@@ -139,7 +139,7 @@ onMounted(() => {
         <div v-if="shortcut.canAddKeyValue && shortcut.tempNodes">
           <TransitionGroup name="fade" tag="ul">
             <widget
-              v-for="(keyValue, index) in shortcut.tempNodes.params"
+              v-for="(keyValue, index) in shortcut.tempNodes"
               :key="index"
               :param="keyValue"
               :widgetIndex="index"

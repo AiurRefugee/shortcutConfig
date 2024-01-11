@@ -19,20 +19,19 @@ function toBottom(wrapperName) {
 }
 
 function addSecParam(object, wrapperName) { 
+  console.log(object);
     if (!object.tempNodes) {
-      object.tempNodes = {
-        canAddKeyValue: true,
-      canAddSecParam: true,
-        params: [],
-      };
+      object.tempNodes = []
     }
-    object.tempNodes.params.push({
+    object.tempNodes.push({
       canAddKeyValue: true,
       canAddSecParam: true,
-      params: [
+      tempNodes: [
         {
           type: "input",
           key: "",
+          canAddKeyValue: true,
+          canAddSecParam: true,
           value: Math.random(),
         },
       ],
@@ -58,14 +57,11 @@ function addSecParam(object, wrapperName) {
 function addKeyValue(object, wrapperName) {
   if (object.canAddKeyValue) {
     if (!object.tempNodes) {
-      object.tempNodes = {
-        canAddKeyValue: false,
-        params: [],
-      };
+      object.tempNodes = []
     }
 
     if (props.addDiretion == "btt") {
-      object.tempNodes.params.push({
+      object.tempNodes.push({
         type: "input",
         key: "",
         value: Math.random(),
@@ -75,10 +71,10 @@ function addKeyValue(object, wrapperName) {
         wrapper.scrollTop = wrapper.scrollHeight;
       }, 50);
     } else {
-      object.tempNodes.params.splice(0, 0, {
+      object.tempNodes.splice(0, 0, {
         type: "input",
         key: "",
-        value: "",
+        value: Math,
       }); 
     }
   }

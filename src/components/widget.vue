@@ -219,16 +219,19 @@ onMounted(() => {
 
 <template>
   <div
-    :class="['listItem', param.params ? 'secItem' : 'keyValueItem']"
+    :class="[
+      'listItem',
+      param.params || param.tempNodes ? 'secItem' : 'keyValueItem',
+    ]"
     @pointerdown="swipeStart"
   >
     <div
-      :class="['label', param.params ? 'primLabel' : '']"
+      :class="['label', param.params || param.tempNodes ? 'primLabel' : '']"
       @pointerdown.stop="swipeStart"
       @click.stop="showBtn"
     >
       <div
-        :class="{ hideOverText: !param.params }"
+        :class="{ hideOverText: paramName }"
         v-if="paramName"
         :id="paramName"
         @pointerdown.stop="swipeStart"
@@ -240,13 +243,15 @@ onMounted(() => {
       <div v-else>
         <el-input
           v-model="param.key"
-          placeholder="请输入参数名"
+          :placeholder="
+            param.hasOwnProperty('tempNodes') ? '请输入参数名' : '请输入键名'
+          "
           @change="updateNode"
         ></el-input>
       </div>
       <div
         class="btnWrapper"
-        v-if="param.params"
+        v-if="param.params || param.tempNodes"
         :style="{
           justifyContent: param.canAddKeyValue ? 'space-around' : 'flex-end',
         }"
@@ -261,6 +266,7 @@ onMounted(() => {
           <el-button type="danger">删除</el-button>
         </div>
       </div>
+      
     </div>
     <div class="widget" v-if="param.type == 'switch'">
       <el-switch v-model="param.value" @change="update"></el-switch>
@@ -289,9 +295,9 @@ onMounted(() => {
         ></el-option>
       </el-select>
     </div>
-    <div class="btn" v-if="!param.params">
-      <el-button type="danger">删除</el-button>
-    </div>
+    <div class="btn" v-if="!param.hasOwnProperty('params') && !param.hasOwnProperty('tempNodes')">
+        <el-button type="danger">删除</el-button>
+      </div>
     <div class="wrapper" v-if="param.params">
       <widget
         v-for="(secParam, secName, index) in param.params"
@@ -304,7 +310,7 @@ onMounted(() => {
     </div>
     <div class="wrapper" v-if="param.tempNodes">
       <widget
-        v-for="(node, index) in param.tempNodes.params"
+        v-for="(node, index) in param.tempNodes"
         :key="index"
         :param="node"
         :layer="layer + 1"

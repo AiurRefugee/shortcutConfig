@@ -1,4 +1,30 @@
 export const shortcutConfig = {
+    "test": {
+        "canAddKeyValue": true,
+        "canAddSecParam": true,
+        "params": {
+            "test": {
+                type: "input",
+                value: '123'
+            }
+        },
+        tempNodes: [
+            {   
+                canAddKeyValue: true,
+                canAddSecParam: true,
+                key: '',
+                tempNodes: [
+                    {
+                        key: '',
+                        value: '',
+                        type: "input",
+                        canAddKeyValue: true,
+                        canAddSecParam: true,
+                    }
+                ]
+            }
+        ]
+    },
     "每日必应壁纸": {
         "activeValue": "",
         "params": {
