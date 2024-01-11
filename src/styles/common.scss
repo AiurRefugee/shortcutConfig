@@ -87,6 +87,8 @@ button {
     text-overflow: ellipsis;
 }
 .primLabel {
+    width: calc(100% + 2vh);
+    translate: -2vh;
     font-size: 18px;
     font-weight: 400;
     overflow: initial;
