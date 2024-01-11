@@ -148,9 +148,9 @@ function swipeStart(e) {
   // listItem.style["max-width"] = "";
   // listItem.style.overflow = 'auto'
   // document.getElementsByClassName('appContainer')[0].style.overflow = 'hidden';
-  Array.from(document.getElementsByClassName("wrapper")).forEach((item) => {
-    item.style.overflow = "hidden";
-  });
+  // Array.from(document.getElementsByClassName("wrapper")).forEach((item) => {
+  //   item.style.overflow = "hidden";
+  // });
   for (const btn of document.getElementsByClassName("btn")) {
     if (btn != removeButton) {
       resizeToHide(btn);
@@ -166,10 +166,8 @@ function swipeStart(e) {
         Math.max(Math.min(startX - e.screenX, 20)) + "px";
     } else {
       removeButton.style.width =
-        Math.max(
-          Math.min(removeWidth + startX - e.screenX, threshold),
-          0
-        ) + "px";
+        Math.max(Math.min(removeWidth + startX - e.screenX, threshold), 0) +
+        "px";
       removeButton.style["padding-right"] =
         Math.max(Math.min(10 + startX - e.screenX, 10 * 1.5), 0) + "px";
 
@@ -180,11 +178,11 @@ function swipeStart(e) {
       console.log("up", e);
       // listItem.style["max-width"] = width + "px";
       listItem.style.overflow = "hidden";
-      document.getElementsByClassName("appContainer")[0].style.overflow =
-        "auto";
-      Array.from(document.getElementsByClassName("wrapper")).forEach((item) => {
-        item.style.overflow = "auto";
-      });
+      // document.getElementsByClassName("appContainer")[0].style.overflow =
+      //   "auto";
+      // Array.from(document.getElementsByClassName("wrapper")).forEach((item) => {
+      //   item.style.overflow = "auto";
+      // });
       document.onpointermove = null;
       if (swipeWidth < 5) {
         return false;
@@ -201,15 +199,15 @@ function swipeStart(e) {
   };
 }
 
-function calMt() { 
-  console.log(props)
-  if(props.layer) {
-    return '1.2vh'
+function calMt() {
+  console.log(props);
+  if (props.layer) {
+    return "1.2vh";
   } else {
-    if(props.widgetIndex) {
-      return '2vh'
+    if (props.widgetIndex) {
+      return "2vh";
     } else {
-      return '0vh'
+      return "0vh";
     }
   }
 }
@@ -222,8 +220,8 @@ onMounted(() => {
 <template>
   <div
     :class="['listItem', param.params ? 'secItem' : 'keyValueItem']"
-    @pointerdown="swipeStart" 
-  > 
+    @pointerdown="swipeStart"
+  >
     <div
       :class="['label', param.params ? 'primLabel' : '']"
       @pointerdown.stop="swipeStart"
@@ -253,7 +251,10 @@ onMounted(() => {
           justifyContent: param.canAddKeyValue ? 'space-around' : 'flex-end',
         }"
       >
-        <div class="btnPrim" v-if="param.canAddKeyValue || param.canAddSecParam && layer < 4">
+        <div
+          class="btnPrim"
+          v-if="param.canAddKeyValue || (param.canAddSecParam && layer < 4)"
+        >
           <addButton :object="param" />
         </div>
         <div class="btnPrim">
@@ -291,24 +292,22 @@ onMounted(() => {
     <div class="btn" v-if="!param.params">
       <el-button type="danger">删除</el-button>
     </div>
-    <div class="wrapper" v-if="param.tempNodes">
-      <TransitionGroup name="fade" tag="ul">
-        <widget
-          v-for="(node, index) in param.tempNodes.params"
-          :key="index"
-          :param="node"
-          :layer="layer + 1"
-          :widgetIndex="index"
-        />
-      </TransitionGroup>
-    </div>
     <div class="wrapper" v-if="param.params">
       <widget
         v-for="(secParam, secName, index) in param.params"
         :key="secName"
         :param="secParam"
         :paramName="secName"
-        :layer="layer + 1" 
+        :layer="layer + 1"
+        :widgetIndex="index"
+      />
+    </div>
+    <div class="wrapper" v-if="param.tempNodes">
+      <widget
+        v-for="(node, index) in param.tempNodes.params"
+        :key="index"
+        :param="node"
+        :layer="layer + 1"
         :widgetIndex="index"
       />
     </div>
