@@ -74,7 +74,7 @@ function addKeyValue(object, wrapperName) {
       object.tempNodes.splice(0, 0, {
         type: "input",
         key: "",
-        value: Math,
+        value: Math.random(),
       }); 
     }
   }
@@ -90,7 +90,7 @@ onMounted(() => {
       v-if="object.canAddSecParam"
       placement="top-start"
       title="选择添加类型"
-      style="border-radius: var(--radius-lg)"
+      style="border-radius: var(--radius-base)"
       :width="200"
       trigger="click"
     >
@@ -98,7 +98,7 @@ onMounted(() => {
         <el-button
           ref="buttonRef"
           type="primary"
-          style="border-radius: var(--radius-lg)"
+          style="border-radius: var(--radius-base)"
           >添加</el-button
         >
       </template>
@@ -120,14 +120,14 @@ onMounted(() => {
     <el-button
       ref="buttonRef"
       type="primary"
-      style="border-radius: var(--radius-lg)"
+      style="border-radius: var(--radius-base)"
       @click="addKeyValue(object, wrapperName)"
       >添加</el-button
     >
   </div>
 </template>
 <style lang="scss" scoped>
-// button {
-//   width: 80px;
-// }
+button {
+  height: var(--cellHeight);
+}
 </style>

@@ -17,7 +17,7 @@ const props = defineProps([
   "param",
   "readOnly",
   "widgetIndex",
-  "layer",
+  "layer", 
 ]);
 const emit = defineEmits(["updateNode"]);
 
@@ -170,9 +170,14 @@ function swipeStart(e) {
         "px";
       removeButton.style["padding-right"] =
         Math.max(Math.min(10 + startX - e.screenX, 10 * 1.5), 0) + "px";
-
+      
       listItem.scrollLeft = listItem.scrollWidth;
     }
+    
+    // if(e.screenX - startX > 0) {
+    //   listItem.scrollLeft= "hidden";
+    // }
+    // listItem.style.paddingLeft = Math.min(Math.max(e.screenX - startX, 0), 200) + "px";
 
     document.onpointerup = (e) => {
       console.log("up", e);
@@ -199,16 +204,15 @@ function swipeStart(e) {
   };
 }
 
-function calMt() {
-  console.log(props);
-  if (props.layer) {
-    return "1.2vh";
-  } else {
-    if (props.widgetIndex) {
-      return "2vh";
+function calMt() { 
+  if (!props.layer) {
+    if(props.param.params || props.param.tempNodes) {
+      return '0'
     } else {
-      return "0vh";
-    }
+      return ''
+    } 
+  } else {
+    return '1vh 0'
   }
 }
 
@@ -223,6 +227,8 @@ onMounted(() => {
       'listItem',
       param.params || param.tempNodes ? 'secItem' : 'keyValueItem',
     ]"
+    :style="{ margin: calMt(),
+  paddingBottom: layer && param.params || param.tempNodes ? '0' : ''}"
     @pointerdown="swipeStart"
   >
     <div
@@ -298,23 +304,23 @@ onMounted(() => {
     <div class="btn" v-if="!param.hasOwnProperty('params') && !param.hasOwnProperty('tempNodes')">
         <el-button type="danger">删除</el-button>
       </div>
-    <div class="wrapper" v-if="param.params">
+    <div class="wrapper" style="margin-bottom: 0;" v-if="param.params">
       <widget
         v-for="(secParam, secName, index) in param.params"
         :key="secName"
         :param="secParam"
         :paramName="secName"
         :layer="layer + 1"
-        :widgetIndex="index"
+        :widgetIndex="index" 
       />
     </div>
-    <div class="wrapper" v-if="param.tempNodes">
+    <div class="wrapper" style="margin-bottom: 0;" v-if="param.tempNodes">
       <widget
         v-for="(node, index) in param.tempNodes"
         :key="index"
         :param="node"
         :layer="layer + 1"
-        :widgetIndex="index"
+        :widgetIndex="index" 
       />
     </div>
   </div>

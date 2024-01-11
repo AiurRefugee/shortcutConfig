@@ -121,11 +121,7 @@ onMounted(() => {
         </div>
       </div>
       <!-- 外层参数-->
-      <div
-        class="wrapper"
-        :id="shortcutName"
-        style="margin-bottom: 2vh"
-      >
+      <div class="wrapper" :id="shortcutName" style="margin-bottom: 1vh;">
         <widget
           v-for="(param, paramName, index) in shortcut.params"
           :key="paramName"
@@ -137,14 +133,12 @@ onMounted(() => {
         />
 
         <div v-if="shortcut.canAddKeyValue && shortcut.tempNodes">
-          <TransitionGroup name="fade" tag="ul">
-            <widget
-              v-for="(keyValue, index) in shortcut.tempNodes"
-              :key="index"
-              :param="keyValue"
-              :widgetIndex="index"
-            />
-          </TransitionGroup>
+          <widget
+            v-for="(keyValue, index) in shortcut.tempNodes"
+            :key="index"
+            :param="keyValue"
+            :widgetIndex="index"
+          />
         </div>
       </div>
       <addButton
@@ -220,11 +214,7 @@ h3 {
   border-radius: var(--radius-lg);
   box-shadow: 0 0 15px 10px #858181d1;
   // background-color: #f6f6f6;
-
-  // .listItem:first-of-type {
-  //   border-top-left-radius: var(--radius-lg);
-  //   border-top-right-radius: var(--radius-lg);
-  // }
+ 
   // .listItem:last-of-type {
   //   border-bottom-left-radius: var(--radius-lg);
   //   border-bottom-right-radius: var(--radius-lg);
