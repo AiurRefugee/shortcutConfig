@@ -8,7 +8,7 @@ import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 import widget from "@/components/widget.vue";
 import addButton from "@/components/addButton.vue";
 const removeWidth = 80;
-const threshold = removeWidth * 1.5;
+const threshold = removeWidth * 8;
 
 let moveFunc, poinerId;
 
@@ -145,7 +145,7 @@ function swipeStart(e) {
     return false;
   }
   const width = removeButton.clientWidth;
-  listItem.style["max-width"] = "";
+  // listItem.style["max-width"] = "";
   // listItem.style.overflow = 'auto'
   // document.getElementsByClassName('appContainer')[0].style.overflow = 'hidden';
   Array.from(document.getElementsByClassName("wrapper")).forEach((item) => {
@@ -160,14 +160,14 @@ function swipeStart(e) {
     swipeWidth = Math.abs(startX - e.screenX);
     if (width < 10) {
       removeButton.style.width =
-        Math.min(Math.max(startX - e.screenX, 0), removeWidth * 1.5) + "px";
+        Math.min(Math.max(startX - e.screenX, 0), threshold) + "px";
       listItem.scrollLeft = listItem.scrollWidth;
       removeButton.style["padding-right"] =
         Math.max(Math.min(startX - e.screenX, 20)) + "px";
     } else {
       removeButton.style.width =
         Math.max(
-          Math.min(removeWidth + startX - e.screenX, removeWidth * 1.5),
+          Math.min(removeWidth + startX - e.screenX, threshold),
           0
         ) + "px";
       removeButton.style["padding-right"] =
@@ -178,7 +178,7 @@ function swipeStart(e) {
 
     document.onpointerup = (e) => {
       console.log("up", e);
-      listItem.style["max-width"] = width + "px";
+      // listItem.style["max-width"] = width + "px";
       listItem.style.overflow = "hidden";
       document.getElementsByClassName("appContainer")[0].style.overflow =
         "auto";
@@ -222,8 +222,7 @@ onMounted(() => {
 <template>
   <div
     :class="['listItem', param.params ? 'secItem' : 'keyValueItem']"
-    @pointerdown="swipeStart"
-    :style="{ marginTop: calMt() }"
+    @pointerdown="swipeStart" 
   > 
     <div
       :class="['label', param.params ? 'primLabel' : '']"

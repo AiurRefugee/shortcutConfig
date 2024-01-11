@@ -86,9 +86,7 @@ button {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.primLabel {
-    width: calc(100% + 2vh);
-    translate: -2vh;
+.primLabel { 
     font-size: 18px;
     font-weight: 400;
     overflow: initial;
@@ -111,7 +109,7 @@ button {
     position: relative;
     overflow: auto;
     padding: 1vh 2vh;
-    margin-top: 2vh;
+    margin: 1.5vh 0;
     border-radius: var(--radius-lg);
     // background: #dfdfdf96;
     // background: linear-gradient(to right, var(--graColor) 5%, transparent 50%, var(--graColor) 95%);
