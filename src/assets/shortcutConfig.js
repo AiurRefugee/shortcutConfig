@@ -9,19 +9,11 @@ export const shortcutConfig = {
             }
         },
         tempNodes: [
-            {   
+            {
+                key: '',
+                type: "input",
                 canAddKeyValue: true,
                 canAddSecParam: true,
-                key: '',
-                tempNodes: [
-                    {
-                        key: '',
-                        value: '',
-                        type: "input",
-                        canAddKeyValue: true,
-                        canAddSecParam: true,
-                    }
-                ]
             }
         ]
     },

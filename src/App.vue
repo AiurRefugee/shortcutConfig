@@ -1,14 +1,10 @@
 <script setup>
 import { ref, onMounted, provide } from "vue";
-import axios from "axios";
-import { ElMessage } from "element-plus";
-import { shortcutConfig } from "@/assets/shortcutConfig.js";
-import { CopyDocument, Share } from "@element-plus/icons-vue";
-import { copyToClipboard } from "@/utils/util.js";
+import axios from "axios"; 
+import { shortcutConfig } from "@/assets/shortcutConfig.js"; 
 
 // components
-import widget from "@/components/widget.vue";
-import addButton from "@/components/addButton.vue";
+import shortcut from "@/views/shortcut.vue"; 
 
 const port = 5173;
 const lgUrl = `http://localhost:${port}`;
@@ -60,9 +56,7 @@ function active(shortcut, value) {
   }
 }
 
-function runShortCut(name) {
-  window.open(`shortcuts://run-shortcut?name=${name}&input=clipboard`);
-}
+
 
 function update() {
   // axios
@@ -76,6 +70,7 @@ function update() {
   //     });
   //   });
 }
+
 onMounted(() => {
   //   axios({
   //     method: "get",
@@ -105,120 +100,13 @@ onMounted(() => {
   <div class="appContainer">
     <!-- <iframe src="https://store.steampowered.com/wishlist/profiles/76561198973207878/#sort=order" width="600" height="400"></iframe> -->
     <h1>ShortcutConfig</h1>
-    <div
-      class="list"
-      v-for="(shortcut, shortcutName) in ShortcutConfig"
+   <shortcut v-for="(shortcut, shortcutName) in ShortcutConfig" 
       :key="shortcutName"
-    >
-      <div class="title">
-        <h2>{{ shortcutName }}</h2>
-        <div
-          class="exec"
-          v-if="shortcut.executable"
-          @click="runShortCut(shortcutName)"
-        >
-          <Share />
-        </div>
-      </div>
-      <!-- 外层参数-->
-      <div class="wrapper" :id="shortcutName" style="margin-bottom: 1vh;">
-        <widget
-          v-for="(param, paramName, index) in shortcut.params"
-          :key="paramName"
-          :readOnly="shortcut.readOnly"
-          :param="param"
-          :paramName="paramName"
-          :widgetIndex="index"
-          :layer="0"
-        />
-
-        <div v-if="shortcut.canAddKeyValue && shortcut.tempNodes">
-          <widget
-            v-for="(keyValue, index) in shortcut.tempNodes"
-            :key="index"
-            :param="keyValue"
-            :widgetIndex="index"
-          />
-        </div>
-      </div>
-      <addButton
-        :object="shortcut"
-        :wrapperName="shortcutName"
-        addDiretion="btt"
+      :shortcut="shortcut"
+      :shortcutName="shortcutName"
       />
-    </div>
   </div>
 </template>
-<style lang="scss" scoped>
-$radius: 10px;
+<style lang="scss" scoped>  
 
-$border: 2px solid lightgray;
-::-webkit-scrollbar {
-  display: none;
-}
-.el-input-group__append {
-  padding: 0 10px;
-}
-h1 {
-  width: 100%;
-}
-h1,
-h2,
-h3 {
-  // width: 80%;
-  padding: 0 2%;
-  text-shadow: rgba(133, 129, 129, 0.8196078431) 5px 0px 8px;
-}
-.add {
-  height: var(--cellHeight);
-  width: 50px;
-  border-radius: var(--radius-base);
-  background: var(--graColor);
-  background: linear-gradient(
-    to right,
-    var(--graColor) 5%,
-    transparent 50%,
-    var(--graColor) 95%
-  );
-  transition: width 0.1s ease-in-out;
-}
-.add:active {
-  width: 100%;
-  // background: linear-gradient(to right, var(--graColor) 5%, transparent 50%, var(--graColor) 95%);
-}
-.title {
-  height: 8vh;
-  display: flex;
-  // justify-content: space-between;
-  align-items: center;
-  .exec {
-    height: 50%;
-    width: 15%;
-    color: lightgray;
-  }
-}
-.active {
-  background-color: #409eff;
-  border-radius: var(--radius-base);
-  padding: 3px 15px;
-}
-.list {
-  // min-width: 25vw;
-  // max-width: 25vw;
-  padding: 1% 2%;
-  margin: 2%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 0 15px 10px #858181d1;
-  // background-color: #f6f6f6;
- 
-  // .listItem:last-of-type {
-  //   border-bottom-left-radius: var(--radius-lg);
-  //   border-bottom-right-radius: var(--radius-lg);
-  //   border-bottom: none;
-  // }
-}
 </style>
