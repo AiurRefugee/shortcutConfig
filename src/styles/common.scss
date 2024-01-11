@@ -1,0 +1,151 @@
+* {
+    // box-sizing: border-box;
+    user-select: none;
+}
+// @keyframes showup {
+//     0% {
+//         translate: 0 -50%;
+//         opacity: 0;
+//         // transform: rotate3d(1, 0, 0, 90deg);
+//     }
+//     100% {
+//         translate: none;
+//         opacity: 1;
+//         // transform: rotate3d(1, 0, 0, 0deg);
+//     }
+
+// }
+html {
+    overflow-x: hidden;
+    --cellHeight: 35px;
+    --radius-lg: 10px;
+    --radius-base: 8px;
+    --radius-sm: 5px;
+    --graColor: #e2e2e2;
+    --el-border-radius-base: 10px !important;
+}
+body {
+    margin: 0;
+}
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+svg {
+    // width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    cursor: pointer;
+}
+button {
+    width: 100%;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+
+.appContainer {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    overflow: auto;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
+    align-items: flex-start;
+}
+
+.wrapper {
+    // min-width: 25vw;
+    max-height: 80vh;
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: flex-start;
+    overflow: auto;
+    transition: height 1.2s ease-in-out;
+    border-radius: var(--radius-lg);
+    transition: height 0.5s ease-in-out;
+}
+
+.label {
+    // width: 8vw;
+    // max-width: 15vw;
+    // position: relative;
+    display: flex;
+    overflow: hidden;
+    align-items: center;
+    height: var(--cellHeight);
+}
+.hideOverText {
+    min-width: 8vw;
+    height: var(--cellHeight);
+    line-height: var(--cellHeight);
+    margin-right: 2%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.primLabel {
+    font-size: 18px;
+    font-weight: 400;
+    overflow: initial;
+    color: #9d9d9d;
+    cursor: pointer;
+    // translate: -2vh;
+}
+
+.widget {
+    width: 15vw;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.listItem {
+    min-width: 25vw;
+    min-height: var(--cellHeight);
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    overflow: auto;
+    padding: 1vh 2vh;
+    margin-top: 2vh;
+    border-radius: var(--radius-lg);
+    // background: #dfdfdf96;
+    // background: linear-gradient(to right, var(--graColor) 5%, transparent 50%, var(--graColor) 95%);
+    // border-bottom: 1px solid lightgray;
+     
+    @media (min-width: 1000px) {
+        min-width: 35vw;
+    }
+} 
+.keyValueItem {
+    background: #dfdfdf58;
+    flex-direction: row;
+}
+.secItem {
+    background: none;
+    flex-direction: column;
+    padding-right: 0;
+    position: relative; 
+} 
+
+/* 1. 声明过渡效果 */
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+    transition: all 1.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+/* 2. 声明进入和离开的状态 */
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+    transform: scaleY(0.01) translate(30px, 0);
+}
+
+/* 3. 确保离开的项目被移除出了布局流
+      以便正确地计算移动时的动画效果。 */
+.fade-leave-active {
+    position: absolute;
+}
