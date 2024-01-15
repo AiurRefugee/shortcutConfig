@@ -21,6 +21,14 @@ function removeParam(index) {
     emit('removeShortcut', props.pointer)
   }
 }
+
+// 删除tempNode中的元素
+function removeTempNode(index) {
+  props.param.tempNodes.splice(index, 1);
+  if(props.param.tempNodes.length == 0) {
+    emit('removeShortcut', 0)
+  }
+}
  
 
 
@@ -47,7 +55,7 @@ onMounted(() => {
         :key="index"
         :readOnly="shortcut.readOnly"
         :param="param" 
-        :widgetPointer="index"
+        :index="index"
         :layer="0"
         @removeParam="removeParam"
         @removeTempNode="removeTempNode"
@@ -58,7 +66,7 @@ onMounted(() => {
           v-for="(keyValue, index) in shortcut.tempNodes"
           :key="index"
           :param="keyValue"
-          :widgetPointer="index"
+          :index="index"
           @removeParam="removeParam"
           @removeTempNode="removeTempNode"
         />

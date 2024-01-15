@@ -212,7 +212,7 @@ function removeParam(index) {
 // 删除tempNode中的元素
 function removeTempNode(index) {
   props.param.tempNodes.splice(index, 1);
-  if(props.param.params.length == 0) {
+  if(props.param.tempNodes.length == 0) {
     emit('removeTempNode', 0)
   }
 }

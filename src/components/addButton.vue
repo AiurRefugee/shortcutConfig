@@ -38,8 +38,7 @@ function addSecParam(object, wrapperName) {
     });
     // toBottom(wrapperName); 
     if(wrapperName) { 
-      const wrapper = document.getElementById(wrapperName)
-      console.log(wrapper)
+      const wrapper = document.getElementById(wrapperName) 
       setTimeout(() => {
         gsap.to(wrapper, {
           scrollTop: wrapper.scrollHeight,
@@ -47,8 +46,7 @@ function addSecParam(object, wrapperName) {
           ease: 'power1.inOut'
         }, 100)
       })
-    }
-    console.log(object);
+    } 
 }
 
 function addKeyValue(object, wrapperName) {
