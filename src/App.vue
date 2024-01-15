@@ -7,53 +7,44 @@ import { shortcutConfig } from "@/assets/shortcutConfig.js";
 import shortcut from "@/views/shortcut.vue"; 
 
 const port = 5173;
-const lgUrl = `http://localhost:${port}`;
-const sizes = {};
+const lgUrl = `http://localhost:${port}`; 
 const width = 20;
 const height = 20;
 const heighCell = 2;
-const ShortcutConfig = ref(shortcutConfig);
+const sizes = []
 const buttonRef = ref(null);
+const ShortcutConfig = ref()
 
 let addingKeyValue = false;
+let indexedArray = [];
+
 
 function calSize(obj) {
-  let height = 0;
-  let width = 0;
-  let onlySwitch = true;
-  function retriveObj(obj) {
-    if (typeof obj !== "object" || obj === null) {
-      return 0;
+   if(!obj.params && !obj.tempNodes) {
+    return 1
+   } 
+   let paramCal = 0, tempNodeCal = 0
+   if(obj.params) {
+    for ( const item of obj.params ) {
+      paramCal += calSize(item) 
     }
-    let maxDepth = 0;
-    if (typeof obj === "object") {
-      if (Object.keys(obj).indexOf("value") == -1) {
-        for (const value of Object.values(obj)) {
-          const depth = retriveObj(value);
-          maxDepth = Math.max(maxDepth, depth);
-        }
-        width += 10;
-        return maxDepth + 10;
-      } else {
-        height += heighCell;
-        if (obj.type == "switch") {
-          onlySwitch = false;
-        }
-      }
+   }
+   if(obj.tempNodes) {
+    for ( const item of obj.tempNodes ) {
+      tempNodeCal += calSize(item) 
     }
-    return maxDepth;
-  }
-  width = retriveObj(obj);
-  return {
-    width: width + 10,
-    height: height,
-  };
+   }
+   return paramCal + tempNodeCal
 }
 
 function active(shortcut, value) {
   if (shortcut.executable) {
     shortcut.activeValue = value;
   }
+}
+
+function removeShortcut(index) {
+  ShortcutConfig.value.splice(index, 1);
 }
 
 
@@ -72,6 +63,17 @@ function update() {
 }
 
 onMounted(() => {
+
+  shortcutConfig.map(item => sizes.push(calSize(item)))
+
+  indexedArray = shortcutConfig.map((value, index) => ({ value: calSize(value), index }));
+  
+  indexedArray.sort((a, b) => a.value - b.value)
+
+  ShortcutConfig.value = indexedArray.map(item => shortcutConfig[item.index])
+  
+
+  
   //   axios({
   //     method: "get",
   //     url: lgUrl + "/read-file",
@@ -100,13 +102,17 @@ onMounted(() => {
   <div class="appContainer">
     <!-- <iframe src="https://store.steampowered.com/wishlist/profiles/76561198973207878/#sort=order" width="600" height="400"></iframe> -->
     <h1>ShortcutConfig</h1>
-   <shortcut v-for="(shortcut, shortcutName) in ShortcutConfig" 
-      :key="shortcutName"
+   <shortcut v-for="(shortcut, index) in ShortcutConfig" 
+      :key="index"
       :shortcut="shortcut"
-      :shortcutName="shortcutName"
+      :pointer="index"
+      :shortcutName="shortcut.shortcutName"
+      @removeShortcut="removeShortcut"
       />
   </div>
 </template>
 <style lang="scss" scoped>  
-
+button {
+  height: var(--cellHeight);
+}
 </style>

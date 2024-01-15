@@ -3,51 +3,29 @@ import { ref, onMounted } from "vue";
 
 import widget from "@/components/widget.vue";
 import addButton from "@/components/addButton.vue";
+import { calHeight } from "../utils/util";
 import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 
-const props = defineProps(["shortcut", "shortcutName"]);
+const props = defineProps(["shortcut", "shortcutName", "pointer"]);
+const emit = defineEmits(["removeShortcut"]);
 
 function runShortCut(name) {
   window.open(`shortcuts://run-shortcut?name=${name}&input=clipboard`);
 }
 
-// 删除参数
-function removeParam(paramName) {
-  console.log(paramName);
-  delete props.shortcut.params[paramName];
-}
-
-// 删除tempNode中的元素
-function removeTempNode(index) {
-  console.log(index);
-  props.shortcut.tempNodes.splice(index, 1);
-}
-
-function calHeight(object) {
-  if (!object.params && !object.tempNodes) {
-    return 1;
-  } else {
-    let paramNum = 0;
-    let tempNum = 0;
-    if (object.params) {
-      for (const [key, subObj] of Object.entries(object.params)) {
-        // console.log(key, subObj)
-        paramNum += calHeight(subObj);
-        console.log(key, paramNum)
-      }
-    }
-    if (object.tempNodes) {
-      for (const subTemp of object.tempNodes) {
-        tempNum += calHeight(subTemp);
-        console.log(subTemp.key, tempNum)
-      }
-    }
-    return paramNum + tempNum;
+// 删除
+function removeParam(index) { 
+  props.shortcut.params.splice(index, 1); 
+  console.log(props.shortcut.params.length - 1, index)
+  if( props.shortcut.params.length == 0 ) {
+    emit('removeShortcut', props.pointer)
   }
 }
+ 
+
 
 onMounted(() => {
-  console.log(calHeight(props.shortcut));
+  // console.log(calHeight(props.shortcut));
 });
 </script>
 <template>
@@ -63,14 +41,13 @@ onMounted(() => {
       </div>
     </div>
     <!-- 外层参数-->
-    <div class="wrapper" :id="shortcutName" style="margin-bottom: 1vh">
+    <div class="wrapper" :id="shortcutName" style="margin-bottom: 1vh; max-height: 80vh;">
       <widget
-        v-for="(param, paramName) in shortcut.params"
-        :key="paramName"
+        v-for="(param, index) in shortcut.params"
+        :key="index"
         :readOnly="shortcut.readOnly"
-        :param="param"
-        :paramName="paramName"
-        :widgetPointer="shortcutName"
+        :param="param" 
+        :widgetPointer="index"
         :layer="0"
         @removeParam="removeParam"
         @removeTempNode="removeTempNode"

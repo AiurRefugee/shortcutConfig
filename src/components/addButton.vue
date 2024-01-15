@@ -19,7 +19,7 @@ function toBottom(wrapperName) {
 }
 
 function addSecParam(object, wrapperName) { 
-  console.log(object);
+  
     if (!object.tempNodes) {
       object.tempNodes = []
     }
@@ -37,11 +37,7 @@ function addSecParam(object, wrapperName) {
       ],
     });
     // toBottom(wrapperName); 
-    if(wrapperName) {
-      // setTimeout(() => {
-      //   const wrapper = document.querySelector(`#${wrapperName}`);
-      //   wrapper.scrollTop = wrapper.scrollHeight;
-      // }, 100);
+    if(wrapperName) { 
       const wrapper = document.getElementById(wrapperName)
       console.log(wrapper)
       setTimeout(() => {
@@ -52,6 +48,7 @@ function addSecParam(object, wrapperName) {
         }, 100)
       })
     }
+    console.log(object);
 }
 
 function addKeyValue(object, wrapperName) {
@@ -126,8 +123,5 @@ onMounted(() => {
     >
   </div>
 </template>
-<style lang="scss" scoped>
-button {
-  height: var(--cellHeight);
-}
+<style lang="scss" scoped> 
 </style>

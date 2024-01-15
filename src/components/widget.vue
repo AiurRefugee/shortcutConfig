@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useEventListener } from "@vueuse/core";
 import gsap from "gsap";
-import { copyToClipboard, adding } from "@/utils/util.js";
+import { copyToClipboard, adding, calHeight } from "@/utils/util.js";
 import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 
 import widget from "@/components/widget.vue";
@@ -10,28 +10,19 @@ import addButton from "@/components/addButton.vue";
 const removeWidth = 80;
 const threshold = removeWidth * 8;
 
-let moveFunc, poinerId;
-
-const props = defineProps([
-  "paramName",
+const props = defineProps([ 
   "param",
   "readOnly",
   "widgetPointer",
   "layer",
 ]);
-const emit = defineEmits(["updateNode, removeParam", "removeTempNode"]);
-
-const nodeName = ref("");
-const removeButton = ref();
-
+const emit = defineEmits(["updateNode", "removeParam", "removeTempNode"]);
+ 
 function updateNode() {}
 
-function showBtn(e) {
-  console.log(e.target);
-  const btnWrapper = findItem(e.target, "btnWrapper", 3);
-  console.log(btnWrapper);
-  if (btnWrapper) {
-    console.log(btnWrapper.clientWidth);
+function showBtn(e) { 
+  const btnWrapper = findItem(e.target, "btnWrapper", 3); 
+  if (btnWrapper) { 
     if (!btnWrapper.clientWidth) {
       // 显示按钮
       Array.from(document.getElementsByClassName("btnWrapper")).forEach(
@@ -44,7 +35,7 @@ function showBtn(e) {
         }
       );
       gsap.to(btnWrapper, {
-        width: "120px",
+        width: "140px",
         duration: 0.5,
         ease: "power1.inOut",
       });
@@ -134,8 +125,7 @@ function swipeStart(e) {
   let swipeWidth = 0;
   let startX = e.screenX;
 
-  const listItem = findItem(e.target, "listItem", 3);
-  console.log("down", listItem);
+  const listItem = findItem(e.target, "listItem", 3); 
   if (!listItem) {
     return false;
   }
@@ -212,27 +202,33 @@ function calMt() {
 }
 
 // 删除参数
-function removeParam(paramName) {
-  delete(props.param.params[paramName])
+function removeParam(index) {
+  props.param.params.splice(index, 1);
+  if(props.param.params.length == 0) {
+    emit('removeParam', 0)
+  }
 }
 
 // 删除tempNode中的元素
 function removeTempNode(index) {
   props.param.tempNodes.splice(index, 1);
+  if(props.param.params.length == 0) {
+    emit('removeTempNode', 0)
+  }
 }
 
 function removeItem() {
-  if (props.paramName) {
-    console.log('removeParam')
-    emit("removeParam", props.paramName);
+  if (props.param.key) {
+    console.log("removeParam", props.widgetPointer);
+    emit("removeParam", props.widgetPointer);
   } else {
-    console.log('removeTempNode')
+    console.log("removeTempNode", props.widgetPointer);
     emit("removeTempNode", props.widgetPointer);
   }
 }
 
 onMounted(() => {
-  // console.log('param', props.param)
+  // console.log('param', props.param) 
 });
 </script>
 
@@ -245,23 +241,23 @@ onMounted(() => {
       ]"
       :style="{
         margin: calMt(),
-        paddingBottom: layer && param.params || param.tempNodes ? '0' : '',
+        paddingBottom: (layer && param.params) || param.tempNodes ? '0' : '',
       }"
       @pointerdown="swipeStart"
+      @click.stop="showBtn"
     >
       <div
-        :class="['label', param.params || param.tempNodes ? 'primLabel' : '']"
-        @pointerdown.stop="swipeStart"
+        :class="['label', param.params || param.tempNodes ? 'primLabel' : '']" 
         @click.stop="showBtn"
       >
         <div
-          :class="{ hideOverText: paramName }"
-          v-if="paramName"
-          :id="paramName"
+          :class="{ hideOverText: param.key }"
+          v-if="param.key "
+          :id="param.key "
           @pointerdown.stop="swipeStart"
           @click.stop="showBtn"
         >
-          {{ paramName }}
+          {{ param.key  }}
           <!-- <addButton v-if="param.canAddKeyValue" :object="param" /> -->
         </div>
         <div v-else>
@@ -291,32 +287,34 @@ onMounted(() => {
           </div>
         </div>
       </div>
-      <div class="widget" v-if="param.type == 'switch'">
-        <el-switch v-model="param.value" @change="update"></el-switch>
-      </div>
-      <div class="widget" v-if="param.type == 'input'">
-        <el-input
-          placeholder="请输入值"
-          v-model="param.value"
-          @change="update"
-          :readonly="readOnly"
-        >
-          <template #append>
-            <el-icon @click="copyToClipboard(param.value)"
-              ><CopyDocument
-            /></el-icon>
-          </template>
-        </el-input>
-      </div>
-      <div class="widget" v-if="param.type == 'select'">
-        <el-select v-model="param.value" @change="update" style="width: 100%">
-          <el-option
-            :label="item"
-            :value="item"
-            v-for="item in param.options"
-            :key="item"
-          ></el-option>
-        </el-select>
+      <div v-if="!param.params && !param.tempNodes">
+        <div class="widget" v-if="param.type == 'switch'">
+          <el-switch v-model="param.value" @change="update"></el-switch>
+        </div>
+        <div class="widget" v-if="param.type == 'input'">
+          <el-input
+            placeholder="请输入值"
+            v-model="param.value"
+            @change="update"
+            :readonly="readOnly"
+          >
+            <template #append>
+              <el-icon @click="copyToClipboard(param.value)"
+                ><CopyDocument
+              /></el-icon>
+            </template>
+          </el-input>
+        </div>
+        <div class="widget" v-if="param.type == 'select'">
+          <el-select v-model="param.value" @change="update" style="width: 100%">
+            <el-option
+              :label="item"
+              :value="item"
+              v-for="item in param.options"
+              :key="item"
+            ></el-option>
+          </el-select>
+        </div>
       </div>
       <div
         class="btn"
@@ -326,19 +324,18 @@ onMounted(() => {
       >
         <el-button type="danger" @click="removeItem">删除</el-button>
       </div>
-      <div class="wrapper" style="margin-bottom: 0" v-if="param.params">
+      <div class="wrapper secWrapper" v-if="param.params">
         <widget
-          v-for="(secParam, secName, index) in param.params"
+          v-for="(secParam, index) in param.params"
           :key="index"
-          :param="secParam"
-          :paramName="secName"
+          :param="secParam" 
           :layer="layer + 1"
-          :widgetPointer="secName"
+          :widgetPointer="index"
           @removeParam="removeParam"
           @removeTempNode="removeTempNode"
         />
       </div>
-      <div class="wrapper" style="margin-bottom: 0" v-if="param.tempNodes">
+      <div class="wrapper secWrapper" v-if="param.tempNodes">
         <widget
           v-for="(node, index) in param.tempNodes"
           :key="index"
@@ -392,14 +389,18 @@ onMounted(() => {
   right: 0;
   width: 0;
   display: flex;
+  align-items: center;
   justify-content: space-around;
   height: var(--cellHeight);
   overflow: hidden;
 }
 .btn {
   right: 10px;
-  height: var(--cellHeight);
+  // height: var(--cellHeight);
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 0;
   // transition: width 0.5s linear;
   // opacity: 0;
@@ -409,5 +410,8 @@ onMounted(() => {
 .btnPrim {
   width: 45%;
   height: var(--cellHeight);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

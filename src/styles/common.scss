@@ -4,13 +4,14 @@
 } 
 html {
     overflow-x: hidden;
-    --cellHeight: 5vh;
+    --cellHeight: 4vh;
     --radius-lg: 15px;
     --radius-base: 12px;
     --radius-sm: 5px;
     --graColor: #e2e2e2;
     --dark: gray;
     --el-border-radius-base: 10px !important;
+    overflow-x: hidden;
 }
 body {
     margin: 0;
@@ -33,6 +34,7 @@ svg {
 }
 button {
     width: 100%;
+    // height: var(--cellHeight);
 }
 ::-webkit-scrollbar {
     display: none;
@@ -43,6 +45,7 @@ button {
     height: 100vh;
     display: flex;
     overflow: auto;
+    overflow-x: hidden;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-content: flex-start;
@@ -58,8 +61,18 @@ button {
     // box-shadow: 0 0 15px 2px #858181d1; 
 }
 
+// .secWrapper {
+//     margin-bottom: 0;
+//     min-height: 8vh;
+//     max-height: 16vh;
+//     box-shadow: inset 0px 2px 15px 0px rgba(133, 129, 129, 0.8196078431);
+//     padding: 1%;
+// }
+
 .label { 
     display: flex;
+    min-width: 5vw;
+    flex: 1;
     overflow: hidden;
     align-items: center;
     height: var(--cellHeight);
@@ -86,24 +99,28 @@ button {
     width: 15vw;
     display: flex;
     justify-content: flex-end;
+    min-height: var(--cellHeight);
 }
 .listItemWrapper {
     overflow: hidden;
     transition: height 0.5s ease-in-out;
+    // margin: 0 15px;
 }
 .listItem {
-    min-width: 25vw;
+    min-width: 20vw;
     min-height: var(--cellHeight);
     display: flex;
     justify-content: space-between;
+    align-items: center;
     position: relative;
     overflow: auto;
     padding: 1vh 2vh;
-    margin: 1.5vh 0;
+    margin: 1vh 5px;
     border-radius: var(--radius-base);  
+    cursor: pointer;
      
     @media (min-width: 1000px) {
-        min-width: 35vw;
+        min-width: 30vw;
     }
 } 
 .keyValueItem {
@@ -115,6 +132,7 @@ button {
     flex-direction: column;
     padding-right: 0;
     position: relative; 
+    align-items: flex-start;
 } 
 
 /* 1. 声明过渡效果 */

@@ -30,3 +30,24 @@ export function copyToClipboard(text) {
 }
 
 export let adding = false
+
+export function calHeight(object) {
+  if (object.type) {
+    return 1;
+  } else {
+    let paramNum = 0;
+    let tempNum = 0;
+    if (object.params) {
+      for (const item of object.params) {
+        // console.log(key, subObj)
+        paramNum += calHeight(item); 
+      }
+    }
+    if (object.tempNodes) {
+      for (const subTemp of object.tempNodes) {
+        tempNum += calHeight(subTemp); 
+      }
+    }
+    return paramNum + tempNum + 1;
+  }
+}
