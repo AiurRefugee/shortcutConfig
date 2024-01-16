@@ -24,15 +24,18 @@ function addSecParam(object, wrapperName) {
       object.tempNodes = []
     }
     object.tempNodes.push({
+      key: "",
+      keyFinished: false,
       canAddKeyValue: true,
       canAddSecParam: true,
       tempNodes: [
         {
           type: "input",
           key: "",
+          keyFinished: false,
           canAddKeyValue: true,
           canAddSecParam: true,
-          value: Math.random(),
+          value: ""
         },
       ],
     });
@@ -59,7 +62,8 @@ function addKeyValue(object, wrapperName) {
       object.tempNodes.push({
         type: "input",
         key: "",
-        value: Math.random(),
+        keyFinished: false,
+        value: "",
       });
       setTimeout(() => {
         const wrapper = document.querySelector(`#${wrapperName}`);
@@ -69,7 +73,7 @@ function addKeyValue(object, wrapperName) {
       object.tempNodes.splice(0, 0, {
         type: "input",
         key: "",
-        value: Math.random(),
+        value: "",
       }); 
     }
   }

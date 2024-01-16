@@ -10,19 +10,29 @@ import addButton from "@/components/addButton.vue";
 const removeWidth = 80;
 const threshold = removeWidth * 8;
 
-const props = defineProps([ 
-  "param",
-  "readOnly",
-  "widgetPointer",
-  "layer",
+const props = defineProps(["param", "readOnly", "index", "layer"]);
+const emit = defineEmits([
+  "updateNode",
+  "removeParam",
+  "removeTempNode",
+  "updateParam",
 ]);
-const emit = defineEmits(["updateNode", "removeParam", "removeTempNode"]);
  
+
+function finish(type) {
+  if(type == 'key' && props.param.key) {
+    props.param.keyFinished = true;
+  }  
+  if(props.param.keyFinished) {
+    emit("updateNode", props.index)
+  }
+} 
+
 function updateNode() {}
 
-function showBtn(e) { 
-  const btnWrapper = findItem(e.target, "btnWrapper", 3); 
-  if (btnWrapper) { 
+function showBtn(e) {
+  const btnWrapper = findItem(e.target, "btnWrapper", 3);
+  if (btnWrapper) {
     if (!btnWrapper.clientWidth) {
       // 显示按钮
       Array.from(document.getElementsByClassName("btnWrapper")).forEach(
@@ -124,9 +134,10 @@ function findItem(element, className, depth) {
 function swipeStart(e) {
   let swipeWidth = 0;
   let startX = e.screenX;
+  console.log('down', e)
 
-  const listItem = findItem(e.target, "listItem", 3); 
-  if (!listItem) {
+  const listItem = findItem(e.target, "listItem", 3);
+  if (!listItem || e.target.tagName === "BUTTON") {
     return false;
   }
   // document.getElementById("app").style.overflow = "hidden";
@@ -134,19 +145,14 @@ function swipeStart(e) {
   if (!removeButton) {
     return false;
   }
-  const width = removeButton.clientWidth;
-  // listItem.style["max-width"] = "";
-  // listItem.style.overflow = 'auto'
-  // document.getElementsByClassName('appContainer')[0].style.overflow = 'hidden';
-  // Array.from(document.getElementsByClassName("wrapper")).forEach((item) => {
-  //   item.style.overflow = "hidden";
-  // });
+  const width = removeButton.clientWidth; 
   for (const btn of document.getElementsByClassName("btn")) {
     if (btn != removeButton) {
       resizeToHide(btn);
     }
   }
   document.onpointermove = (e) => {
+    if(!e.isPrimary) return
     swipeWidth = Math.abs(startX - e.screenX);
     if (width < 10) {
       removeButton.style.width =
@@ -164,8 +170,8 @@ function swipeStart(e) {
       listItem.scrollLeft = listItem.scrollWidth;
     }
 
-    document.onpointerup = (e) => {
-      console.log("up", e);
+    document.onpointerup = (e) => { 
+      console.log('up')
       // listItem.style["max-width"] = width + "px";
       listItem.style.overflow = "hidden";
       // document.getElementsByClassName("appContainer")[0].style.overflow =
@@ -174,17 +180,19 @@ function swipeStart(e) {
       //   item.style.overflow = "auto";
       // });
       document.onpointermove = null;
+      document.onpointerup = null;
       if (swipeWidth < 5) {
         return false;
       }
+      // if(swipeWidth > listItem.clientWidth * 0.8) {
+      //   removeItem()
+      //   return false;
+      // }
       if (removeButton.clientWidth > removeWidth * 0.5) {
-        resizeToFull(removeButton);
-        console.log("full");
+        resizeToFull(removeButton); 
       } else {
-        resizeToHide(removeButton);
-        console.log("hide");
+        resizeToHide(removeButton); 
       }
-      document.onpointerup = null;
     };
   };
 }
@@ -204,31 +212,42 @@ function calMt() {
 // 删除参数
 function removeParam(index) {
   props.param.params.splice(index, 1);
-  if(props.param.params.length == 0) {
-    emit('removeParam', 0)
+  if (props.param.params.length == 0) {
+    emit("removeParam", 0);
   }
 }
 
 // 删除tempNode中的元素
 function removeTempNode(index) {
   props.param.tempNodes.splice(index, 1);
-  if(props.param.tempNodes.length == 0) {
-    emit('removeTempNode', 0)
+  if (props.param.tempNodes.length == 0) {
+    emit("removeTempNode", 0);
   }
 }
 
 function removeItem() {
-  if (props.param.key) {
-    console.log("removeParam", props.widgetPointer);
-    emit("removeParam", props.widgetPointer);
-  } else {
-    console.log("removeTempNode", props.widgetPointer);
-    emit("removeTempNode", props.widgetPointer);
+  if (props.param.key) { 
+    emit("removeParam", props.index);
+  } else { 
+    emit("removeTempNode", props.index);
   }
 }
 
+function updateParam(index) {
+  props.param.params.push(props.param.tempNodes.splice(index, 1)[0]);
+}
+
+// function emitUpdate(index) {
+//   setTimeout(() => {
+//     console.log('update')
+//     if (props.param.key && props.param.key) {
+//       emit("updateParam", index);
+//     }
+//   }, 1000);
+// }
+
 onMounted(() => {
-  // console.log('param', props.param) 
+  // console.log('param', props.param)
 });
 </script>
 
@@ -247,27 +266,29 @@ onMounted(() => {
       @click.stop="showBtn"
     >
       <div
-        :class="['label', param.params || param.tempNodes ? 'primLabel' : '']" 
+        :class="['label', param.params || param.tempNodes ? 'primLabel' : '']"
         @click.stop="showBtn"
       >
         <div
           :class="{ hideOverText: param.key }"
-          v-if="param.key "
-          :id="param.key "
+          v-if="!param.params && !param.keyFinished "
+          :id="param.key"
           @pointerdown.stop="swipeStart"
           @click.stop="showBtn"
         >
-          {{ param.key  }}
-          <!-- <addButton v-if="param.canAddKeyValue" :object="param" /> -->
-        </div>
-        <div v-else>
           <el-input
             v-model="param.key"
+            autocomplete="new-password"
+            @blur="finish('key')"
             :placeholder="
               param.hasOwnProperty('tempNodes') ? '请输入参数名' : '请输入键名'
             "
-            @change="updateNode"
           ></el-input>
+
+          <!-- <addButton v-if="param.canAddKeyValue" :object="param" /> -->
+        </div>
+        <div v-else>
+          {{ param.key }}
         </div>
         <div
           class="btnWrapper"
@@ -291,12 +312,12 @@ onMounted(() => {
         <div class="widget" v-if="param.type == 'switch'">
           <el-switch v-model="param.value" @change="update"></el-switch>
         </div>
-        <div class="widget" v-if="param.type == 'input'">
+        <div class="widget" v-if="param.type == 'input'" autocomplete="new-password">
           <el-input
             placeholder="请输入值"
             v-model="param.value"
-            @change="update"
             :readonly="readOnly"
+            @blur="finish('value')"
           >
             <template #append>
               <el-icon @click="copyToClipboard(param.value)"
@@ -306,7 +327,7 @@ onMounted(() => {
           </el-input>
         </div>
         <div class="widget" v-if="param.type == 'select'">
-          <el-select v-model="param.value" @change="update" style="width: 100%">
+          <el-select v-model="param.value" @change="update" autocomplete="new-password" style="width: 100%">
             <el-option
               :label="item"
               :value="item"
@@ -328,9 +349,9 @@ onMounted(() => {
         <widget
           v-for="(secParam, index) in param.params"
           :key="index"
-          :param="secParam" 
+          :param="secParam"
           :layer="layer + 1"
-          :widgetPointer="index"
+          :index="index"
           @removeParam="removeParam"
           @removeTempNode="removeTempNode"
         />
@@ -341,7 +362,7 @@ onMounted(() => {
           :key="index"
           :param="node"
           :layer="layer + 1"
-          :widgetPointer="index"
+          :index="index"
           @removeParam="removeParam"
           @removeTempNode="removeTempNode"
         />
@@ -351,5 +372,4 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-
 </style>

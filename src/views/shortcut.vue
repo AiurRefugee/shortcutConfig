@@ -15,8 +15,7 @@ function runShortCut(name) {
 
 // 删除
 function removeParam(index) { 
-  props.shortcut.params.splice(index, 1); 
-  console.log(props.shortcut.params.length - 1, index)
+  props.shortcut.params.splice(index, 1);  
   if( props.shortcut.params.length == 0 ) {
     emit('removeShortcut', props.pointer)
   }
@@ -30,6 +29,9 @@ function removeTempNode(index) {
   }
 }
  
+function updateParam(index) {
+  props.shortcut.params.push(props.shortcut.tempNodes.splice(index, 1)[0])
+}
 
 
 onMounted(() => {
@@ -59,6 +61,7 @@ onMounted(() => {
         :layer="0"
         @removeParam="removeParam"
         @removeTempNode="removeTempNode"
+        @updateParam="updateParam"
       />
 
       <div v-if="shortcut.canAddKeyValue && shortcut.tempNodes">
@@ -69,6 +72,7 @@ onMounted(() => {
           :index="index"
           @removeParam="removeParam"
           @removeTempNode="removeTempNode"
+          @updateParam="updateParam"
         />
       </div>
     </div>
@@ -80,35 +84,5 @@ onMounted(() => {
   </div>
 </template>
 <style lang="scss" scoped>
-::-webkit-scrollbar {
-  display: none;
-}
-.el-input-group__append {
-  padding: 0 10px;
-}
-.title {
-  height: 8vh;
-  display: flex;
-  // justify-content: space-between;
-  align-items: center;
-  .exec {
-    height: 50%;
-    width: 15%;
-    color: lightgray;
-    display: flex;
-    justify-content: center;
-  }
-}
-.list {
-  // min-width: 25vw;
-  // max-width: 25vw;
-  padding: 1% 2%;
-  margin: 2%;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  overflow-x: hidden;
-  border-radius: var(--radius-lg);
-  box-shadow: 0 0 15px 10px #858181d1;
-}
+
 </style>

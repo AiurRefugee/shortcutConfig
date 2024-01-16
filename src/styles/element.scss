@@ -6,7 +6,8 @@
     padding: 0 10px !important;
     margin-right: 5px;
 }
-.el-popover, .el-button {
+.el-popover,
+.el-button {
     border-radius: var(--radius-base) !important;
 }
 .el-input__wrapper {
@@ -17,3 +18,6 @@
 // [class*="el-input"] {
 //     width: 100% !important;
 // }
+.el-input-group__append {
+    padding: 0 10px;
+}
