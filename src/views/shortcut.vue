@@ -24,8 +24,8 @@ function removeParam(index) {
 
 // 删除tempNode中的元素
 function removeTempNode(index) {
-  props.param.tempNodes.splice(index, 1);
-  if(props.param.tempNodes.length == 0) {
+  props.shortcut.tempNodes.splice(index, 1);
+  if(props.shortcut.tempNodes.length == 0) {
     emit('removeShortcut', 0)
   }
 }
@@ -49,7 +49,7 @@ onMounted(() => {
       </div>
     </div>
     <!-- 外层参数-->
-    <div class="wrapper" :id="shortcutName" style="margin-bottom: 1vh; max-height: 80vh;">
+    <div class="wrapper" :id="shortcutName" style="margin-bottom: 2vh; max-height: 80vh;">
       <widget
         v-for="(param, index) in shortcut.params"
         :key="index"
