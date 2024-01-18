@@ -27,8 +27,7 @@ function updateNode() {
 }
 
 function finish() { 
-  if(props.param.key) {
-    console.log(props.index)
+  if(props.param.key) { 
     props.param.keyFinished = true
     emit("updateNode", props.index)
     $bus.emit('update')

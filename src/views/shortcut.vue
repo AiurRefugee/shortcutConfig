@@ -17,8 +17,7 @@ function runShortCut(name) {
 const thisShortcut = ref();
 
 // 删除参数
-function removeParam(index) {
-  console.log(props.shortcut.params)
+function removeParam(index) { 
   props.shortcut.params.splice(index, 1);
   if (!props.shortcut.canAddKeyValue && !props.shortcut.canAddSecParam) {
     if (props.shortcut.params && props.shortcut.params.length == 0) {
