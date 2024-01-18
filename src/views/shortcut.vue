@@ -18,14 +18,13 @@ const thisShortcut = ref();
 
 // 删除参数
 function removeParam(index) {
+  console.log(props.shortcut.params)
   props.shortcut.params.splice(index, 1);
   if (!props.shortcut.canAddKeyValue && !props.shortcut.canAddSecParam) {
     if (props.shortcut.params && props.shortcut.params.length == 0) {
-      removeShortCut();
+      removeShortCut(); 
     }
-    if (!props.shortcut.tempNodes || props.shortcut.tempNodes.length == 0) {
-      removeShortCut();
-    }
+     
   }
 }
 
@@ -37,10 +36,7 @@ function removeShortCut() {
 // 删除tempNode中的元素
 function removeTempNode(index) {
   props.shortcut.tempNodes.splice(index, 1);
-  if (!props.shortcut.canAddKeyValue && !props.shortcut.canAddSecParam) {
-    if (props.shortcut.params && props.shortcut.params.length == 0) {
-      removeShortCut();
-    }
+  if (!props.shortcut.canAddKeyValue && !props.shortcut.canAddSecParam) { 
     if (!props.shortcut.tempNodes || props.shortcut.tempNodes.length == 0) {
       removeShortCut();
     }
@@ -51,9 +47,9 @@ function updateNode(index) {
   props.shortcut.params.push(props.shortcut.tempNodes.splice(index, 1)[0]);
 }
 
-function toggleRemove(e) { 
-  if(e.target.tagName == 'INPUT') return
-  const btn = thisShortcut.value.querySelector(".shortcutBtn"); 
+function toggleRemove(e) {
+  if (e.target.tagName == "INPUT") return;
+  const btn = thisShortcut.value.querySelector(".shortcutBtn");
   if (!btn) return;
   Array.from(document.getElementsByClassName("shortcutBtn")).forEach((btn) => {
     if (btn !== e.target) {
@@ -90,24 +86,22 @@ onMounted(() => {});
 <template>
   <div class="list" ref="thisShortcut">
     <div class="title">
-      <div class="titleH" @click="toggleRemove">
-        <div v-if="shortcut.nameFinished">
-          <h2>{{ shortcut.shortcutName }}</h2>
-          <div
-            class="exec"
-            v-if="shortcut.executable"
-            @click="runShortCut(shortcut.shortcutName)"
-          >
-            <Share />
-          </div>
+      <div class="titleH" @click="toggleRemove" v-if="shortcut.nameFinished">
+        <h2>{{ shortcut.shortcutName }}</h2>
+        <div
+          class="exec"
+          v-if="shortcut.executable"
+          @click="runShortCut(shortcut.shortcutName)"
+        >
+          <Share />
         </div>
-        <div v-else>
-          <el-input
-            v-model="shortcut.shortcutName"
-            placeholder=""
-            @blur="finish"
-          ></el-input>
-        </div>
+      </div>
+      <div v-else>
+        <el-input
+          v-model="shortcut.shortcutName"
+          placeholder=""
+          @blur="finish"
+        ></el-input>
       </div>
       <div class="shortcutBtn">
         <el-button type="danger" @click="removeShortCut">删除</el-button>

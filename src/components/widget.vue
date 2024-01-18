@@ -118,8 +118,7 @@ function swipeStart(e) {
   const listItem = findItem(e.target, "listItem", 3);
   if (!listItem || e.target.tagName === "BUTTON") {
     return false;
-  }
-  // document.getElementById("app").style.overflow = "hidden";
+  } 
   const removeButton = findSiblingsWithClass(listItem, "btn")[0];
   if (!removeButton) {
     return false;
@@ -153,8 +152,7 @@ function swipeStart(e) {
 
     document.onpointerup = (e) => { 
       console.log('up')
-      document.getElementById('appContainer').style.overflow = 'auto'
-      // listItem.style["max-width"] = width + "px";
+      document.getElementById('appContainer').style.overflow = 'auto' 
       listItem.style.overflow = "hidden"; 
       document.onpointermove = null;
       document.onpointerup = null;
@@ -184,16 +182,33 @@ function calMt() {
 
 // 删除参数
 function removeParam(index) {
-  props.param.params.splice(index, 1); 
+  console.log('l', props.param)
+  props.param.params.splice(index, 1);  
+  if (!props.param.canAddKeyValue && !props.param.canAddSecParam) {
+    if (props.param.params && props.param.params.length == 0) {
+      removeItem() 
+    } 
+  }
 }
 
 // 删除tempNode中的元素
-function removeTempNode(index) {
-  console.log(index)
-  props.param.tempNodes.splice(index, 1); 
+function removeTempNode(index) { 
+  props.param.tempNodes.splice(index, 1);  
+  if (!props.param.canAddKeyValue && !props.param.canAddSecParam) {
+    if (props.param.params && props.param.params.length == 0) {
+      removeItem()
+      return
+    }
+    if (!props.param.tempNodes || props.param.tempNodes.length == 0) {
+      removeItem()
+    }
+  }
 }
 
-function removeItem() {
+function removeItem(e) {
+  // const listItem = findItem(e.target, "list-item", 3)
+  document.getElementById('appContainer').style.overflow = 'auto' 
+    // listItem.style.overflow = "hidden"; 
   if (props.param.key) { 
     emit("removeParam", props.index);
   } else { 
