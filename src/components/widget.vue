@@ -1,12 +1,14 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { useEventListener } from "@vueuse/core";
 import gsap from "gsap";
-import { copyToClipboard, adding, calHeight } from "@/utils/util.js";
+import { copyToClipboard, findItem } from "@/utils/util.js";
 import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 
 import widget from "@/components/widget.vue";
 import addButton from "@/components/addButton.vue";
+
+const $bus = inject("$bus")
 const removeWidth = 80;
 const threshold = removeWidth * 8;
 
@@ -14,23 +16,31 @@ const props = defineProps(["param", "readOnly", "index", "layer"]);
 const emit = defineEmits([
   "updateNode",
   "removeParam",
-  "removeTempNode",
-  "updateParam",
+  "removeTempNode", 
+  "index"
 ]);
  
+const timeout = null
 
-function finish(type) {
-  if(type == 'key' && props.param.key) {
-    props.param.keyFinished = true;
-  }  
-  if(props.param.keyFinished) {
+function updateNode() {
+  props.param.params.push(props.param.tempNodes.splice(index, 1)[0])
+}
+
+function finish() { 
+  if(props.param.key) {
+    console.log(props.index)
+    props.param.keyFinished = true
     emit("updateNode", props.index)
+    $bus.emit('update')
   }
 } 
 
-function updateNode() {}
+function update(val) { 
+  $bus.emit('update')
+}
 
 function showBtn(e) {
+  cancelMove()
   const btnWrapper = findItem(e.target, "btnWrapper", 3);
   if (btnWrapper) {
     if (!btnWrapper.clientWidth) {
@@ -64,7 +74,7 @@ function resizeToHide(btn) {
   gsap.to(btn, {
     duration: 0.6,
     width: 0,
-    paddingRight: "0px",
+    // paddingRight: "0px",
     ease: "power1.inOut",
   });
 }
@@ -81,7 +91,7 @@ function resizeToFull(btn) {
   gsap.to(btn, {
     duration: 0.6,
     width: removeWidth,
-    paddingRight: "10px",
+    // paddingRight: "10px",
     ease: "power1.inOut",
   });
   gsap.to(listItem, {
@@ -96,42 +106,11 @@ function findSiblingsWithClass(element, className) {
   return siblings.filter((sibling) => sibling.classList.contains(className));
 }
 
-// 查找节点
-function findItem(element, className, depth) {
-  if (!element || depth === 0) {
-    return;
-  }
-
-  if (element && element.classList.contains(className)) {
-    return element;
-  }
-
-  // 查找子节点中具有指定类名的节点
-  const children = Array.from(element.children);
-  if (children) {
-    for (const child of children) {
-      const target = findItem(child, className, depth - 1);
-      if (target && target.classList.contains(className)) {
-        return target;
-      }
-    }
-  }
-
-  // 查找兄弟节点中具有指定类名的节点
-  let sibling = element.nextElementSibling;
-  while (sibling) {
-    if (sibling.classList.contains(className)) {
-      // 可以在这里进行相关操作，如返回该节点或执行其他逻辑
-      return sibling;
-    }
-    sibling = sibling.nextElementSibling;
-  }
-
-  // 递归向上查找父节点的兄弟节点中具有指定类名的节点
-  return findItem(element.parentElement, className, depth - 1);
+function cancelMove() {
+  document.onpointermove = null
 }
 
-function swipeStart(e) {
+function swipeStart(e) { 
   let swipeWidth = 0;
   let startX = e.screenX;
   console.log('down', e)
@@ -147,47 +126,41 @@ function swipeStart(e) {
   }
   const width = removeButton.clientWidth; 
   for (const btn of document.getElementsByClassName("btn")) {
+    document.getElementById('appContainer').style.overflow = 'hidden'
     if (btn != removeButton) {
       resizeToHide(btn);
     }
   }
   document.onpointermove = (e) => {
+    e.preventDefault(); 
     if(!e.isPrimary) return
     swipeWidth = Math.abs(startX - e.screenX);
     if (width < 10) {
       removeButton.style.width =
         Math.min(Math.max(startX - e.screenX, 0), threshold) + "px";
       listItem.scrollLeft = listItem.scrollWidth;
-      removeButton.style["padding-right"] =
-        Math.max(Math.min(startX - e.screenX, 20)) + "px";
+      // removeButton.style["padding-right"] =
+      //   Math.max(Math.min(startX - e.screenX, 20)) + "px";
     } else {
       removeButton.style.width =
         Math.max(Math.min(removeWidth + startX - e.screenX, threshold), 0) +
         "px";
-      removeButton.style["padding-right"] =
-        Math.max(Math.min(10 + startX - e.screenX, 10 * 1.5), 0) + "px";
+      // removeButton.style["padding-right"] =
+      //   Math.max(Math.min(10 + startX - e.screenX, 10 * 1.5), 0) + "px";
 
       listItem.scrollLeft = listItem.scrollWidth;
     }
 
     document.onpointerup = (e) => { 
       console.log('up')
+      document.getElementById('appContainer').style.overflow = 'auto'
       // listItem.style["max-width"] = width + "px";
-      listItem.style.overflow = "hidden";
-      // document.getElementsByClassName("appContainer")[0].style.overflow =
-      //   "auto";
-      // Array.from(document.getElementsByClassName("wrapper")).forEach((item) => {
-      //   item.style.overflow = "auto";
-      // });
+      listItem.style.overflow = "hidden"; 
       document.onpointermove = null;
       document.onpointerup = null;
       if (swipeWidth < 5) {
         return false;
-      }
-      // if(swipeWidth > listItem.clientWidth * 0.8) {
-      //   removeItem()
-      //   return false;
-      // }
+      } 
       if (removeButton.clientWidth > removeWidth * 0.5) {
         resizeToFull(removeButton); 
       } else {
@@ -211,18 +184,13 @@ function calMt() {
 
 // 删除参数
 function removeParam(index) {
-  props.param.params.splice(index, 1);
-  if (props.param.params.length == 0) {
-    emit("removeParam", 0);
-  }
+  props.param.params.splice(index, 1); 
 }
 
 // 删除tempNode中的元素
 function removeTempNode(index) {
-  props.param.tempNodes.splice(index, 1);
-  if (props.param.tempNodes.length == 0) {
-    emit("removeTempNode", 0);
-  }
+  console.log(index)
+  props.param.tempNodes.splice(index, 1); 
 }
 
 function removeItem() {
@@ -236,23 +204,13 @@ function removeItem() {
 function updateParam(index) {
   props.param.params.push(props.param.tempNodes.splice(index, 1)[0]);
 }
-
-// function emitUpdate(index) {
-//   setTimeout(() => {
-//     console.log('update')
-//     if (props.param.key && props.param.key) {
-//       emit("updateParam", index);
-//     }
-//   }, 1000);
-// }
-
-onMounted(() => {
-  // console.log('param', props.param)
+ 
+onMounted(() => { 
 });
 </script>
 
 <template>
-  <div class="listItemWrapper">
+  <div class="listItemWrapper" :id="param.key">
     <div
       :class="[
         'listItem',
@@ -263,6 +221,7 @@ onMounted(() => {
         paddingBottom: (layer && param.params) || param.tempNodes ? '0' : '',
       }"
       @pointerdown="swipeStart"
+      @click="cancelMove"
       @click.stop="showBtn"
     >
       <div
@@ -279,7 +238,7 @@ onMounted(() => {
           <el-input
             v-model="param.key"
             autocomplete="new-password"
-            @blur="finish('key')"
+            @blur="finish"
             :placeholder="
               param.hasOwnProperty('tempNodes') ? '请输入参数名' : '请输入键名'
             "
@@ -317,7 +276,7 @@ onMounted(() => {
             placeholder="请输入值"
             v-model="param.value"
             :readonly="readOnly"
-            @blur="finish('value')"
+            @change="update"
           >
             <template #append>
               <el-icon @click="copyToClipboard(param.value)"

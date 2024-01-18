@@ -1,20 +1,9 @@
 
 
-
-function change(obj) {
-    let res = []
-    for (const [key, value] of Object.entries(obj)) {
-        res.push({
-            key: key,
-            ...value
-        })
-    }
-    console.log(res)
-}
-
 export const shortcutConfig = [
     {
         "shortcutName": "test",
+        "nameFinished": true,
         "canAddKeyValue": true,
         "canAddSecParam": true,
         "params": [
@@ -35,8 +24,7 @@ export const shortcutConfig = [
                     {
                         "key": "",
                         "keyFinished": false,
-                        "canAddKeyValue": true,
-                        "canAddSecParam": true,
+                        "canAddKeyValue": true, 
                         "tempNodes": [
                             {
                                 "key": "",
@@ -44,8 +32,7 @@ export const shortcutConfig = [
                                 "keyFinished": false,
                                 "valFinished": true,
                                 "value": "233",
-                                "canAddKeyValue": true,
-                                "canAddSecParam": true
+                                "canAddKeyValue": true, 
                             }
                         ]
                     }
@@ -55,7 +42,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "每日必应壁纸",
-        "activeValue": "",
+        "nameFinished": true,
         "params": [
             {
                 "key": "是否保存至相册",
@@ -67,7 +54,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "viteConfig",
-        "activeValue": "",
+        "nameFinished": true,
         "params": [
             {
                 "key": "设备",
@@ -101,7 +88,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "微博热搜",
-        "activeValue": "",
+        "nameFinished": true,
         "params": [
             {
                 "key": "列表长度",
@@ -120,10 +107,10 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "获取设备IP",
-        "activeValue": "",
+        "nameFinished": true,
         "params": [
             {
-                "key": "Mac", 
+                "key": "Mac",
                 "params": [
                     {
                         "key": "1001-5G",
@@ -195,7 +182,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "经典永流传",
-        "activeValue": "",
+        "nameFinished": true,
         "executable": true,
         "canAddKeyValue": true,
         "readOnly": true,
@@ -300,7 +287,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "读取哈希表",
-        "activeValue": "",
+        "nameFinished": true,
         "canAddKeyValue": true,
         "canAddSecParam": true,
         "params": [

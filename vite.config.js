@@ -27,11 +27,17 @@ export default defineConfig(
         // 使用 "/api" 作为前缀的请求将被转发到下面的目标
         '/read-file': {
           target: 'http://localhost:3001/read-file', // 目标服务器
+          headers: {
+            "ngrok-skip-browser-warning": true
+          },
           changeOrigin: true, // 需要虚拟主机站点
           rewrite: (path) => path.replace(/^\/read-file/, '') // 重写请求路径
         },
         '/write-file': {
           target: 'http://localhost:3001/write-file', // 目标服务器
+          headers: {
+            "ngrok-skip-browser-warning": true
+          },
           changeOrigin: true, // 需要虚拟主机站点
           rewrite: (path) => path.replace(/^\/write-file/, '') // 重写请求路径
         }

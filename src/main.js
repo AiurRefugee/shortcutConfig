@@ -1,14 +1,17 @@
 import { createApp } from 'vue' 
 import '@/styles/common.scss'
-// import '@/styles/element.scss'
+import '@/styles/element.scss'
 
 import App from './App.vue' 
+ 
+import { EventBus } from "@/utils/util.js"
 
-import VueTouch from "vue-touch";
+const $bus = new EventBus() 
 
 // create Vue app
 const app = createApp(App);
- 
-app.use(VueTouch, { name: 'v-touch' })
+
+app.provide('$bus', $bus)
+
 
 app.mount('#app')

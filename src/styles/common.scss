@@ -6,7 +6,7 @@ div {
     -webkit-tap-highlight-color: transparent;
 }
 html {
-    overflow-x: hidden;
+    overflow: hidden;
     --cellHeight: 4vh;
     --radius-lg: 15px;
     --radius-base: 12px;
@@ -32,13 +32,14 @@ body {
     margin: 0;
 }
 h1 {
-    width: 100%;
+    // width: 100%;
 }
 h1,
 h2,
 h3 {
     // width: 80%;
     color: var(--textColorPrimay);
+    min-width: 10vw;
     padding: 0 2%;
     text-shadow: rgba(133, 129, 129, 0.8196078431) 5px 0px 8px;
 }
@@ -63,20 +64,45 @@ button {
     overflow: auto;
     overflow-x: hidden;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: stretch;
     align-content: flex-start;
     align-items: flex-start;
     background-color: var(--bgColorPrimary);
+}
+.ShortcutConfig {
+    $size: 8vh;
+    width: 100vw;
+    height: $size;
+    display: flex;
+    align-items: center;
+    .addWrapper {
+        $btnSize: calc($size * 0.6);
+        width: $btnSize;
+        height: $btnSize;
+        font-size: $btnSize;
+        line-height: $btnSize;
+        border-radius: 8px;
+    }
 }
 
 .title {
     height: 8vh;
     display: flex;
-    // justify-content: space-between;
+    cursor: pointer;
+    justify-content: space-between; 
     align-items: center;
+    .titleH {
+        display: flex;
+        align-items: center;
+        width: 80%;
+        cursor: pointer;
+    }
+    .shortcutBtn {
+        width: 0;
+        overflow: hidden;
+    }
     .exec {
-        height: 50%;
-        width: 15%;
+        height: 4vh; 
         color: lightgray;
         display: flex;
         justify-content: center;
@@ -87,6 +113,7 @@ button {
     // max-width: 25vw;
     padding: 1% 2%;
     margin: 3vw 5%;
+    min-width: 26vw;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -113,6 +140,10 @@ button {
 //     box-shadow: inset 0px 2px 15px 0px rgba(133, 129, 129, 0.8196078431);
 //     padding: 1%;
 // }
+
+.left {
+    width: 0;
+}
 
 .label {
     display: flex;

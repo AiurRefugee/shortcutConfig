@@ -5,19 +5,6 @@ import gsap from "gsap";
 const props = defineProps(["object", "wrapperName", "addDiretion"]);
 const emit = defineEmits(["addKeyValue"]);
 
-function toBottom(wrapperName) {
-  const wrapper = document.querySelector(`#${wrapperName}`);
-  if (wrapper) {
-    setTimeout(() => {
-      gsap.to(`#${wrapperName}`, {
-        scrollTop: wrapper.scrollHeight,
-        duration: 1,
-        ease: "none",
-      });
-    }, 50);
-  }
-}
-
 function addSecParam(object, wrapperName) { 
   
     if (!object.tempNodes) {
@@ -33,8 +20,7 @@ function addSecParam(object, wrapperName) {
           type: "input",
           key: "",
           keyFinished: false,
-          canAddKeyValue: true,
-          canAddSecParam: true,
+          canAddKeyValue: true, 
           value: ""
         },
       ],
