@@ -91,10 +91,8 @@ button {
     cursor: pointer;
     justify-content: space-between; 
     align-items: center;
-    .titleH {
-        display: flex;
-        align-items: center;
-        width: 80%;
+    .titleH { 
+        width: 100%; 
         cursor: pointer;
     }
     .shortcutBtn {
