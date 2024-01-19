@@ -8,7 +8,7 @@ import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 import widget from "@/components/widget.vue";
 import addButton from "@/components/addButton.vue";
 
-const $bus = inject("$bus")
+const $bus = inject("$bus");
 const removeWidth = 80;
 const threshold = removeWidth * 8;
 
@@ -16,30 +16,41 @@ const props = defineProps(["param", "readOnly", "index", "layer"]);
 const emit = defineEmits([
   "updateNode",
   "removeParam",
-  "removeTempNode", 
-  "index"
+  "removeTempNode",
+  "index",
+  "checkName"
 ]);
- 
-const timeout = null
+
+const timeout = null;
 
 function updateNode() {
-  props.param.params.push(props.param.tempNodes.splice(index, 1)[0])
+  props.param.params.push(props.param.tempNodes.splice(index, 1)[0]);
 }
 
-function finish() { 
-  if(props.param.key) { 
-    props.param.keyFinished = true
-    emit("updateNode", props.index)
-    $bus.emit('update')
+function finish() {
+  let nameRep = false;
+  emit("checkName", props.param.key, (val) => {
+    nameRep = val;
+  }); 
+  console.log(nameRep);
+  document.getElementById("appContainer").style.overflow = "auto";
+  if (nameRep) {
+    ElMessage.error("参数名称重复");
+    return false;
   }
-} 
+  if (props.param.key) {
+    props.param.keyFinished = true;
+    emit("updateNode", props.index);
+    $bus.emit("update");
+  }
+}
 
-function update(val) { 
-  $bus.emit('update')
+function update(val) {
+  $bus.emit("update");
 }
 
 function showBtn(e) {
-  cancelMove()
+  cancelMove();
   const btnWrapper = findItem(e.target, "btnWrapper", 3);
   if (btnWrapper) {
     if (!btnWrapper.clientWidth) {
@@ -106,32 +117,32 @@ function findSiblingsWithClass(element, className) {
 }
 
 function cancelMove() {
-  document.onpointermove = null
+  document.onpointermove = null;
 }
 
-function swipeStart(e) { 
+function swipeStart(e) {
   let swipeWidth = 0;
   let startX = e.screenX;
-  console.log('down', e)
+  console.log("down", e);
 
   const listItem = findItem(e.target, "listItem", 3);
   if (!listItem || e.target.tagName === "BUTTON") {
     return false;
-  } 
+  }
   const removeButton = findSiblingsWithClass(listItem, "btn")[0];
   if (!removeButton) {
     return false;
   }
-  const width = removeButton.clientWidth; 
+  const width = removeButton.clientWidth;
   for (const btn of document.getElementsByClassName("btn")) {
-    document.getElementById('appContainer').style.overflow = 'hidden'
+    document.getElementById("appContainer").style.overflow = "hidden";
     if (btn != removeButton) {
       resizeToHide(btn);
     }
   }
   document.onpointermove = (e) => {
-    e.preventDefault(); 
-    if(!e.isPrimary) return
+    e.preventDefault();
+    if (!e.isPrimary) return;
     swipeWidth = Math.abs(startX - e.screenX);
     if (width < 10) {
       removeButton.style.width =
@@ -149,19 +160,19 @@ function swipeStart(e) {
       listItem.scrollLeft = listItem.scrollWidth;
     }
 
-    document.onpointerup = (e) => { 
-      console.log('up')
-      document.getElementById('appContainer').style.overflow = 'auto' 
-      listItem.style.overflow = "hidden"; 
+    document.onpointerup = (e) => {
+      console.log("up");
+      document.getElementById("appContainer").style.overflow = "auto";
+      listItem.style.overflow = "hidden";
       document.onpointermove = null;
       document.onpointerup = null;
       if (swipeWidth < 5) {
         return false;
-      } 
+      }
       if (removeButton.clientWidth > removeWidth * 0.5) {
-        resizeToFull(removeButton); 
+        resizeToFull(removeButton);
       } else {
-        resizeToHide(removeButton); 
+        resizeToHide(removeButton);
       }
     };
   };
@@ -181,36 +192,36 @@ function calMt() {
 
 // 删除参数
 function removeParam(index) {
-  console.log('l', props.param)
-  props.param.params.splice(index, 1);  
+  console.log("l", props.param);
+  props.param.params.splice(index, 1);
   if (!props.param.canAddKeyValue && !props.param.canAddSecParam) {
     if (props.param.params && props.param.params.length == 0) {
-      removeItem() 
-    } 
+      removeItem();
+    }
   }
 }
 
 // 删除tempNode中的元素
-function removeTempNode(index) { 
-  props.param.tempNodes.splice(index, 1);  
+function removeTempNode(index) {
+  props.param.tempNodes.splice(index, 1);
   if (!props.param.canAddKeyValue && !props.param.canAddSecParam) {
     if (props.param.params && props.param.params.length == 0) {
-      removeItem()
-      return
+      removeItem();
+      return;
     }
     if (!props.param.tempNodes || props.param.tempNodes.length == 0) {
-      removeItem()
+      removeItem();
     }
   }
 }
 
 function removeItem(e) {
   // const listItem = findItem(e.target, "list-item", 3)
-  document.getElementById('appContainer').style.overflow = 'auto' 
-    // listItem.style.overflow = "hidden"; 
-  if (props.param.key) { 
+  document.getElementById("appContainer").style.overflow = "auto";
+  // listItem.style.overflow = "hidden";
+  if (props.param.key) {
     emit("removeParam", props.index);
-  } else { 
+  } else {
     emit("removeTempNode", props.index);
   }
 }
@@ -218,9 +229,13 @@ function removeItem(e) {
 function updateParam(index) {
   props.param.params.push(props.param.tempNodes.splice(index, 1)[0]);
 }
- 
-onMounted(() => { 
-});
+
+// 检查名称重复
+function checkName(name, callBack) {
+  callBack(props.param.params.filter(item => item.key == name).length > 0)
+}
+
+onMounted(() => {});
 </script>
 
 <template>
@@ -244,7 +259,7 @@ onMounted(() => {
       >
         <div
           :class="{ hideOverText: param.key }"
-          v-if="!param.params && !param.keyFinished "
+          v-if="!param.params && !param.keyFinished"
           :id="param.key"
           @pointerdown.stop="swipeStart"
           @click.stop="showBtn"
@@ -285,7 +300,11 @@ onMounted(() => {
         <div class="widget" v-if="param.type == 'switch'">
           <el-switch v-model="param.value" @change="update"></el-switch>
         </div>
-        <div class="widget" v-if="param.type == 'input'" autocomplete="new-password">
+        <div
+          class="widget"
+          v-if="param.type == 'input'"
+          autocomplete="new-password"
+        >
           <el-input
             placeholder="请输入值"
             v-model="param.value"
@@ -300,7 +319,12 @@ onMounted(() => {
           </el-input>
         </div>
         <div class="widget" v-if="param.type == 'select'">
-          <el-select v-model="param.value" @change="update" autocomplete="new-password" style="width: 100%">
+          <el-select
+            v-model="param.value"
+            @change="update"
+            autocomplete="new-password"
+            style="width: 100%"
+          >
             <el-option
               :label="item"
               :value="item"

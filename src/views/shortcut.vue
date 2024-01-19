@@ -6,9 +6,10 @@ import addButton from "@/components/addButton.vue";
 import { calHeight } from "../utils/util";
 
 import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
+import { ElMessage } from "element-plus";
 
 const props = defineProps(["shortcut", "index", "pointer"]);
-const emit = defineEmits(["removeShortcut"]);
+const emit = defineEmits(["removeShortcut", "checkName"]);
 
 function runShortCut(name) {
   window.open(`shortcuts://run-shortcut?name=${name}&input=clipboard`);
@@ -48,7 +49,7 @@ function updateNode(index) {
 
 function toggleRemove(e) {
   if (e.target.tagName == "INPUT") return;
-  const btn = thisShortcut.value.querySelector(".shortcutBtn");
+  const btn = thisShortcut.value && thisShortcut.value.querySelector(".shortcutBtn");
   if (!btn) return;
   Array.from(document.getElementsByClassName("shortcutBtn")).forEach((btn) => {
     if (btn !== e.target) {
@@ -75,17 +76,29 @@ function toggleRemove(e) {
 }
 
 function finish() {
+  let nameRep = false
+  emit('checkName', props.shortcut.shortcutName, val => {nameRep = val})
+  console.log(nameRep)
+  if(nameRep) {
+    ElMessage.error('快捷指令名称重复');
+    return false
+  }
   if (props.shortcut.shortcutName) {
     props.shortcut.nameFinished = true;
   }
+}
+
+// 检查名称重复
+function checkName(name, callBack) {
+  callBack(props.shortcut.params.filter(item => item.key == name).length > 0)
 }
 
 onMounted(() => {});
 </script>
 <template>
   <div class="list" ref="thisShortcut">
-    <div class="title">
-      <div class="titleH" @click="toggleRemove" v-if="shortcut.nameFinished">
+    <div class="title" @click="toggleRemove">
+      <div class="titleH" v-if="shortcut.nameFinished">
         <h2>{{ shortcut.shortcutName }}</h2>
         <div
           class="exec"
@@ -99,7 +112,7 @@ onMounted(() => {});
         <el-input
           v-model="shortcut.shortcutName"
           placeholder=""
-          @blur="finish"
+          @change="finish"
         ></el-input>
       </div>
       <div class="shortcutBtn">
@@ -120,6 +133,7 @@ onMounted(() => {});
         :param="param"
         :index="index"
         :layer="0"
+        @checkName="checkName"
         @removeParam="removeParam"
         @removeTempNode="removeTempNode"
         @updateNode="updateNode"
@@ -132,6 +146,7 @@ onMounted(() => {});
           :param="keyValue"
           :index="index"
           :layer="0"
+          @checkName="checkName"
           @removeParam="removeParam"
           @removeTempNode="removeTempNode"
           @updateNode="updateNode"

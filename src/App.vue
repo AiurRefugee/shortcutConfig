@@ -1,12 +1,12 @@
 <script setup>
 import { ref, onMounted, provide, inject } from "vue";
-import axios from "axios"; 
-import { CirclePlusFilled} from "@element-plus/icons-vue";
+import axios from "axios";
+import { CirclePlusFilled } from "@element-plus/icons-vue";
 
-import { shortcutConfig } from '@/assets/shortcutConfig'
+import { shortcutConfig } from "@/assets/shortcutConfig";
 
 // components
-import shortcut from "@/views/shortcut.vue"; 
+import shortcut from "@/views/shortcut.vue";
 
 const port = 5173;
 const lgUrl = `http://localhost:${port}`;
@@ -42,11 +42,10 @@ function removeShortcut(index) {
   ShortcutConfig.value.splice(index, 1);
 }
 
-function update() { 
+function update() {
   axios
     .post(lgUrl + "/write-file", ShortcutConfig.value)
-    .then(function (response) {
-    })
+    .then(function (response) {})
     .catch((error) => {
       ElMessage({
         type: "error",
@@ -62,58 +61,35 @@ function addShortcut() {
     tempNodes: [],
     nameFinished: false,
     canAddKeyValue: true,
-    canAddSecParam: true
+    canAddSecParam: true,
   });
 }
 
-onMounted(() => { 
-      shortcutConfig.map((item) => sizes.push(calSize(item)));
+// 检查名称重复
+function checkName(name, callBack) {
+  callBack(ShortcutConfig.value.filter(item => item.shortcutName == name).length > 1)
+}
 
-      indexedArray = shortcutConfig.map((value, index) => ({
-        value: calSize(value),
-        index,
-      }));
+onMounted(() => {
+  shortcutConfig.map((item) => sizes.push(calSize(item)));
 
-      indexedArray.sort((a, b) => a.value - b.value);
+  indexedArray = shortcutConfig.map((value, index) => ({
+    value: calSize(value),
+    index,
+  }));
 
-      ShortcutConfig.value = indexedArray.map(
-        (item) => shortcutConfig[item.index]
-      ); 
-  // axios({
-  //   method: "get",
-  //   url: lgUrl + "/read-file",
-  //   responseType: "stream",
-  // })
-  //   .then(function (response) { 
-  //     // let shortcutConfig = JSON.parse(response.data)
-  //     // shortcutConfig.map((item) => sizes.push(calSize(item)));
+  indexedArray.sort((a, b) => a.value - b.value);
 
-  //     // indexedArray = shortcutConfig.map((value, index) => ({
-  //     //   value: calSize(value),
-  //     //   index,
-  //     // }));
-
-  //     // indexedArray.sort((a, b) => a.value - b.value);
-
-  //     // ShortcutConfig.value = indexedArray.map(
-  //     //   (item) => shortcutConfig[item.index]
-  //     // ); 
-  //   })
-  //   .catch((error) => {
-  //     ElMessage({
-  //       type: "error",
-  //       message: error,
-  //     });
-  //   });
+  ShortcutConfig.value = indexedArray.map((item) => shortcutConfig[item.index]);
 });
 </script>
 <template>
   <div class="appContainer" id="appContainer">
     <div class="ShortcutConfig">
       <h1>ShortcutConfig</h1>
-    <div class="addWrapper">
-      <el-icon @click="addShortcut"><CirclePlusFilled /></el-icon> 
-    </div> 
+      <div class="addWrapper">
+        <el-icon @click="addShortcut"><CirclePlusFilled /></el-icon>
+      </div>
     </div>
     <shortcut
       v-for="(shortcut, index) in ShortcutConfig"
@@ -122,12 +98,12 @@ onMounted(() => {
       :index="index"
       :shortcutName="shortcut.shortcutName"
       @removeShortcut="removeShortcut"
-    /> 
+      @checkName="checkName"
+    />
   </div>
 </template>
 <style lang="scss" scoped>
 button {
   height: var(--cellHeight);
-} 
-
+}
 </style>

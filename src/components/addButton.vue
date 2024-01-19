@@ -13,8 +13,7 @@ function addSecParam(object, wrapperName) {
     object.tempNodes.push({
       key: "",
       keyFinished: false,
-      canAddKeyValue: true,
-      canAddSecParam: true,
+      canAddKeyValue: true, 
       tempNodes: [
         {
           type: "input",
