@@ -1,46 +1,51 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import { copyToClipboard, adding } from "@/utils/util.js";
 import gsap from "gsap";
 const props = defineProps(["object", "wrapperName", "addDiretion"]);
+const $bus = inject("$bus");
 const emit = defineEmits(["addKeyValue"]);
 
-function addSecParam(object, wrapperName) { 
-  
-    if (!object.tempNodes) {
-      object.tempNodes = []
-    }
-    object.tempNodes.push({
-      key: "",
-      keyFinished: false,
-      canAddKeyValue: true, 
-      tempNodes: [
+function addSecParam(object, wrapperName) {
+  if (!object.tempNodes) {
+    object.tempNodes = [];
+  }
+  object.tempNodes.push({
+    key: "",
+    keyFinished: false,
+    canAddKeyValue: true,
+    tempNodes: [
+      {
+        type: "input",
+        key: "",
+        keyFinished: false,
+        canAddKeyValue: true,
+        value: "",
+      },
+    ],
+  });
+  // toBottom(wrapperName);
+  if (wrapperName) {
+    const wrapper = document.getElementById(wrapperName);
+    setTimeout(() => {
+      gsap.to(
+        wrapper,
         {
-          type: "input",
-          key: "",
-          keyFinished: false,
-          canAddKeyValue: true, 
-          value: ""
-        },
-      ],
-    });
-    // toBottom(wrapperName); 
-    if(wrapperName) { 
-      const wrapper = document.getElementById(wrapperName) 
-      setTimeout(() => {
-        gsap.to(wrapper, {
           scrollTop: wrapper.scrollHeight,
           duration: 0.5,
-          ease: 'power1.inOut'
-        }, 100)
-      })
-    } 
+          ease: "power1.inOut",
+        },
+        100
+      );
+    });
+  }
+  $bus.emit("update");
 }
 
 function addKeyValue(object, wrapperName) {
   if (object.canAddKeyValue) {
     if (!object.tempNodes) {
-      object.tempNodes = []
+      object.tempNodes = [];
     }
 
     if (props.addDiretion == "btt") {
@@ -59,9 +64,10 @@ function addKeyValue(object, wrapperName) {
         type: "input",
         key: "",
         value: "",
-      }); 
+      });
     }
   }
+  $bus.emit("update");
 }
 onMounted(() => {
   // console.log("wrapperName", props.object.canAddKeyValue);
@@ -110,5 +116,5 @@ onMounted(() => {
     >
   </div>
 </template>
-<style lang="scss" scoped> 
+<style lang="scss" scoped>
 </style>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, inject } from "vue";
 import gsap from "gsap";
 import widget from "@/components/widget.vue";
 import addButton from "@/components/addButton.vue";
@@ -15,6 +15,7 @@ function runShortCut(name) {
   window.open(`shortcuts://run-shortcut?name=${name}&input=clipboard`);
 }
 
+const $bus = inject("$bus");
 const thisShortcut = ref();
 
 // 删除参数
@@ -30,7 +31,7 @@ function removeParam(index) {
 
 // 删除shortcut
 function removeShortCut() {
-  emit("removeShortcut", props.index);
+  emit("removeShortcut", props.index); 
 }
 
 // 删除tempNode中的元素
@@ -49,6 +50,7 @@ function updateNode(index) {
 
 function toggleRemove(e) {
   if (e.target.tagName == "INPUT") return;
+  if(Array.from(e.target.classList).filter(item => item.includes('el')).length) return
   const btn = thisShortcut.value && thisShortcut.value.querySelector(".shortcutBtn");
   if (!btn) return;
   Array.from(document.getElementsByClassName("shortcutBtn")).forEach((btn) => {
@@ -86,6 +88,7 @@ function finish() {
   if (props.shortcut.shortcutName) {
     props.shortcut.nameFinished = true;
   }
+  $bus.emit("update");
 }
 
 // 检查名称重复

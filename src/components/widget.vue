@@ -191,8 +191,7 @@ function calMt() {
 }
 
 // 删除参数
-function removeParam(index) {
-  console.log("l", props.param);
+function removeParam(index) { 
   props.param.params.splice(index, 1);
   if (!props.param.canAddKeyValue && !props.param.canAddSecParam) {
     if (props.param.params && props.param.params.length == 0) {
@@ -224,6 +223,7 @@ function removeItem(e) {
   } else {
     emit("removeTempNode", props.index);
   }
+  update()
 }
 
 function updateParam(index) {

@@ -3,7 +3,7 @@ import { ref, onMounted, provide, inject } from "vue";
 import axios from "axios";
 import { CirclePlusFilled } from "@element-plus/icons-vue";
 
-import { shortcutConfig } from "@/assets/shortcutConfig";
+// import { shortcutConfig } from "@/assets/shortcutConfig";
 
 // components
 import shortcut from "@/views/shortcut.vue";
@@ -40,6 +40,7 @@ function calSize(obj) {
 
 function removeShortcut(index) {
   ShortcutConfig.value.splice(index, 1);
+  update();
 }
 
 function update() {
@@ -63,24 +64,53 @@ function addShortcut() {
     canAddKeyValue: true,
     canAddSecParam: true,
   });
+  update();
 }
 
 // 检查名称重复
 function checkName(name, callBack) {
-  callBack(ShortcutConfig.value.filter(item => item.shortcutName == name).length > 1)
+  callBack(
+    ShortcutConfig.value.filter((item) => item.shortcutName == name).length > 1
+  );
 }
 
 onMounted(() => {
-  shortcutConfig.map((item) => sizes.push(calSize(item)));
+  axios({
+    method: "get",
+    url: lgUrl + "/read-file",
+    responseType: "stream",
+  })
+    .then(function (response) {
+      let shortcutConfig = JSON.parse(response.data);
+      shortcutConfig.map((item) => sizes.push(calSize(item)));
 
-  indexedArray = shortcutConfig.map((value, index) => ({
-    value: calSize(value),
-    index,
-  }));
+      indexedArray = shortcutConfig.map((value, index) => ({
+        value: calSize(value),
+        index,
+      }));
 
-  indexedArray.sort((a, b) => a.value - b.value);
+      indexedArray.sort((a, b) => a.value - b.value);
 
-  ShortcutConfig.value = indexedArray.map((item) => shortcutConfig[item.index]);
+      ShortcutConfig.value = indexedArray.map(
+        (item) => shortcutConfig[item.index]
+      );
+    })
+    .catch((error) => {
+      ElMessage({
+        type: "error",
+        message: error,
+      });
+    });
+  // shortcutConfig.map((item) => sizes.push(calSize(item)));
+
+  // indexedArray = shortcutConfig.map((value, index) => ({
+  //   value: calSize(value),
+  //   index,
+  // }));
+
+  // indexedArray.sort((a, b) => a.value - b.value);
+
+  // ShortcutConfig.value = indexedArray.map((item) => shortcutConfig[item.index]);
 });
 </script>
 <template>
