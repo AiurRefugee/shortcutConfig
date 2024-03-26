@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
     box-sizing: border-box;
     user-select: none;
@@ -5,7 +9,30 @@
 div {
     -webkit-tap-highlight-color: transparent;
 }
+#opt {
+    // transition: all 0.3s ease-in-out;
+}
 html {
+    width: 100vw;
+    height: 100dvh;
+    overflow: auto;
+    --shortcutWidth: 50vw;
+    --shortcutMargin: 1rem;
+    --shortcutPad: 1rem;
+    --colNum: 2;
+
+    --bgLight_Primary: white;
+    --bgLight_Secondary: #e9e9e9;
+    --bgLight_Basic: #e2e1e1;
+
+    --bgDark_Primary: #1f1f1f;
+    --bgDark_Secondary: #272727;
+
+    --txtLight_Primary: #eeeeee;
+    --txtDark_Primary: rgba(43, 42, 42, 0.932);
+
+    --radius-lg: 1rem;
+
     overflow: hidden;
     --cellHeight: 4vh;
     --radius-lg: 15px;
@@ -20,6 +47,13 @@ html {
     --textColorPrimay: #2e2e2e;
     --textColorSecPrimary: #848484;
     --listBgColor: #dadada58;
+
+    @media (width <= 628px) {
+        --shortcutWidth: 90vw;
+        --shortcutMargin: 1rem;
+        --colNum: 1;
+    }
+
     @media (prefers-color-scheme: dark) {
         --bgColorPrimary: #181818;
         --bgColorSecPrimary: #222222;
@@ -30,24 +64,42 @@ html {
 }
 body {
     margin: 0;
-}
-h1 {
-    // width: 100%;
-}
-h1,
-h2,
-h3 {
-    // width: 80%;
-    color: var(--textColorPrimay);
-    min-width: 10vw;
-    padding: 0 2%;
-    text-shadow: rgba(133, 129, 129, 0.8196078431) 5px 0px 8px;
+    height: 100dvh;
+    overflow: auto;
 }
 svg {
     // width: 100%;
     height: 100%;
     aspect-ratio: 1 / 1;
     cursor: pointer;
+}
+.shortcutContainer {
+    width: 100vw;
+    // column-width: 45%;
+    column-count: var(--colNum);
+    // display: flex;
+    // flex-direction: column;
+    break-inside: avoid;
+    // height: 100vh;
+    // display: grid;
+    // grid-template-columns: repeat(2, 1fr);
+    // grid-template-rows: masonry;
+    grid-gap: 10px;
+    // flex-direction: column;
+    flex-wrap: wrap;
+    overflow-x: auto;
+    // overflow-y: hidden;
+}
+.shortcutWrapper {
+    width: 100%;
+    break-inside: avoid;
+    padding: var(--shortcutPad);
+    .shortcut {
+        // margin: var(--shortcutMargin);
+        border-radius: var(--radius-lg);
+        padding: var(--shortcutPad);
+        background-color: var(--bgLight_Secondary);
+    }
 }
 button {
     width: 100%;
@@ -70,29 +122,25 @@ button {
     background-color: var(--bgColorPrimary);
 }
 .ShortcutConfig {
-    $size: 8vh;
     width: 100vw;
-    height: $size;
+    position: fixed;
+    padding-left: 1rem;
+    top: 0;
+    z-index: 99;
     display: flex;
     align-items: center;
-    .addWrapper {
-        $btnSize: calc($size * 0.6);
-        width: $btnSize;
-        height: $btnSize;
-        font-size: $btnSize;
-        line-height: $btnSize;
-        border-radius: 8px;
-    }
+    background: var(--bgLight_Primary);
+    color: var(--txtDark_Primary);
 }
 
 .title {
     height: 8vh;
     display: flex;
     cursor: pointer;
-    justify-content: space-between; 
+    justify-content: space-between;
     align-items: center;
-    .titleH { 
-        width: 100%; 
+    .titleH {
+        width: 100%;
         display: flex;
         align-items: center;
         cursor: pointer;
@@ -102,7 +150,7 @@ button {
         overflow: hidden;
     }
     .exec {
-        height: 4vh; 
+        height: 4vh;
         color: lightgray;
         display: flex;
         justify-content: center;
@@ -112,8 +160,8 @@ button {
     // min-width: 25vw;
     // max-width: 25vw;
     padding: 1% 2%;
-    margin: 3vw 5%;
-    min-width: 35vw;
+    margin: 2rem;
+    width: 45vw;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -121,6 +169,9 @@ button {
     border-radius: var(--radius-lg);
     box-shadow: 0 0 15px 10px #858181d1;
     background-color: var(--bgColorSecPrimary);
+    @media (width <= 628px) {
+        width: 90vw;
+    }
 }
 
 .wrapper {
@@ -186,6 +237,23 @@ button {
     overflow: hidden;
     transition: height 0.5s ease-in-out;
     // margin: 0 15px;
+    background-color: #f5f5f5;
+    .listItemWrapper {
+        margin: 0;
+    }
+    h2 {
+        font-size: 0.9rem;
+    }
+    .subWrapper {
+        // background-color: #edededea;
+        border-left: 1px solid #c7c7c7;
+        
+    }
+}
+.divider {
+    background-color: lightgray;
+    height: 1px;
+    width: 100%;
 }
 .listItem {
     min-width: 30vw;

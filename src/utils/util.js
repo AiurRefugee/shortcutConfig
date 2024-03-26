@@ -15,19 +15,17 @@ export class EventBus {
 }
 
 export function trans(obj) {
-  if (obj.params) {
-    for (const child of obj.params) {
-      trans(child)
+  const target = {}
+  for (const param of obj.params) {
+    const { key, value } = param
+    if (!param.params) { 
+      target[key] = value
+    } else {
+      const temp =trans(param) 
+      target[key] = temp
     }
-    for (const item of obj.params) {
-      const key = item.key
-      delete (item.key)
-      obj[key] = item
-    }
-    delete obj.params
-
-  }
-
+  } 
+  return target
 }
 
 export function copyToClipboard(text) {

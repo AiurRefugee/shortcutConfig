@@ -12,7 +12,7 @@ const $bus = inject("$bus");
 const removeWidth = 80;
 const threshold = removeWidth * 8;
 
-const props = defineProps(["param", "readOnly", "index", "layer"]);
+const props = defineProps(["param", "index", "layer"]);
 const emit = defineEmits([
   "updateNode",
   "removeParam",
@@ -265,8 +265,7 @@ onMounted(() => {});
           @click.stop="showBtn"
         >
           <el-input
-            v-model="param.key"
-            autocomplete="new-password"
+            v-model="param.key" 
             @blur="finish"
             :placeholder="
               param.hasOwnProperty('tempNodes') ? '请输入参数名' : '请输入键名'
@@ -303,12 +302,12 @@ onMounted(() => {});
         <div
           class="widget"
           v-if="param.type == 'input'"
-          autocomplete="new-password"
+          
         >
           <el-input
             placeholder="请输入值"
             v-model="param.value"
-            :readonly="readOnly"
+            :readonly="props.readOnly"
             @change="update"
           >
             <template #append>
@@ -322,7 +321,7 @@ onMounted(() => {});
           <el-select
             v-model="param.value"
             @change="update"
-            autocomplete="new-password"
+            
             style="width: 100%"
           >
             <el-option

@@ -79,16 +79,14 @@ onMounted(() => {
     <el-popover
       v-if="object.canAddSecParam"
       placement="top-start"
-      title="选择添加类型"
-      style="border-radius: var(--radius-base)"
+      title="选择添加类型" 
       :width="200"
       trigger="click"
     >
       <template #reference>
         <el-button
           ref="buttonRef"
-          type="primary"
-          style="border-radius: var(--radius-base)"
+          type="primary" 
           >添加</el-button
         >
       </template>
@@ -109,8 +107,7 @@ onMounted(() => {
   <div v-if="object.canAddKeyValue && !object.canAddSecParam">
     <el-button
       ref="buttonRef"
-      type="primary"
-      style="border-radius: var(--radius-base)"
+      type="primary" 
       @click="addKeyValue(object, wrapperName)"
       >添加</el-button
     >
