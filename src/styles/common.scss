@@ -9,12 +9,18 @@
 div {
     -webkit-tap-highlight-color: transparent;
 }
+.flex-grow-1 {
+    flex-grow: 1;
+}
+.flex-grow-2 {
+    flex-grow: 2;
+}
 #opt {
     // transition: all 0.3s ease-in-out;
 }
 html {
     width: 100vw;
-    height: 100dvh;
+    height: 110dvh;
     overflow: auto;
     --shortcutWidth: 50vw;
     --shortcutMargin: 1rem;
@@ -30,6 +36,7 @@ html {
 
     --txtLight_Primary: #eeeeee;
     --txtDark_Primary: rgba(43, 42, 42, 0.932);
+    --txtDark_Basic: #3e3e3e;
 
     --radius-lg: 1rem;
 
@@ -47,25 +54,28 @@ html {
     --textColorPrimay: #2e2e2e;
     --textColorSecPrimary: #848484;
     --listBgColor: #dadada58;
-
+    background-color: var(--bgLight_Primary);
     @media (width <= 628px) {
+        font-size: 14px;
         --shortcutWidth: 90vw;
         --shortcutMargin: 1rem;
         --colNum: 1;
     }
 
     @media (prefers-color-scheme: dark) {
-        --bgColorPrimary: #181818;
-        --bgColorSecPrimary: #222222;
-        --textColorPrimay: #e7e7e7;
-        --textColorSecPrimary: #afafaf;
-        --listBgColor: #73737358;
+        --bgLight_Primary: rgb(0, 0, 0);
+        --bgLight_Secondary: #1e1e1e;
+        --bgLight_Basic: #2c2c2c;
+
+        --txtLight_Primary: #181818;
+        --txtDark_Primary: rgb(241 241 241 / 93%);
+        --txtDark_Basic: #b9b9b9;
     }
 }
 body {
     margin: 0;
     height: 100dvh;
-    overflow: auto;
+    overflow: hidden;
 }
 svg {
     // width: 100%;
@@ -73,6 +83,7 @@ svg {
     aspect-ratio: 1 / 1;
     cursor: pointer;
 }
+
 .shortcutContainer {
     width: 100vw;
     // column-width: 45%;
@@ -94,8 +105,12 @@ svg {
     width: 100%;
     break-inside: avoid;
     padding: var(--shortcutPad);
+    background-color: var(--bgLight_Primary);
     .shortcut {
         // margin: var(--shortcutMargin);
+        h2 {
+            color: var(--txtDark_Primary);
+        }
         border-radius: var(--radius-lg);
         padding: var(--shortcutPad);
         background-color: var(--bgLight_Secondary);
@@ -119,7 +134,7 @@ button {
     justify-content: stretch;
     align-content: flex-start;
     align-items: flex-start;
-    background-color: var(--bgColorPrimary);
+    background-color: var(--bgLight_Primary);
 }
 .ShortcutConfig {
     width: 100vw;
@@ -130,6 +145,7 @@ button {
     display: flex;
     align-items: center;
     background: var(--bgLight_Primary);
+    background: linear-gradient(to bottom, var(--bgLight_Primary) 35%, transparent 100%);
     color: var(--txtDark_Primary);
 }
 
@@ -234,20 +250,32 @@ button {
     min-height: var(--cellHeight);
 }
 .listItemWrapper {
+    $baseFontSize: 0.9rem;
     overflow: hidden;
     transition: height 0.5s ease-in-out;
     // margin: 0 15px;
-    background-color: #f5f5f5;
+    background-color: var(--bgLight_Basic);
     .listItemWrapper {
         margin: 0;
+        
     }
     h2 {
-        font-size: 0.9rem;
+        font-size: 1.1rem;
+        font-weight: 600;
     }
+    .listItemWrapper h2 {
+        color: var(--txtDark_Basic);
+        font-weight: 400;
+        font-size: $baseFontSize;
+    }
+    #listItem h2 {
+        font-size: $baseFontSize;
+    }
+
+     
     .subWrapper {
         // background-color: #edededea;
         border-left: 1px solid #c7c7c7;
-        
     }
 }
 .divider {

@@ -2,11 +2,11 @@
 import { ref, onMounted, inject } from "vue";
 import { useEventListener } from "@vueuse/core";
 import gsap from "gsap";
+import OptButton from "@/components/optButton.vue";
 import { copyToClipboard, findItem } from "@/utils/util.js";
 import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 
 import Widgets from "@/components/Widgets.vue";
-import addButton from "@/components/addButton.vue";
 
 const $bus = inject("$bus");
 
@@ -25,14 +25,46 @@ const emit = defineEmits([
 
 const timeout = null;
 
-function showOpt(item, event) {
-  console.log(event);
-  const opt = listItemWrapper.value.querySelector("#opt");
-  gsap.to(opt, {
-    width: "10rem",
-    duration: 0.3,
-    ease: "power1.inOut",
+function hideAllButton(id) {
+  Array.from(document.querySelectorAll(id)).forEach((item) => {
+    gsap.to(item, {
+      width: "0",
+      duration: 0.3,
+      ease: "power1.inOut",
+    });
   });
+}
+
+function toogleButton(button) {
+  if (button.clientWidth > 0) {
+    gsap.to(button, {
+      width: "0",
+      duration: 0.3,
+      ease: "power1.inOut",
+    });
+  } else {
+    gsap.to(button, {
+      width: "4rem",
+      duration: 0.3,
+      ease: "power1.inOut",
+    });
+  }
+}
+
+function showOpt(item, event) {
+  console.log(item);
+  const deleteButton = listItemWrapper.value.querySelector("#delete");
+  if (props.param.canAddKeyValue) {
+    const addButton = listItemWrapper.value.querySelector("#add");
+    if (addButton) {
+      toogleButton(addButton);
+    }
+  }
+  hideAllButton("#add");
+  hideAllButton("#delete");
+  if (deleteButton) {
+    toogleButton(deleteButton);
+  }
 }
 
 onMounted(() => {});
@@ -43,17 +75,25 @@ onMounted(() => {});
     ref="listItemWrapper"
     class="listItemWrapper rounded-lg my-4"
     :id="param.key"
-    @click.stop="showOpt(item, $event)"
   >
     <div
       id="listItem"
+      
       class="text-lg pl-2 flex items-center py-2 cursor-pointer"
     >
-      <div class="w-1/2 flex-1 whitespace-nowrap overflow-hidden">
-        <h2 class="w-full overflow-auto">{{ param.key }}</h2>
+      <div
+        class="w-1/2 flex-grow-2 whitespace-nowrap overflow-hidden pr-4"
+        :class="param.type ? '' : 'flex-shrink-0'"
+      >
+        <h2 class="w-full overflow-auto" v-if="param.key" @click.stop="showOpt(item, $event)">{{ param.key }}</h2>
         <!-- <div class="divider"></div> -->
+        <el-input
+          v-model="param.key"
+          placeholder="请输入键名"
+          v-else
+        ></el-input>
       </div>
-      <div class="w-1/2 flex-1 pr-2">
+      <div class="w-1/2 flex-grow-2 pr-2" :class="param.type ? '' : ''">
         <div class="w-full flex justify-end" v-if="param.type == 'select'">
           <el-select v-model="param.value" @change="update" style="width: 100%">
             <el-option
@@ -65,7 +105,11 @@ onMounted(() => {});
           </el-select>
         </div>
 
-        <div class="w-full flex justify-end" v-if="param.type == 'input'">
+        <div
+          class="w-full flex flex-grow-2 justify-end"
+          v-if="param.type == 'input'"
+          :class="param.type ? '' : ''"
+        >
           <el-input
             placeholder="请输入值"
             v-model="param.value"
@@ -79,24 +123,26 @@ onMounted(() => {});
             </template>
           </el-input>
         </div>
-        <div class="w-full flex justify-end" v-if="param.type == 'switch'">
-          <el-switch v-model="param.value" @change="update"></el-switch>
+        <div
+          class="w-full flex justify-end flex-grow-2"
+          v-if="param.type == 'switch'"
+          :class="param.type ? '' : ''"
+        >
+          <el-switch v-model="param.value" @change="update" size="large"></el-switch>
         </div>
       </div>
-      <div
-        id="add"
-        class="w-16 flex-shrink-0 mr-2 overflow-hidden"
-        v-if="param.canAddKeyValue || param.canAddSecParam"
-      >
-        <el-button type="primary" @click="addKeyValue">添加</el-button>
-      </div>
-      <div id="delete" class="w-16 flex-shrink-0 overflow-hidden mr-2">
-        <el-button type="danger">删除</el-button>
-      </div>
+      <OptButton :object="param" />
     </div>
     <div class="subWrapper ml-4 mb-4 pl-2 pr-0" v-if="param.params">
       <Widgets
         v-for="(item, index) in param.params"
+        :key="index"
+        :param="item"
+      />
+    </div>
+    <div class="subWrapper ml-4 mb-4 pl-2 pr-0" v-if="param.tempNodes">
+      <Widgets
+        v-for="(item, index) in param.tempNodes"
         :key="index"
         :param="item"
       />

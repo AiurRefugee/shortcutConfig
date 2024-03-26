@@ -75,6 +75,7 @@ function checkName(name, callBack) {
 }
 
 onMounted(() => {
+  
   // axios({
   //   method: "get",
   //   url: lgUrl + "/read-file",
@@ -116,16 +117,16 @@ function vibrate() {
     alert("您的设备不支持振动功能。");
   }
 }
-
 </script>
-<template> 
+<template>
+  <div class="appContainer">
     <div class="ShortcutConfig h-10 text-2xl w-full font-bold">
       <h1>ShortcutConfig</h1>
       <div class="addWrapper ml-4">
         <el-icon @click="addShortcut"><CirclePlusFilled /></el-icon>
       </div>
     </div>
-    <div class="shortcutContainer pt-10">
+    <div class="shortcutContainer pt-8 pb-16">
       <shortcut
         v-for="(shortcut, index) in ShortcutConfig"
         :key="index"
@@ -135,8 +136,9 @@ function vibrate() {
         @removeShortcut="removeShortcut"
         @checkName="checkName"
       />
-    </div> 
+      <div class="w-full h-24"></div>
+    </div>
+  </div>
 </template>
 <style lang="scss" scoped>
- 
 </style>
