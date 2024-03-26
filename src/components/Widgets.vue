@@ -78,60 +78,75 @@ onMounted(() => {});
   >
     <div
       id="listItem"
-      
       class="text-lg pl-2 flex items-center py-2 cursor-pointer"
     >
-      <div
-        class="w-1/2 flex-grow-2 whitespace-nowrap overflow-hidden pr-4"
-        :class="param.type ? '' : 'flex-shrink-0'"
-      >
-        <h2 class="w-full overflow-auto" v-if="param.key" @click.stop="showOpt(item, $event)">{{ param.key }}</h2>
-        <!-- <div class="divider"></div> -->
-        <el-input
-          v-model="param.key"
-          placeholder="请输入键名"
-          v-else
-        ></el-input>
-      </div>
-      <div class="w-1/2 flex-grow-2 pr-2" :class="param.type ? '' : ''">
-        <div class="w-full flex justify-end" v-if="param.type == 'select'">
-          <el-select v-model="param.value" @change="update" style="width: 100%">
-            <el-option
-              :label="item"
-              :value="item"
-              v-for="item in param.options"
-              :key="item"
-            ></el-option>
-          </el-select>
-        </div>
-
+      <div class="w-full flex items-center" @click.stop="showOpt(item, $event)">
         <div
-          class="w-full flex flex-grow-2 justify-end"
-          v-if="param.type == 'input'"
-          :class="param.type ? '' : ''"
+          class="w-1/2 flex-grow-2 whitespace-nowrap overflow-hidden pr-4"
+          :class="param.type ? '' : 'flex-shrink-0'"
         >
-          <el-input
-            placeholder="请输入值"
-            v-model="param.value"
-            :readonly="props.readOnly"
-            @change="update"
+          <h2
+            class="w-full overflow-auto"
+            v-if="param.key"
+            
           >
-            <template #append>
-              <el-icon @click="copyToClipboard(param.value)"
-                ><CopyDocument
-              /></el-icon>
-            </template>
-          </el-input>
+            {{ param.key }}
+          </h2>
+          <!-- <div class="divider"></div> -->
+          <el-input
+            v-model="param.key"
+            placeholder="请输入键名"
+            v-else
+          ></el-input>
         </div>
-        <div
-          class="w-full flex justify-end flex-grow-2"
-          v-if="param.type == 'switch'"
-          :class="param.type ? '' : ''"
-        >
-          <el-switch v-model="param.value" @change="update" size="large"></el-switch>
+        <div class="w-1/2 flex-grow-2 pr-2" :class="param.type ? '' : ''">
+          <div class="w-full flex justify-end" v-if="param.type == 'select'">
+            <el-select
+              v-model="param.value"
+              @change="update"
+              style="width: 100%"
+            >
+              <el-option
+                :label="item"
+                :value="item"
+                v-for="item in param.options"
+                :key="item"
+              ></el-option>
+            </el-select>
+          </div>
+
+          <div
+            class="w-full flex flex-grow-2 justify-end"
+            v-if="param.type == 'input'"
+            :class="param.type ? '' : ''"
+          >
+            <el-input
+              placeholder="请输入值"
+              v-model="param.value"
+              :readonly="props.readOnly"
+              @change="update"
+            >
+              <template #append>
+                <el-icon @click="copyToClipboard(param.value)"
+                  ><CopyDocument
+                /></el-icon>
+              </template>
+            </el-input>
+          </div>
+          <div
+            class="w-full flex justify-end flex-grow-2"
+            v-if="param.type == 'switch'"
+            :class="param.type ? '' : ''"
+          >
+            <el-switch
+              v-model="param.value"
+              @change="update"
+              size="large"
+            ></el-switch>
+          </div>
         </div>
+        <OptButton :object="param" />
       </div>
-      <OptButton :object="param" />
     </div>
     <div class="subWrapper ml-4 mb-4 pl-2 pr-0" v-if="param.params">
       <Widgets
