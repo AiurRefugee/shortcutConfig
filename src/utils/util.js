@@ -1,4 +1,7 @@
 
+
+import gsap from "gsap"; 
+
 export class EventBus {
   constructor() {
     this.events = {};
@@ -18,13 +21,13 @@ export function trans(obj) {
   const target = {}
   for (const param of obj.params) {
     const { key, value } = param
-    if (!param.params) { 
+    if (!param.params) {
       target[key] = value
     } else {
-      const temp =trans(param) 
+      const temp = trans(param)
       target[key] = temp
     }
-  } 
+  }
   return target
 }
 
@@ -82,7 +85,7 @@ export function calHeight(object) {
 }
 
 // 查找节点
-export function findItem(element, className, depth) {  
+export function findItem(element, className, depth) {
   if (!element || !depth || !className || depth === 0) {
     return;
   }
@@ -119,5 +122,39 @@ export function findItem(element, className, depth) {
     sibling = sibling.nextElementSibling;
   }
 
-  
-} 
+
+}
+
+
+
+export function calScroll(scrollView, event) {
+  var showed = false
+  const height = event.target.scrollTop;
+  const scrollTitle = scrollView
+    .querySelector("#scrollTitle")
+  var rect = null
+  if (!scrollTitle) {
+    console.log('g')
+    return false
+  }
+  rect = scrollTitle.getClientRects()[0];
+  const threshold = (rect.bottom + rect.top) * 0.75 
+  console.log(threshold)
+  const header = scrollView.querySelector("header");
+  const title = header.querySelector("h1"); 
+  if (threshold < height) {
+    if (!showed) {
+      gsap.to(title, { duration: 0.1, opacity: 1, ease: "power1.inOut" });
+      gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
+      // header.style.background = 'linear-gradient(to bottom, var(--bgLight_Primary) 50%, transparent 100%)'
+      showed = true
+    }
+
+  } else {
+
+    gsap.to(title, { duration: 0.1, opacity: 0, ease: "power1.inOut" });
+    gsap.to(scrollTitle, { duration: 0.2, opacity: 1, ease: "power1.inOut" });
+    // header.style.background = 'var(--bgLight_Primary)'
+    showed = false
+  }
+}

@@ -41,6 +41,123 @@ export const shortcutConfig = [
         ]
     },
     {
+        "shortcutName": "test",
+        "nameFinished": true,
+        "canAddKeyValue": true,
+        "canAddSecParam": true,
+        "params": [
+            {
+                "key": "test",
+                "type": "input",
+                "keyFinished": true,
+                "value": "123"
+            }
+        ],
+        "tempNodes": [
+            {
+                "key": "",
+                "canAddKeyValue": true,
+                "keyFinished": false,
+                "canAddSecParam": true,
+                "tempNodes": [
+                    {
+                        "key": "",
+                        "keyFinished": false,
+                        "canAddKeyValue": true, 
+                        "tempNodes": [
+                            {
+                                "key": "",
+                                "type": "input",
+                                "keyFinished": false,
+                                "valFinished": true,
+                                "value": "233",
+                                "canAddKeyValue": true, 
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "shortcutName": "test",
+        "nameFinished": true,
+        "canAddKeyValue": true,
+        "canAddSecParam": true,
+        "params": [
+            {
+                "key": "test",
+                "type": "input",
+                "keyFinished": true,
+                "value": "123"
+            }
+        ],
+        "tempNodes": [
+            {
+                "key": "",
+                "canAddKeyValue": true,
+                "keyFinished": false,
+                "canAddSecParam": true,
+                "tempNodes": [
+                    {
+                        "key": "",
+                        "keyFinished": false,
+                        "canAddKeyValue": true, 
+                        "tempNodes": [
+                            {
+                                "key": "",
+                                "type": "input",
+                                "keyFinished": false,
+                                "valFinished": true,
+                                "value": "233",
+                                "canAddKeyValue": true, 
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "shortcutName": "test",
+        "nameFinished": true,
+        "canAddKeyValue": true,
+        "canAddSecParam": true,
+        "params": [
+            {
+                "key": "test",
+                "type": "input",
+                "keyFinished": true,
+                "value": "123"
+            }
+        ],
+        "tempNodes": [
+            {
+                "key": "",
+                "canAddKeyValue": true,
+                "keyFinished": false,
+                "canAddSecParam": true,
+                "tempNodes": [
+                    {
+                        "key": "",
+                        "keyFinished": false,
+                        "canAddKeyValue": true, 
+                        "tempNodes": [
+                            {
+                                "key": "",
+                                "type": "input",
+                                "keyFinished": false,
+                                "valFinished": true,
+                                "value": "233",
+                                "canAddKeyValue": true, 
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "shortcutName": "每日必应壁纸",
         "nameFinished": true,
         "params": [

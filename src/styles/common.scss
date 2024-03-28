@@ -20,7 +20,7 @@ div {
 }
 html {
     width: 100vw;
-    height: 110dvh;
+    height: 100dvh;
     overflow: auto;
     --shortcutWidth: 50vw;
     --shortcutMargin: 1rem;
@@ -35,7 +35,9 @@ html {
     --bgDark_Secondary: #272727;
 
     --txtLight_Primary: #eeeeee;
+    --txtLight_Secondary: #bdbdbd;
     --txtDark_Primary: rgba(43, 42, 42, 0.932);
+    --txtDark_Secondary: #303030;
     --txtDark_Basic: #3e3e3e;
 
     --radius-lg: 1rem;
@@ -68,8 +70,10 @@ html {
         --bgLight_Basic: #2c2c2c;
 
         --txtLight_Primary: #181818;
+        --txtLight_Secondary: #3d3d3d;
         --txtDark_Primary: rgb(241 241 241 / 93%);
-        --txtDark_Basic: #b9b9b9;
+        --txtDark_Secondary: #d9d8d8;
+        --txtDark_Basic: #9b9b9b;
     }
 }
 body {
@@ -83,9 +87,120 @@ svg {
     aspect-ratio: 1 / 1;
     cursor: pointer;
 }
+.bgLight_Primary {
+    background: var(--bgLight_Primary); 
+}
+.bgLight_Secondary {
+    background: var(--bgLight_Secondary); 
+}
+.bgLight_Basic {
+    background: var(--bgLight_Basic); 
+}
+.txtLight_Primary {
+   color: var(--txtLight_Primary);  
+   fill: var(--txtDark_Primary);
+}
+.txtLight_Secondary {
+   color: var(--txtLight_Secondary);  
+   fill: var(--txtLight_Secondary);  ;
+}
+.txtDark_Primary {
+   color: var(--txtDark_Primary);  
+   fill: var(--txtDark_Primary);
+}
+.txtDark_Secondary {
+   color: var(--txtDark_Secondary);
+   fill: var(--txtDark_Secondary);;
+}
+.txtDark_Basic {
+   color: var(--txtDark_Basic);
+   fill: var(--txtDark_Basic);
+}
+.scrollNavWrap {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 80vh;
+    width: 8rem;
+    transform: translateY(10%);
+    transition: all 0.3s ease-in-out;
+    overflow: scroll;
+    z-index: 999;
+    align-items: center;
+    right: 0;
+    // translate: 0 30%;
+    // margin-top: 10vh;
+    color: var(--txtDark_Secondary);
+    padding: 1rem 0;
+    // background: linear-gradient(
+    //     to bottom,
+    //     transparent 0,
+    //     var(--bgLight_Primary) 20%,
+    //     var(--bgLight_Secondary) 80%,
+    //     transparent 100%
+    // );
+    $a-count: 4; // 设置a标签数量
 
+    // @for $i from 1 through $a-count {
+    //     a:nth-child(#{$i}) {
+    //         opacity: $i / $a-count; // 计算透明度
+    //     }
+    // }
+    .overlay {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: 9999;
+        // background-color: red;
+        // background: linear-gradient(
+        //     to bottom,
+        //     rgba(40, 40, 40, 0.061) 0,
+        //     rgba(0, 0, 0, 0.031) 20%,
+        //     rgba(0, 0, 0, 0.031) 80%,
+        //     rgba(40, 40, 40, 0.061) 100%
+        // );
+        top: 0;
+    }
+    .scrollNavItem {
+        width: 80%;
+        // height: 1rem;
+        position: relative;
+        z-index: 9;
+        flex-shrink: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: center;
+        text-overflow: ellipsis;
+    }
+}
+// .scrollNavWrap::before {
+//     content: "";
+//     position: fixed;
+//     width: 100%;
+//     height: 20%;
+//     top: 0;
+//     background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, transparent 100%);
+//     z-index: 9999;
+// }
+// .scrollNavWrap::after {
+//     content: "";
+//     position: fixed;
+//     width: 100%;
+//     height: 20%;
+//     bottom: 0;
+//     background-image: linear-gradient(to bottom, transparent 0, rgba(255, 255, 255, 0.2) 100%);
+//     z-index: 9999;
+// }
+.perspectWrapper {
+    perspective: 1300px;
+    width: 100%;
+    height: 100%;
+    perspective-origin: left;
+    -webkit-perspective-origin: left;
+    transform-style: preserve-3d;
+}
 .shortcutContainer {
-    width: 100vw;
+    width: 100vw; 
     // column-width: 45%;
     column-count: var(--colNum);
     // display: flex;
@@ -96,9 +211,8 @@ svg {
     // grid-template-columns: repeat(2, 1fr);
     // grid-template-rows: masonry;
     grid-gap: 10px;
+    transition:  all 0.3s ease-in-out;
     // flex-direction: column;
-    flex-wrap: wrap;
-    overflow-x: auto;
     // overflow-y: hidden;
 }
 .shortcutWrapper {
@@ -123,13 +237,31 @@ button {
 ::-webkit-scrollbar {
     display: none;
 }
-
+.appHeader {
+    padding: 0.3rem 0;
+    color: var(--txtDark_Primary);
+    background-color: var(--bgLight_Primary);
+    font-size: 1.5rem;
+    position: fixed;
+    background: linear-gradient(to bottom, var(--bgLight_Primary) 50%, transparent 100%);
+    // transition: all 0.15s ease-in-out;
+    padding-bottom: 0.5rem;
+    top: 0;
+    z-index: 99; 
+    letter-spacing: 0.1rem;
+    .title {
+        opacity: 0; 
+        font-weight: 800;
+        color: var(--txtDark_Primary);
+    }
+}
 .appContainer {
     width: 100vw;
     height: 100vh;
     display: flex;
-    overflow: auto;
-    overflow-x: hidden;
+    // overflow-y: auto;
+    
+    perspective-origin: left; 
     flex-wrap: wrap;
     justify-content: stretch;
     align-content: flex-start;
@@ -138,10 +270,11 @@ button {
 }
 .ShortcutConfig {
     width: 100vw;
-    position: fixed;
+    // position: fixed;
+    font-size: 1.6rem;
     padding-left: 1rem;
-    top: 0;
-    z-index: 99;
+    // top: 0;
+    // z-index: 99;
     display: flex;
     align-items: center;
     background: var(--bgLight_Primary);
@@ -149,29 +282,7 @@ button {
     color: var(--txtDark_Primary);
 }
 
-.title {
-    height: 8vh;
-    display: flex;
-    cursor: pointer;
-    justify-content: space-between;
-    align-items: center;
-    .titleH {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-    }
-    .shortcutBtn {
-        width: 0;
-        overflow: hidden;
-    }
-    .exec {
-        height: 4vh;
-        color: lightgray;
-        display: flex;
-        justify-content: center;
-    }
-}
+ 
 .list {
     // min-width: 25vw;
     // max-width: 25vw;
@@ -257,7 +368,6 @@ button {
     background-color: var(--bgLight_Basic);
     .listItemWrapper {
         margin: 0;
-        
     }
     h2 {
         font-size: 1.1rem;
@@ -272,7 +382,6 @@ button {
         font-size: $baseFontSize;
     }
 
-     
     .subWrapper {
         // background-color: #edededea;
         border-left: 1px solid #c7c7c7;

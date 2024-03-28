@@ -80,10 +80,11 @@ onMounted(() => {});
       id="listItem"
       class="text-lg pl-2 flex items-center py-2 cursor-pointer"
     >
-      <div class="w-full flex items-center" @click.stop="showOpt(item, $event)">
+      <div class="w-full flex items-center" >
         <div
           class="w-1/2 flex-grow-2 whitespace-nowrap overflow-hidden pr-4"
           :class="param.type ? '' : 'flex-shrink-0'"
+          @click.stop="showOpt(item, $event)"
         >
           <h2
             class="w-full overflow-auto"
