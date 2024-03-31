@@ -1,65 +1,56 @@
 <script setup>
 import { ref, onMounted, inject } from "vue";
-import { copyToClipboard, adding } from "@/utils/util.js";
+
 import gsap from "gsap";
-const props = defineProps(["object", "wrapperName", "addDiretion"]);
+const props = defineProps(["object", "deleteParamsFunc", "type", "index"]);
 const $bus = inject("$bus");
 const emit = defineEmits(["addKeyValue"]);
+const deleteShortcut = inject("deleteShortcut");
+const addKeyValue = inject("addKeyValue");
+const addSecParam = inject("addSecParam");
+const getAddParam = inject("getAddParam")
+const showAddDialog = ref(false);
+
+function addKeyValueFunc() {
+  if (props.type == "shortcut") {
+    addKeyValue();
+  }
+}
+
+async function getAddParamFunc() {
+  const res = await getAddParam()
+  console.log("res", res);
+}
+
+function addSecParamFunc() {
+  if (props.type == "shortcut") {
+    addSecParam();
+  }
+}
+
+
 
 onMounted(() => {
-  // console.log("wrapperName", props.object.canAddKeyValue);
+  // console.log("wrapperName", props.object.canAddParam);
 });
 </script>
-<template>
+<template>  
   <!-- 添加参数或键值对 -->
-  <div v-if="object.canAddKeyValue && object.canAddSecParam">
-    <el-popover
-      v-if="object.canAddSecParam"
-      placement="left"
-      title="选择添加类型"
-      :width="200"
-      trigger="click"
-    >
-      <template #reference>
-        <div
-          id="add"
-          class="w-0 flex-shrink-0 mr-2 overflow-hidden"
-        >
-        <el-button
-            ref="buttonRef"
-            type="primary" 
-            >添加</el-button
-          >
-        </div>
-      </template>
-      <el-row justify="space-around" style="width: 100%" :gutter="10">
-        <el-col :span="12"
-          ><el-button type="primary" 
-            >键值对</el-button
-          ></el-col
-        >
-        <el-col :span="12"
-          ><el-button type="primary" 
-            >二级参数</el-button
-          ></el-col
-        >
-      </el-row>
-    </el-popover>
-  </div>
-  <div
-    id="add"
-    class="w-0 flex-shrink-0 mr-2 overflow-hidden"
-    v-if="object.canAddKeyValue && !object.canAddSecParam"
-  >
-    <el-button
-      ref="buttonRef"
-      type="primary"
-      @click="addKeyValue(object, wrapperName)"
+  <div id="add" class="w-0 flex-shrink-0 overflow-hidden">
+    <el-button ref="buttonRef" type="primary" @click="getAddParamFunc"
       >添加</el-button
     >
   </div>
-  <div id="delete" class="w-0 flex-shrink-0 overflow-hidden mr-2">
-    <el-button type="danger">删除</el-button>
+  <div id="delete" class="w-0 flex-shrink-0 overflow-hidden">
+    <div v-if="type == 'shortcut'">
+      <el-button type="danger" @click="deleteShortcut(index)">删除</el-button>
+    </div>
+    <div v-if="type == 'params'">
+      <el-button type="danger" @click="deleteParamsFunc(index)">删除</el-button>
+    </div>
+    <div v-if="type == 'tempNodes'">
+      <el-button type="danger" @click="deleteParamsFunc(index)">删除</el-button>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>

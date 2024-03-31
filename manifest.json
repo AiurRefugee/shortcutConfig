@@ -1,0 +1,21 @@
+{
+    "display": "fullscreen",
+    "name": "ShortcutConfig",
+    "theme_color": "white",
+    "background_color": "white",
+    "shortcuts": [
+        {
+            "name": "detail",
+            "url": "/detail/test",
+            "description": "List of events planned for today"
+        },
+        {
+            "name": "New event",
+            "url": "/create/event"
+        },
+        {
+            "name": "New reminder",
+            "url": "/create/reminder"
+        }
+    ]
+}

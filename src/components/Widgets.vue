@@ -3,109 +3,80 @@ import { ref, onMounted, inject } from "vue";
 import { useEventListener } from "@vueuse/core";
 import gsap from "gsap";
 import OptButton from "@/components/optButton.vue";
-import { copyToClipboard, findItem } from "@/utils/util.js";
-import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
-
+import { CopyDocument } from "@element-plus/icons-vue";
 import Widgets from "@/components/Widgets.vue";
-
+import { showOpt, copyToClipboard } from '@/utils/utils.js'
 const $bus = inject("$bus");
 
+const subWrapper = ref();
 const listItemWrapper = ref();
 const removeWidth = 80;
 const threshold = removeWidth * 8;
 
-const props = defineProps(["param", "index", "layer"]);
-const emit = defineEmits([
-  "updateNode",
-  "removeParam",
-  "removeTempNode",
-  "index",
-  "checkName",
-]);
+const props = defineProps(["param", "index", "type", "deleteFunc"]);
 
-const timeout = null;
-
-function hideAllButton(id) {
-  Array.from(document.querySelectorAll(id)).forEach((item) => {
-    gsap.to(item, {
-      width: "0",
-      duration: 0.3,
-      ease: "power1.inOut",
-    });
+function deleteParam(index) {
+  const target = subWrapper.value.children[index];
+  console.log("target", subWrapper.value, index);
+  gsap.to(target, {
+    height: 0,
+    opacity: 0,
+    padding: 0,
+    margin: 0,
+    transform: "translate( 0, -30px)",
+    duration: 0.4,
+    ease: "power1.inOut",
+    onComplete: () => {
+      setTimeout(() => {
+        props.param.params.splice(index, 1);
+      }, 200);
+    },
   });
 }
 
-function toogleButton(button) {
-  if (button.clientWidth > 0) {
-    gsap.to(button, {
-      width: "0",
-      duration: 0.3,
-      ease: "power1.inOut",
-    });
-  } else {
-    gsap.to(button, {
-      width: "4rem",
-      duration: 0.3,
-      ease: "power1.inOut",
-    });
-  }
+function emitDelete(index) {
+  console.log("emitWidgetDelete", index);
+  props.deleteFunc(index);
 }
 
-function showOpt(item, event) {
-  console.log(item);
-  const deleteButton = listItemWrapper.value.querySelector("#delete");
-  if (props.param.canAddKeyValue) {
-    const addButton = listItemWrapper.value.querySelector("#add");
-    if (addButton) {
-      toogleButton(addButton);
-    }
-  }
-  hideAllButton("#add");
-  hideAllButton("#delete");
-  if (deleteButton) {
-    toogleButton(deleteButton);
-  }
-}
+const timeout = null;
+
 
 onMounted(() => {});
 </script>
 
 <template>
-  <div
-    ref="listItemWrapper"
-    class="listItemWrapper rounded-lg my-4"
-    :id="param.key"
-  >
+  <div ref="listItemWrapper" class="listItemWrapper rounded-lg" :id="param.key">
     <div
       id="listItem"
-      class="text-lg pl-2 flex items-center py-2 cursor-pointer"
+      class="text-lg p-2 pr-0 flex items-center cursor-pointer"
     >
-      <div class="w-full flex items-center" >
+      <div class="w-full flex justify-between items-center">
         <div
           class="w-1/2 flex-grow-2 whitespace-nowrap overflow-hidden pr-4"
           :class="param.type ? '' : 'flex-shrink-0'"
-          @click.stop="showOpt(item, $event)"
+          @click.stop="showOpt(listItemWrapper, param.canAddParam)"
         >
-          <h2
-            class="w-full overflow-auto"
-            v-if="param.key"
-            
-          >
-            {{ param.key }}
-          </h2>
           <!-- <div class="divider"></div> -->
-          <el-input
+          <!-- <el-input
+            style="width: 60%;"
             v-model="param.key"
             placeholder="请输入键名"
             v-else
-          ></el-input>
+          ></el-input> -->
+          <div class="w-full flex items-center overflow-auto">
+            <input
+              class="bg-transparent text-base txtDark_Primary"
+              v-model="param.key"
+              placeholder="请输入键名"
+            />
+          </div>
         </div>
-        <div class="w-1/2 flex-grow-2 pr-2" :class="param.type ? '' : ''">
+        <div class="w-1/2 pr-2 flex-grow-2" :class="param.type ? '' : ''">
           <div class="w-full flex justify-end" v-if="param.type == 'select'">
             <el-select
               v-model="param.value"
-              @change="update"
-              style="width: 100%"
+              style="width: 100%; position: relative; z-index: 10"
             >
               <el-option
                 :label="item"
@@ -125,7 +96,6 @@ onMounted(() => {});
               placeholder="请输入值"
               v-model="param.value"
               :readonly="props.readOnly"
-              @change="update"
             >
               <template #append>
                 <el-icon @click="copyToClipboard(param.value)"
@@ -139,29 +109,35 @@ onMounted(() => {});
             v-if="param.type == 'switch'"
             :class="param.type ? '' : ''"
           >
-            <el-switch
-              v-model="param.value"
-              @change="update"
-              size="large"
-            ></el-switch>
+            <el-switch v-model="param.value" size="large"></el-switch>
           </div>
         </div>
-        <OptButton :object="param" />
+
+        <OptButton
+          :object="param"
+          :index="index"
+          :type="type"
+          :deleteParamsFunc="emitDelete"
+          :addParamsFunc="emitAdd"
+        />
       </div>
     </div>
-    <div class="subWrapper ml-4 mb-4 pl-2 pr-0" v-if="param.params">
-      <Widgets
-        v-for="(item, index) in param.params"
-        :key="index"
-        :param="item"
-      />
-    </div>
-    <div class="subWrapper ml-4 mb-4 pl-2 pr-0" v-if="param.tempNodes">
-      <Widgets
-        v-for="(item, index) in param.tempNodes"
-        :key="index"
-        :param="item"
-      />
+    <div
+      ref="subWrapper"
+      class="subWrapper ml-4 pl-2"
+      :class="param.params.length ? 'mb-4' : ''"
+      v-if="param.params"
+    >
+      <transition-group name="list">
+        <Widgets
+          v-for="(item, index) in param.params"
+          :key="item"
+          :index="index"
+          :type="'params'"
+          :param="item"
+          :deleteFunc="deleteParam"
+        />
+      </transition-group>
     </div>
   </div>
 </template>

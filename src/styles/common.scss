@@ -9,11 +9,17 @@
 div {
     -webkit-tap-highlight-color: transparent;
 }
+#app {
+    height: 100%;
+}
 .flex-grow-1 {
     flex-grow: 1;
 }
 .flex-grow-2 {
     flex-grow: 2;
+}
+input:focus-visible {
+    outline: none;
 }
 #opt {
     // transition: all 0.3s ease-in-out;
@@ -26,10 +32,12 @@ html {
     --shortcutMargin: 1rem;
     --shortcutPad: 1rem;
     --colNum: 2;
+    --dialogWidth: 60vw;
+    --el-dialog-padding-primary: 2rem;
 
     --bgLight_Primary: white;
     --bgLight_Secondary: #e9e9e9;
-    --bgLight_Basic: #e2e1e1;
+    --bgLight_Basic: #d8d8d8;
 
     --bgDark_Primary: #1f1f1f;
     --bgDark_Secondary: #272727;
@@ -38,7 +46,7 @@ html {
     --txtLight_Secondary: #bdbdbd;
     --txtDark_Primary: rgba(43, 42, 42, 0.932);
     --txtDark_Secondary: #303030;
-    --txtDark_Basic: #3e3e3e;
+    --txtDark_Basic: #939393;
 
     --radius-lg: 1rem;
 
@@ -57,11 +65,15 @@ html {
     --textColorSecPrimary: #848484;
     --listBgColor: #dadada58;
     background-color: var(--bgLight_Primary);
+    @media(orientation: portrait) { 
+    }
+
     @media (width <= 628px) {
         font-size: 14px;
         --shortcutWidth: 90vw;
         --shortcutMargin: 1rem;
         --colNum: 1;
+        --dialogWidth: 85vw;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -86,6 +98,9 @@ svg {
     height: 100%;
     aspect-ratio: 1 / 1;
     cursor: pointer;
+}
+#scrollTitle {
+    font-weight: 600;
 }
 .bgLight_Primary {
     background: var(--bgLight_Primary); 
@@ -115,89 +130,27 @@ svg {
 .txtDark_Basic {
    color: var(--txtDark_Basic);
    fill: var(--txtDark_Basic);
-}
-.scrollNavWrap {
-    display: flex;
-    flex-direction: column;
-    position: fixed;
-    height: 80vh;
-    width: 8rem;
-    transform: translateY(10%);
+} 
+.dialogWrapper {
+    
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    // opacity: 0;
+    // scale: 0;
+    // background-color: rgba(211, 211, 211, 0.623);
+    .dialog {
+        width: var(--dialogWidth); 
+    }
+} 
+ 
+.shortcutList {
     transition: all 0.3s ease-in-out;
-    overflow: scroll;
-    z-index: 999;
-    align-items: center;
-    right: 0;
-    // translate: 0 30%;
-    // margin-top: 10vh;
-    color: var(--txtDark_Secondary);
-    padding: 1rem 0;
-    // background: linear-gradient(
-    //     to bottom,
-    //     transparent 0,
-    //     var(--bgLight_Primary) 20%,
-    //     var(--bgLight_Secondary) 80%,
-    //     transparent 100%
-    // );
-    $a-count: 4; // 设置a标签数量
-
-    // @for $i from 1 through $a-count {
-    //     a:nth-child(#{$i}) {
-    //         opacity: $i / $a-count; // 计算透明度
-    //     }
-    // }
-    .overlay {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: 9999;
-        // background-color: red;
-        // background: linear-gradient(
-        //     to bottom,
-        //     rgba(40, 40, 40, 0.061) 0,
-        //     rgba(0, 0, 0, 0.031) 20%,
-        //     rgba(0, 0, 0, 0.031) 80%,
-        //     rgba(40, 40, 40, 0.061) 100%
-        // );
-        top: 0;
+    opacity: 1;
+    @media(width > 628px) {
+        display: none;
+        opacity: 0;
     }
-    .scrollNavItem {
-        width: 80%;
-        // height: 1rem;
-        position: relative;
-        z-index: 9;
-        flex-shrink: 0;
-        overflow: hidden;
-        white-space: nowrap;
-        text-align: center;
-        text-overflow: ellipsis;
-    }
-}
-// .scrollNavWrap::before {
-//     content: "";
-//     position: fixed;
-//     width: 100%;
-//     height: 20%;
-//     top: 0;
-//     background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0, transparent 100%);
-//     z-index: 9999;
-// }
-// .scrollNavWrap::after {
-//     content: "";
-//     position: fixed;
-//     width: 100%;
-//     height: 20%;
-//     bottom: 0;
-//     background-image: linear-gradient(to bottom, transparent 0, rgba(255, 255, 255, 0.2) 100%);
-//     z-index: 9999;
-// }
-.perspectWrapper {
-    perspective: 1300px;
-    width: 100%;
-    height: 100%;
-    perspective-origin: left;
-    -webkit-perspective-origin: left;
-    transform-style: preserve-3d;
 }
 .shortcutContainer {
     width: 100vw; 
@@ -209,27 +162,55 @@ svg {
     // height: 100vh;
     // display: grid;
     // grid-template-columns: repeat(2, 1fr);
-    // grid-template-rows: masonry;
+    // grid-template-rows: masonry; 
     grid-gap: 10px;
     transition:  all 0.3s ease-in-out;
     // flex-direction: column;
     // overflow-y: hidden;
+    opacity: 1;
+    @media (width <= 628px) {
+        opacity: 0;
+        display: none;
+    }
+}
+.pos10 {
+    position: relative;
+    z-index: 10;
+}
+#add, #delete {
+    transition: width 0.3 ease-in-out;
 }
 .shortcutWrapper {
+    --dialogWidth: 50vw;
     width: 100%;
+    position: relative;
+    z-index: 9;
     break-inside: avoid;
     padding: var(--shortcutPad);
-    background-color: var(--bgLight_Primary);
+    background-color: var(--bgLight_Primary); 
+    margin: auto;
+    @media (width <= 628px) {
+        max-width: 600px;
+        // background-color: var(--bgLight_Primary);
+    }
     .shortcut {
+        h2 ~ #add {
+            margin-right: 0.5rem;
+        }
         // margin: var(--shortcutMargin);
+        h2 ~ #delete {
+            margin-right: 0;
+        }
         h2 {
             color: var(--txtDark_Primary);
         }
+        transition: all 0.3s ease-in-out;
         border-radius: var(--radius-lg);
         padding: var(--shortcutPad);
-        background-color: var(--bgLight_Secondary);
+        background-color: var(--bgLight_Secondary); 
     }
 }
+
 button {
     width: 100%;
     // height: var(--cellHeight);
@@ -243,9 +224,9 @@ button {
     background-color: var(--bgLight_Primary);
     font-size: 1.5rem;
     position: fixed;
-    background: linear-gradient(to bottom, var(--bgLight_Primary) 50%, transparent 100%);
+    background: linear-gradient(to bottom, var(--bgLight_Primary) 80%, transparent 100%);
     // transition: all 0.15s ease-in-out;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.8rem;
     top: 0;
     z-index: 99; 
     letter-spacing: 0.1rem;
@@ -254,6 +235,7 @@ button {
         font-weight: 800;
         color: var(--txtDark_Primary);
     }
+    
 }
 .appContainer {
     width: 100vw;
@@ -366,22 +348,30 @@ button {
     transition: height 0.5s ease-in-out;
     // margin: 0 15px;
     background-color: var(--bgLight_Basic);
+    
     .listItemWrapper {
         margin: 0;
+        #listItem {
+            // padding-bottom: 0;
+        }
     }
     h2 {
         font-size: 1.1rem;
         font-weight: 600;
     }
+    
     .listItemWrapper h2 {
         color: var(--txtDark_Basic);
         font-weight: 400;
         font-size: $baseFontSize;
     }
+    
     #listItem h2 {
         font-size: $baseFontSize;
     }
-
+    #listItem {
+        
+    }
     .subWrapper {
         // background-color: #edededea;
         border-left: 1px solid #c7c7c7;
@@ -479,6 +469,3 @@ button {
     align-items: center;
 }
 
-.el-popper__arrow {
-    display: none;
-}

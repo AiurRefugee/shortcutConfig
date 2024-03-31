@@ -15,21 +15,7 @@ export class EventBus {
     this.events[eventName] = fn;
   }
 
-}
-
-export function trans(obj) {
-  const target = {}
-  for (const param of obj.params) {
-    const { key, value } = param
-    if (!param.params) {
-      target[key] = value
-    } else {
-      const temp = trans(param)
-      target[key] = temp
-    }
-  }
-  return target
-}
+} 
 
 export function copyToClipboard(text) {
   try {
@@ -59,71 +45,8 @@ export function copyToClipboard(text) {
       grouping: true,
     })
   }
-}
-
-export let adding = false
-
-export function calHeight(object) {
-  if (object.type) {
-    return 1;
-  } else {
-    let paramNum = 0;
-    let tempNum = 0;
-    if (object.params) {
-      for (const item of object.params) {
-        // console.log(key, subObj)
-        paramNum += calHeight(item);
-      }
-    }
-    if (object.tempNodes) {
-      for (const subTemp of object.tempNodes) {
-        tempNum += calHeight(subTemp);
-      }
-    }
-    return paramNum + tempNum + 1;
-  }
-}
-
-// 查找节点
-export function findItem(element, className, depth) {
-  if (!element || !depth || !className || depth === 0) {
-    return;
-  }
-
-  if (element && element.classList.contains(className)) {
-    return element;
-  }
-
-  const parent = element.parentNode;
-
-  const parentRes = findItem(parent, className, depth - 1);
-  if (parentRes) {
-    return parentRes;
-  }
-
-  // 查找子节点中具有指定类名的节点
-  const children = Array.from(element.children);
-  if (children) {
-    for (const child of children) {
-      const target = findItem(child, className, depth - 1);
-      if (target) {
-        return target;
-      }
-    }
-  }
-
-  // 查找兄弟节点中具有指定类名的节点
-  let sibling = element.nextElementSibling;
-  while (sibling) {
-    if (sibling.classList.contains(className)) {
-      // 可以在这里进行相关操作，如返回该节点或执行其他逻辑
-      return sibling;
-    }
-    sibling = sibling.nextElementSibling;
-  }
-
-
-}
+} 
+ 
 
 
 
@@ -138,13 +61,14 @@ export function calScroll(scrollView, event) {
     return false
   }
   rect = scrollTitle.getClientRects()[0];
-  const threshold = (rect.bottom + rect.top) * 0.75 
-  console.log(threshold)
+  const threshold = (rect.bottom + rect.top) * 0.5  
   const header = scrollView.querySelector("header");
   const title = header.querySelector("h1"); 
   if (threshold < height) {
     if (!showed) {
       gsap.to(title, { duration: 0.1, opacity: 1, ease: "power1.inOut" });
+      // gsap.to('#left', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
+      // gsap.to('#right', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
       gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
       // header.style.background = 'linear-gradient(to bottom, var(--bgLight_Primary) 50%, transparent 100%)'
       showed = true
@@ -153,8 +77,67 @@ export function calScroll(scrollView, event) {
   } else {
 
     gsap.to(title, { duration: 0.1, opacity: 0, ease: "power1.inOut" });
+    // gsap.to('#left', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
+      // gsap.to('#right', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
     gsap.to(scrollTitle, { duration: 0.2, opacity: 1, ease: "power1.inOut" });
     // header.style.background = 'var(--bgLight_Primary)'
     showed = false
+  }
+}
+ 
+
+export function deleteParam(shortcut, index) {
+  props.shortcut.params.splice(index, 1);
+}
+
+export function deleteTempNodeParam(shortcut, index) {
+  props.shortcut.tempNodes.splice(index, 1)
+}
+
+
+export function hideLastButton(button) {
+  gsap.to(button, {
+    width: 0,
+    marginRight: '0',
+    duration: 0.3,
+    ease: "power1.inOut",
+  });
+}
+
+function toogleButton(button) {
+  if (button.clientWidth > 0) {
+    console.log("add");
+    gsap.to(button, {
+      width: 0,
+      duration: 0.3,
+      marginRight: '0',
+      ease: "power1.inOut",
+    });
+  } else { 
+    gsap.to(button, {
+      width: "4rem",
+      marginRight: '0.5rem',
+      duration: 0.3,
+      ease: "power1.inOut",
+    });
+  }
+}
+
+var lastAdd, lastDelete
+export function showOpt(wrapper, canAdd) { 
+  hideLastButton(lastAdd);
+  hideLastButton(lastDelete);
+  const deleteButton = wrapper.querySelector("#delete");
+  if (canAdd) {
+    const addButton = wrapper.querySelector('#add') 
+    if (addButton) {
+      toogleButton(addButton);
+      lastAdd = addButton;
+    }
+  }
+
+  if (deleteButton) {
+    toogleButton(deleteButton);
+    lastDelete = deleteButton;
   }
 }

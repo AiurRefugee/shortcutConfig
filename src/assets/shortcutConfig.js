@@ -3,9 +3,9 @@
 export const shortcutConfig = [
     {
         "shortcutName": "test",
-        "nameFinished": true,
-        "canAddKeyValue": true,
-        "canAddSecParam": true,
+        
+        "canAddParam": true,
+        
         "params": [
             {
                 "key": "test",
@@ -13,38 +13,13 @@ export const shortcutConfig = [
                 "keyFinished": true,
                 "value": "123"
             }
-        ],
-        "tempNodes": [
-            {
-                "key": "",
-                "canAddKeyValue": true,
-                "keyFinished": false,
-                "canAddSecParam": true,
-                "tempNodes": [
-                    {
-                        "key": "",
-                        "keyFinished": false,
-                        "canAddKeyValue": true, 
-                        "tempNodes": [
-                            {
-                                "key": "",
-                                "type": "input",
-                                "keyFinished": false,
-                                "valFinished": true,
-                                "value": "233",
-                                "canAddKeyValue": true, 
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        ], 
     },
     {
         "shortcutName": "test",
-        "nameFinished": true,
-        "canAddKeyValue": true,
-        "canAddSecParam": true,
+        
+        "canAddParam": true,
+        
         "params": [
             {
                 "key": "test",
@@ -52,38 +27,13 @@ export const shortcutConfig = [
                 "keyFinished": true,
                 "value": "123"
             }
-        ],
-        "tempNodes": [
-            {
-                "key": "",
-                "canAddKeyValue": true,
-                "keyFinished": false,
-                "canAddSecParam": true,
-                "tempNodes": [
-                    {
-                        "key": "",
-                        "keyFinished": false,
-                        "canAddKeyValue": true, 
-                        "tempNodes": [
-                            {
-                                "key": "",
-                                "type": "input",
-                                "keyFinished": false,
-                                "valFinished": true,
-                                "value": "233",
-                                "canAddKeyValue": true, 
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        ], 
     },
     {
         "shortcutName": "test",
-        "nameFinished": true,
-        "canAddKeyValue": true,
-        "canAddSecParam": true,
+        
+        "canAddParam": true,
+        
         "params": [
             {
                 "key": "test",
@@ -91,38 +41,13 @@ export const shortcutConfig = [
                 "keyFinished": true,
                 "value": "123"
             }
-        ],
-        "tempNodes": [
-            {
-                "key": "",
-                "canAddKeyValue": true,
-                "keyFinished": false,
-                "canAddSecParam": true,
-                "tempNodes": [
-                    {
-                        "key": "",
-                        "keyFinished": false,
-                        "canAddKeyValue": true, 
-                        "tempNodes": [
-                            {
-                                "key": "",
-                                "type": "input",
-                                "keyFinished": false,
-                                "valFinished": true,
-                                "value": "233",
-                                "canAddKeyValue": true, 
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        ], 
     },
     {
         "shortcutName": "test",
-        "nameFinished": true,
-        "canAddKeyValue": true,
-        "canAddSecParam": true,
+        
+        "canAddParam": true,
+        
         "params": [
             {
                 "key": "test",
@@ -130,36 +55,11 @@ export const shortcutConfig = [
                 "keyFinished": true,
                 "value": "123"
             }
-        ],
-        "tempNodes": [
-            {
-                "key": "",
-                "canAddKeyValue": true,
-                "keyFinished": false,
-                "canAddSecParam": true,
-                "tempNodes": [
-                    {
-                        "key": "",
-                        "keyFinished": false,
-                        "canAddKeyValue": true, 
-                        "tempNodes": [
-                            {
-                                "key": "",
-                                "type": "input",
-                                "keyFinished": false,
-                                "valFinished": true,
-                                "value": "233",
-                                "canAddKeyValue": true, 
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+        ], 
     },
     {
         "shortcutName": "每日必应壁纸",
-        "nameFinished": true,
+        
         "params": [
             {
                 "key": "是否保存至相册",
@@ -171,7 +71,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "viteConfig",
-        "nameFinished": true,
+        
         "params": [
             {
                 "key": "设备",
@@ -205,7 +105,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "微博热搜",
-        "nameFinished": true,
+        
         "params": [
             {
                 "key": "列表长度",
@@ -224,7 +124,7 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "获取设备IP",
-        "nameFinished": true,
+        
         "params": [
             {
                 "key": "Mac",
@@ -299,9 +199,9 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "经典永流传",
-        "nameFinished": true,
+        
         "executable": true,
-        "canAddKeyValue": true,
+        "canAddParam": true,
         "readOnly": true,
         "params": [
             {
@@ -404,13 +304,13 @@ export const shortcutConfig = [
     },
     {
         "shortcutName": "读取哈希表",
-        "nameFinished": true,
-        "canAddKeyValue": true,
-        "canAddSecParam": true,
+        
+        "canAddParam": true,
+        
         "params": [
             {
                 "key": "Steam",
-                "canAddKeyValue": true,
+                "canAddParam": true,
                 "params": [
                     {
                         "key": "孙威",
@@ -465,7 +365,7 @@ export const shortcutConfig = [
             },
             {
                 "key": "Epic",
-                "canAddKeyValue": true,
+                "canAddParam": true,
                 "params": [
                     {
                         "key": "柯娜 灵媒",
@@ -569,7 +469,7 @@ export const shortcutConfig = [
             },
             {
                 "key": "B站api",
-                "canAddKeyValue": true,
+                "canAddParam": true,
                 "params": [
                     {
                         "key": "刷新推荐",
@@ -603,7 +503,7 @@ export const shortcutConfig = [
             },
             {
                 "key": "Working",
-                "canAddKeyValue": true,
+                "canAddParam": true,
                 "params": [
                     {
                         "key": "i-go Swagger",

@@ -4,7 +4,7 @@ import { ref, onMounted, computed, getCurrentInstance } from "vue";
 
 
 const emit = defineEmits(["toogle"]);
-const props = defineProps(['calScrollFunc', 'top']);
+const props = defineProps(['calScrollFunc', 'top', 'classNames']);
 
 // const layout = layoutStore();
 // const size = computed(() => layout.size);  
@@ -21,6 +21,7 @@ onMounted(() => {
 <template>
   <div
     class="scrollView"
+    :class="classNames"
     ref="scrollView"
     :style="{  
       'padding-top': top ? '5vh' : '0'

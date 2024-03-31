@@ -21,3 +21,11 @@
 // .el-input-group__append {
 //     padding: 0 10px;
 // }
+
+html {
+    --el-dialog-padding-primary: 2rem !important;
+}
+
+.el-dialog__body {
+    padding: 0.2rem 1rem !important; 
+}
