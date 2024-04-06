@@ -11,61 +11,29 @@ import { useRouter } from "vue-router";
 import detailView from "@/views/detailView.vue";
 import { calScroll } from "@/utils/utils.js";
 import gsap from "gsap";
-// import { touch } from 'touchjs'
-// console.log(touch)
 import { shortcutStore } from "@/store/shortcut";
-const store = shortcutStore();
-const size = computed(() => store.size);
+const store = shortcutStore(); 
 
 const router = useRouter();
 // components
 import shortcut from "@/components/shortcut.vue";
 
-const gui = ref({
-  down: false,
-  startY: 0,
-  endY: 0,
-});
-
-// touch.on('#test', 'swipeleft swiperight', function(ev){
-//   alert('6')
-//     console.log("you have done", ev.type);
-// });
-
-const rightThreshold = 0.2;
-const moveThreshold = 75;
 const port = 5173;
-const lgUrl = `http://localhost:${port}`;
-const sizes = [];
+const lgUrl = `http://localhost:${port}`; 
 
 const $bus = inject("$bus");
 $bus.on("update", update);
 
-const showAddDialog = ref(false);
-var startY = null;
-
-
-
-const shortcutDetail = ref(null);
-const showDetail = ref(false);
-const paramString = ref("");
-
-const ShortcutConfig = ref(shortcutConfig);
-const rotateDeg = ref(0);
-const showScrollNav = ref(false);
-
-const touchPointx = computed(() => store.touchPointx);
+const ShortcutConfig = ref(shortcutConfig);  
 
 function update() {
-  axios
-    .post(lgUrl + "/write-file", ShortcutConfig.value)
-    .then(function (response) {})
-    .catch((error) => {
-      ElMessage({
-        type: "error",
-        message: error,
-      });
-    });
+  console.log('update', ShortcutConfig.value)
+}
+
+async function addShortcut() {
+  console.log("addShortcut");
+  const newShortcut = await store.getAddParam("shortcut")
+  ShortcutConfig.value.unshift(newShortcut);
 }
 
 function deleteShortcut(index) {
@@ -73,7 +41,7 @@ function deleteShortcut(index) {
   gsap.to(`#shortcut${index}`, {
     transform: "translate(0, -100px)",
     opacity: 0,
-    duration: 0.3,
+    duration: 0.8,
     ease: "power3.out",
     onComplete: () => {
       ShortcutConfig.value.splice(index, 1);
@@ -82,24 +50,6 @@ function deleteShortcut(index) {
 
   // update();
 }
-
-
-
-provide("deleteShortcut", deleteShortcut);
-
-function getAddParam(index) {
-  paramString.value = "";
-  showAddDialog.value = true;
-  addParamManager = {
-    ...initAddParamManager,
-  };
-  return new Promise((resolve, reject) => {
-    addParamManager.confirmCallback = resolve;
-    addParamManager.cancelCallback = reject;
-  });
-}
-
-provide("getAddParam", getAddParam);
 
 function deleteKeyValue(index, keyValueIndex) {
   ShortcutConfig.value[index].params.splice(keyValueIndex, 1);
@@ -117,8 +67,6 @@ function navToDetail(shortcut) {
 }
 </script>
 <template>
-  
-
   <!-- <debugGUI :gui="gui"></debugGUI> -->
   <ScrollView :calScrollFunc="calScroll">
     <template v-slot:header>
@@ -131,7 +79,7 @@ function navToDetail(shortcut) {
           class="ShortcutConfig mt-12 h-10 w-full font-bold"
         >
           <h1>ShortcutConfig</h1>
-          <div class="addWrapper ml-4" @click="getAddParam">
+          <div class="addWrapper ml-4" @click="addShortcut">
             <el-icon><CirclePlusFilled /></el-icon>
           </div>
         </div>
@@ -146,7 +94,7 @@ function navToDetail(shortcut) {
                 :shortcut="shortcut"
                 :shortcutIndex="index"
                 :shortcutName="shortcut.shortcutName"
-                :deleteShortcutFunc="deleteShortcut"
+                @removeShortcut="deleteShortcut"
               />
             </div>
           </TransitionGroup>
@@ -155,7 +103,7 @@ function navToDetail(shortcut) {
 
 
         <div
-          class="shortcutList w-full p-4 overflow-auto" 
+          class="shortcutList w-full p-6 overflow-auto" 
         >
           <div class="w-full text-white rounded-2xl overflow-hidden">
             <button

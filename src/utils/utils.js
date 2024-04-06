@@ -100,25 +100,24 @@ export function hideLastButton(button) {
     width: 0,
     marginRight: '0',
     duration: 0.3,
-    ease: "power1.inOut",
+    // ease: "power1.inOut",
   });
 }
 
 function toogleButton(button) {
-  if (button.clientWidth > 0) {
-    console.log("add");
+  if (button.clientWidth > 0) { 
     gsap.to(button, {
       width: 0,
       duration: 0.3,
       marginRight: '0',
-      ease: "power1.inOut",
+      // ease: "power1.inOut",
     });
   } else { 
     gsap.to(button, {
       width: "4rem",
       marginRight: '0.5rem',
       duration: 0.3,
-      ease: "power1.inOut",
+      // ease: "power1.inOut",
     });
   }
 }

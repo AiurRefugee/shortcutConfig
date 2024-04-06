@@ -8,12 +8,14 @@ import Widgets from "@/components/Widgets.vue";
 import { showOpt, copyToClipboard } from '@/utils/utils.js'
 const $bus = inject("$bus");
 
-const subWrapper = ref();
-const listItemWrapper = ref();
-const removeWidth = 80;
-const threshold = removeWidth * 8;
+import { shortcutStore } from "@/store/shortcut";
+const store = shortcutStore();
 
-const props = defineProps(["param", "index", "type", "deleteFunc"]);
+const subWrapper = ref();
+const listItemWrapper = ref(); 
+
+const props = defineProps(["param", "index", "shortcutIndex"]);
+const emit = defineEmits(["deleteParam"]);
 
 function deleteParam(index) {
   const target = subWrapper.value.children[index];
@@ -24,23 +26,27 @@ function deleteParam(index) {
     padding: 0,
     margin: 0,
     transform: "translate( 0, -30px)",
-    duration: 0.4,
+    duration: 0.3,
     ease: "power1.inOut",
     onComplete: () => {
       setTimeout(() => {
         props.param.params.splice(index, 1);
+        $bus.emit('update', props.shortcutIndex)
       }, 200);
     },
   });
 }
 
-function emitDelete(index) {
-  console.log("emitWidgetDelete", index);
-  props.deleteFunc(index);
+async function addKeyValue() {
+  const newKeyValue = await store.getAddParam("param")
+  props.param.params.unshift(newKeyValue)
+  $bus.emit('update', props.shortcutIndex)
 }
 
-const timeout = null;
-
+function emitDelete(index) {
+  
+  emit("deleteParam", index);
+} 
 
 onMounted(() => {});
 </script>
@@ -72,7 +78,7 @@ onMounted(() => {});
             />
           </div>
         </div>
-        <div class="w-1/2 pr-2 flex-grow-2" :class="param.type ? '' : ''">
+        <div class="w-1/2 pr-3 flex-grow-2" :class="param.type ? '' : ''">
           <div class="w-full flex justify-end" v-if="param.type == 'select'">
             <el-select
               v-model="param.value"
@@ -109,16 +115,14 @@ onMounted(() => {});
             v-if="param.type == 'switch'"
             :class="param.type ? '' : ''"
           >
-            <el-switch v-model="param.value" size="large"></el-switch>
+            <el-switch v-model="param.value"></el-switch>
           </div>
         </div>
 
-        <OptButton
-          :object="param"
-          :index="index"
-          :type="type"
-          :deleteParamsFunc="emitDelete"
-          :addParamsFunc="emitAdd"
+        <OptButton 
+          :index="index" 
+          @addKeyValue="addKeyValue"
+          @deleteParam="emitDelete" 
         />
       </div>
     </div>
@@ -135,7 +139,7 @@ onMounted(() => {});
           :index="index"
           :type="'params'"
           :param="item"
-          :deleteFunc="deleteParam"
+          @deleteParam="deleteParam"
         />
       </transition-group>
     </div>

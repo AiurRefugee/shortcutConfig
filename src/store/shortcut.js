@@ -21,16 +21,27 @@ function calWindowSize() {
 export const shortcutStore = defineStore('shortcutStore', {
   state: () => ({
     shortcut: null,
+    showDialog: false,
     touchPointx: 0,
     size: calWindowSize(),
-
+    addType: 'param',
+    addParamPromise: null,
+    addParamResolve: null
   }),
   getters: {
     // double: (state) => state.count * 2,
   },
   actions: {
+    async getAddParam(type) {
+      this.addType = type;
+      this.showDialog = true
+      return new Promise((resolve, reject) => {
+        this.addParamResolve = resolve;
+      })
+
+    },
     updateSize() {
-      this.size = calWindowSize();
+      this.size = calWindowSize(); 
     }
     // increment() {
     //   this.count++

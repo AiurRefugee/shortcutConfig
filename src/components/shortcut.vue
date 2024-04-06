@@ -7,12 +7,12 @@ import OptButton from "@/components/optButton.vue";
 import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { showOpt, copyToClipboard } from '@/utils/utils.js'
+import { shortcutStore } from '@/store/shortcut';
+const store = shortcutStore()
 
 const props = defineProps([
   "shortcut",
-  "shortcutIndex",
-  "pointer",
-  "deleteShortcutFunc",
+  "shortcutIndex", 
 ]);
 const emit = defineEmits(["removeShortcut", "checkName"]);
 
@@ -23,34 +23,16 @@ function runShortCut(name) {
 const $bus = inject("$bus");
 const thisShortcut = ref();
 
-function addKeyValue() {
-  props.shortcut.params.push({
-    key: "",
-    value: "",
-    type: 'input',
-    canAddParam: true,
-    canAddSecParam: true
-  })
+async function addKeyValue() { 
+  const param = await store.getAddParam('param')
+  console.log("addKeyValue", param);
+  props.shortcut.params.unshift(param)
+  $bus.emit('update')
+} 
+
+function removeShortcut(index) {
+  emit("removeShortcut", index);
 }
-provide("addKeyValue", addKeyValue)
-
-function addSecParam() {
-  props.shortcut.params.push({
-    key: "",
-
-    canAddParam: true,
-    canAddSecParam: true,
-    params: [{
-      key: "",
-      value: "",
-      type: "input",
-      canAddParam: true,
-    canAddSecParam: true,
-    }]
-  })
-}
-provide("addSecParam", addSecParam)
-
 
 function deleteParam(index) {
   console.log("deleteShortcutParam", index);
@@ -62,16 +44,16 @@ function deleteParam(index) {
       padding: 0,
       margin: 0,
       transform: "translate( 0, -30px)",
-      duration: 0.4,
+      duration: 0.3,
       ease: "power1.inOut",
       onComplete: () => {
         setTimeout(() => {
           props.shortcut.params.splice(index, 1);
+          $bus.emit('update', props.shortcutIndex)
         }, 200);
       },
     }
-  );
-  console.log(props.shortcut);
+  ); 
 }
 
 onMounted(() => {});
@@ -87,10 +69,9 @@ onMounted(() => {});
         >
           {{ shortcut.shortcutName }}
         </h2>
-        <OptButton
-          :object="shortcut"
-          :type="'shortcut'"
-          :index="shortcutIndex"
+        <OptButton 
+          @addKeyValue="addKeyValue"
+          @deleteParam="removeShortcut" 
         />
       </div>
       <transition-group name="list">
@@ -102,9 +83,10 @@ onMounted(() => {});
         >
           <Widgets
             :index="index"
+            :shortcutIndex="shortcutIndex"
             :type="'params'"
             :param="item"
-            :deleteFunc="deleteParam"
+            @deleteParam="deleteParam"
           >
           </Widgets>
         </div>

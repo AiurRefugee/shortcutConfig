@@ -22,6 +22,7 @@ onMounted(() => {
     </TransitionGroup>
   </div> -->
   <section class="w-full h-full">
+    <addParamDialog/>
     <router-view v-slot="{ Component, route }">
       <keep-alive>
         <transition :name="route.meta.transition">

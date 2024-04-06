@@ -1,78 +1,207 @@
 <script setup>
-const paramString = ref('')
+import { ref, computed, onMounted } from "vue";
+import { shortcutStore } from "@/store/shortcut";
+import { ElMessage } from "element-plus";
+import gsap from "gsap";
+const store = shortcutStore();
+const showDialog = computed(() => store.showDialog);
+const addType = computed(() => store.addType);
 
-const initAddParamManager = {
-  confirmed: false,
-  canceded: false,
-  confirmCallback: null,
-  cancelCallback: null,
+const emit = defineEmits(["addKeyValue"]); 
+const initParam = {
+  shortcutName: "",
+  canAddParam: true,
+  key: "",
+  value: true,
+  params: [],
+  type: "switch",
+  options: "",
 };
 
-var addParamManager = {
-  ...initAddParamManager,
-};
-
-const info = [
-  "shortcutName: shortcut名称",
-  "canAddParam: 控制参数是否可以添加键参数",
-  "key: 参数的键",
-  "value: 参数的值",
-  "params: 参数的参数",
-  "type: 控制参数的控件类型。input: 输入框;select: 选择器;switch: 开关",
-];
-
-const showAddDialog = ref(false);
-
-function showAddDialogFunc() {
-  showAddDialog.value = true;
+const newParam = ref(JSON.parse(JSON.stringify(initParam)));
+ 
+function closeDialog() {  
+  newParam.value = JSON.parse(JSON.stringify(initParam)) 
+  store.showDialog = false;  
 }
 
-function closeDialog() {
-  addParamManager = {
-    ...initAddParamManager,
-  };
-  paramString.value = "";
-  showAddDialog.value = false;
+function checkNewParam() { 
+  if (addType.value == "shortcut") {
+    if (newParam.value.shortcutName === "") {
+      ElMessage({
+        message: "shortcutName不能为空",
+        type: "error",
+        grouping: true,
+      });
+      return false;
+    }
+  } else {
+    if (newParam.value.key === "") {
+      ElMessage({
+        message: "键名不能为空",
+        type: "error",
+        grouping: true,
+      });
+      return false;
+    }
+    if (newParam.value.type == "select" && newParam.value.options == "") {
+      ElMessage({
+        message: "选项不能为空",
+        type: "error",
+        grouping: true,
+      });
+      return false;
+    }
+  }
+
+  return true;
 }
 
 function addParm() {
-  addParamManager.confirmed = true;
-  addParamManager.confirmCallback(paramString.value);
+  if (!checkNewParam()) {
+    return false;
+  }
+  if (addType.value != "shortcut") {
+    delete newParam.value.shortcutName;
+  }
+  if (!newParam.value.canAddParam) {
+    delete newParam.value.params;
+  } else {
+    delete newParam.value.type;
+    delete newParam.value.value;
+    
+  }
+  if (newParam.value.type == "select") {
+    newParam.value.options = newParam.value.options.split(" ");
+    newParam.value.value = newParam.value.options[0];
+  } else {
+    delete newParam.value.options;
+  }
+  console.log(newParam.value);
+  store.addParamResolve(newParam.value);
   closeDialog();
 }
 
-function cancelAddParm() {
-  paramString.value = "";
-  addParamManager.canceded = true;
-  addParamManager.cancelCallback();
+function cancelAddParm() {  
   closeDialog();
 }
 
+function toogleCanAdd() {
+  console.log(newParam.value.canAddParam)
+  if (newParam.value.canAddParam) {
+    // 可以添加参数
+    gsap.to("#canAdd", {
+      height: "0",
+      duration: 0.3,
+      // ease: 'power4.out',
+    });
+  } else {
+    // 不可以添加参数
+    gsap.to("#canAdd", {
+      height: "auto",
+      duration: 0.3,
+      // ease: 'power4.out',
+    });
+  }
+}
+function clearValue(type) { 
+  newParam.value.value = ""
+}
+
+onMounted( () => {
+  newParam.value = { ...initParam };
+  console.log(newParam.value);
+})
 </script>
 <template>
-    <el-dialog
-    title="添加参数"
-    v-model="showAddDialog"
+  <el-dialog
+    :title="addType == 'shortcut' ? '添加shortcut' : '添加param'"
+    v-model="showDialog"
     style="border-radius: 1rem"
     :width="'var(--dialogWidth)'"
     @close="closeDialog"
   >
-    <section>
-      <el-input
-        v-model="paramString"
-        placeholder="请输入参数的json字符串"
-        type="textarea"
-      ></el-input>
-      <div class="w-full mt-2 pl-2 text-xs txtDark_Basic">
-        <p>参数说明:</p>
-        <div class="pl-2 flex w-full flex-wrap">
-          <p
-            v-for="item in info"
-            :key="item"
-            class="w-full overflow-hidden flex-shrink-0"
-          >
-            {{ item }}
+    <section class="pl-4">
+      <div class="paramItem" v-if="addType == 'shortcut'">
+        <p class="w-1/3 mr-2">shortcutName:</p>
+        <div class="pl-1">
+          <el-input
+            v-model="newParam.shortcutName"
+            placeholder="shortcutName"
+          ></el-input>
+        </div>
+      </div>
+      <div class="paramItem" v-else>
+        <div>
+          <p class="w-1/3 mr-2">key:</p>
+          <div class="pl-1">
+            <el-input v-model="newParam.key" placeholder="key"></el-input>
+          </div>
+        </div>
+        <div class="paramItem my-2">
+          <p class="w-1/3 mr-2">canAddParam:</p>
+          <div class="pl-1">
+            <el-switch
+              v-model="newParam.canAddParam" 
+              @change="toogleCanAdd"
+            ></el-switch>
+          </div>
+        </div>
+      </div>
+
+      <div
+        id="canAdd"
+        :style="{ height: newParam.canAddParam ? '0' : 'auto' }"
+        class="w-full flex flex-col justify-around overflow-hidden"
+      >
+        <div>
+          <div class="paramItem">
+            <p class="w-1/3 mr-2">paramType:</p>
+            <div class="pl-1">
+              <el-select v-model="newParam.type" @change="clearValue">
+                <el-option label="select" value="select"></el-option>
+                <el-option label="input" value="input"></el-option>
+                <el-option label="switch" value="switch"></el-option>
+              </el-select>
+            </div>
+          </div>
+          <p class="text-xs txtDark_Basic">
+            参数类型:select选择器;input输入框;switch开关
           </p>
+        </div>
+
+        <div v-if="newParam.type === 'input'">
+          <div class="paramItem">
+            <p class="w-1/3 mr-2">value:</p>
+            <div class="pl-1">
+              <el-input
+                v-model="newParam.value"
+                placeholder="参数值"
+              ></el-input>
+            </div>
+          </div>
+        </div>
+        <div v-if="newParam.type === 'select'">
+          <div class="paramItem">
+            <p class="w-1/3 mr-2">value:</p>
+            <div class="pl-1">
+              <el-input
+                v-model="newParam.options"
+                placeholder="选项值"
+              ></el-input>
+            </div>
+          </div>
+          <p class="text-xs txtDark_Basic">
+            选项值以空格为分割， 默认值写在第一个
+          </p>
+        </div>
+        <div v-if="newParam.type === 'switch'">
+          <div class="paramItem">
+            <p class="w-1/3 mr-2">value:</p>
+            <div class="pl-1">
+              <el-switch v-model="newParam.value"></el-switch>
+            </div>
+          </div>
         </div>
       </div>
     </section>

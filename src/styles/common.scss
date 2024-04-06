@@ -5,6 +5,7 @@
 * {
     box-sizing: border-box;
     user-select: none;
+    
 }
 div {
     -webkit-tap-highlight-color: transparent;
@@ -111,6 +112,9 @@ svg {
 .bgLight_Basic {
     background: var(--bgLight_Basic); 
 }
+.bgDark_Primary {
+    background: rgba(24, 24, 24, 0.695);
+}
 .txtLight_Primary {
    color: var(--txtLight_Primary);  
    fill: var(--txtDark_Primary);
@@ -172,18 +176,16 @@ svg {
         opacity: 0;
         display: none;
     }
-}
-.pos10 {
-    position: relative;
-    z-index: 10;
-}
+} 
 #add, #delete {
     transition: width 0.3 ease-in-out;
+    will-change: width, height, margin;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
 }
 .shortcutWrapper {
     --dialogWidth: 50vw;
-    width: 100%;
-    position: relative;
+    width: 100%; 
     z-index: 9;
     break-inside: avoid;
     padding: var(--shortcutPad);
@@ -387,8 +389,7 @@ button {
     min-height: var(--cellHeight);
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    position: relative;
+    align-items: center; 
     overflow: auto;
     padding: 1vh 2vh;
     margin: 1vh 5px;
@@ -406,8 +407,7 @@ button {
 .secItem {
     background: none;
     flex-direction: column;
-    padding-right: 0;
-    position: relative;
+    padding-right: 0; 
     align-items: flex-start;
 }
 
@@ -469,3 +469,31 @@ button {
     align-items: center;
 }
 
+.addGrid {
+    display: grid;
+    grid-template-columns: 40% auto;
+    grid-gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.paramItem {
+    width: 100%;
+    // height: 40px; 
+    // margin-top: 8px;
+    // margin-bottom: 4px;
+    // justify-content: space-between;
+    align-items: center;
+    p {
+        flex-shrink: 0;
+        width: 40%;
+        margin: 3px 0;
+    } 
+}
+#canAdd {
+    transition: height 0.5s linear 1.5s;
+    .paramItem {
+        margin: 6px 0;
+    }
+}
