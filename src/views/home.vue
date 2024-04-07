@@ -70,8 +70,7 @@ function navToDetail(shortcut) {
     <template v-slot:header>
       <appHeader :title="'shortcutConfig'" />
     </template>
-    <template v-slot:content>
-      <div class="appContainer">
+    <template v-slot:content> 
         <div
           id="scrollTitle"
           class="ShortcutConfig mt-12 h-10 w-full font-bold"
@@ -141,8 +140,7 @@ function navToDetail(shortcut) {
             </button>
           </div>
           <div id="test" class="w-full h-52"></div>
-        </div>
-      </div>
+        </div> 
     </template>
   </ScrollView>
 </template>

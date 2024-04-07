@@ -21,4 +21,4 @@ app.component('addParamDialog', addParamDialog)
 app.provide('$bus', $bus)
 
 
-app.mount('#app')
+app.mount('body')

@@ -20,8 +20,7 @@ onMounted(() => {
         <span v-if="item == 2" @click="deleteButton(2)">删除</span>
       </div>
     </TransitionGroup>
-  </div> -->
-  <section class="w-full h-full">
+  </div> --> 
     <addParamDialog/>
     <router-view v-slot="{ Component, route }">
       <keep-alive>
@@ -29,6 +28,5 @@ onMounted(() => {
           <component :is="Component" />
         </transition>
       </keep-alive>
-    </router-view>
-  </section>
+    </router-view> 
 </template> 
