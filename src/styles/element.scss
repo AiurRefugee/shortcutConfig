@@ -29,3 +29,10 @@ html {
 .el-dialog__body {
     padding: 0.2rem 1rem !important; 
 }
+.el-dialog__body, .el-dialog__footer, .el-dialog__header, .el-dialog{
+    background: var(--bgLight_Secondary) !important;
+    border-radius: 1rem !important;
+}
+.el-dialog__title {
+    color: var(--txtDark_Primary) !important;
+}

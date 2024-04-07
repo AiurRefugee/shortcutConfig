@@ -6,14 +6,13 @@ import OptButton from "@/components/optButton.vue";
 
 import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
-import { showOpt, copyToClipboard } from '@/utils/utils.js'
-import { shortcutStore } from '@/store/shortcut';
-const store = shortcutStore()
+import { showOpt, copyToClipboard } from "@/utils/utils.js";
+import { shortcutStore } from "@/store/shortcut";
+const store = shortcutStore();
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
 
-const props = defineProps([
-  "shortcut",
-  "shortcutIndex", 
-]);
+const props = defineProps(["shortcut", "shortcutIndex"]);
 const emit = defineEmits(["removeShortcut", "checkName"]);
 
 function runShortCut(name) {
@@ -21,39 +20,51 @@ function runShortCut(name) {
 }
 
 const $bus = inject("$bus");
+const widgetsList = ref();
 const thisShortcut = ref();
 
-async function addKeyValue() { 
-  const param = await store.getAddParam('param')
+async function addKeyValue() {
+  const param = await store.getAddParam("param");
   console.log("addKeyValue", param);
-  props.shortcut.params.unshift(param)
-  $bus.emit('update')
-} 
+  props.shortcut.params.unshift(param);
+  $bus.emit("update");
+}
 
 function removeShortcut(index) {
-  emit("removeShortcut", index);
+  gsap.to(thisShortcut.value, {
+    transform: "translate(0, -200px)",
+    opacity: 0,
+    height: 0,
+    padding: 0,
+    margin: 0,
+    duration: 0.6,
+    ease: "power3.out",
+    onComplete: () => { 
+      if (window.innerWidth <= 628) {
+        router.go(-1);
+      }
+    },
+  });
 }
 
 function deleteParam(index) {
   console.log("deleteShortcutParam", index);
-  gsap.to(
-    `#${props.shortcut.shortcutName}${props.shortcutIndex}params${index}`,
-    {
-      height: 0,
-      opacity: 0,
-      padding: 0,
-      margin: 0,
-      transform: "translate( 0, -30px)",
-      duration: 0.3,
-      ease: "power1.inOut",
-      onComplete: () => {
-        setTimeout(() => {
-          props.shortcut.params.splice(index, 1);
-          $bus.emit('update', props.shortcutIndex)
-        }, 200);
-      },
-    }
-  ); 
+  const target = widgetsList.value.children[index];
+  gsap.to(target, {
+    height: 0,
+    opacity: 0,
+    padding: 0,
+    margin: 0,
+    transform: "translate( 0, -30px)",
+    duration: 0.6,
+    ease: "power1.inOut",
+    onComplete: () => {
+      setTimeout(() => {
+        props.shortcut.params.splice(index, 1);
+        $bus.emit("update", props.shortcutIndex);
+      }, 200);
+    },
+  });
 }
 
 onMounted(() => {});
@@ -69,26 +80,24 @@ onMounted(() => {});
         >
           {{ shortcut.shortcutName }}
         </h2>
-        <OptButton 
-          @addKeyValue="addKeyValue"
-          @deleteParam="removeShortcut" 
-        />
+        <OptButton @addKeyValue="addKeyValue" @deleteParam="removeShortcut" />
       </div>
       <transition-group name="list">
-        <div
-          class="py-2"
-          :id="shortcut.shortcutName + shortcutIndex + 'params' + index"
-          v-for="(item, index) in shortcut.params"
-          :key="item"
-        >
-          <Widgets
-            :index="index"
-            :shortcutIndex="shortcutIndex"
-            :type="'params'"
-            :param="item"
-            @deleteParam="deleteParam"
+        <div ref="widgetsList">
+          <div
+            class="py-2 overflow-hidden"
+            v-for="(item, index) in shortcut.params"
+            :key="item"
           >
-          </Widgets>
+            <Widgets
+              :index="index"
+              :shortcutIndex="shortcutIndex"
+              :type="'params'"
+              :param="item"
+              @deleteParam="deleteParam"
+            >
+            </Widgets>
+          </div>
         </div>
       </transition-group>
     </div>

@@ -12,27 +12,27 @@ import detailView from "@/views/detailView.vue";
 import { calScroll } from "@/utils/utils.js";
 import gsap from "gsap";
 import { shortcutStore } from "@/store/shortcut";
-const store = shortcutStore(); 
+const store = shortcutStore();
 
 const router = useRouter();
 // components
 import shortcut from "@/components/shortcut.vue";
 
 const port = 5173;
-const lgUrl = `http://localhost:${port}`; 
+const lgUrl = `http://localhost:${port}`;
 
 const $bus = inject("$bus");
 $bus.on("update", update);
 
-const ShortcutConfig = ref(shortcutConfig);  
+const ShortcutConfig = ref(shortcutConfig);
 
 function update() {
-  console.log('update', ShortcutConfig.value)
+  console.log("update", ShortcutConfig.value);
 }
 
 async function addShortcut() {
   console.log("addShortcut");
-  const newShortcut = await store.getAddParam("shortcut")
+  const newShortcut = await store.getAddParam("shortcut");
   ShortcutConfig.value.unshift(newShortcut);
 }
 
@@ -54,8 +54,6 @@ function deleteShortcut(index) {
 function deleteKeyValue(index, keyValueIndex) {
   ShortcutConfig.value[index].params.splice(keyValueIndex, 1);
 }
-
-
 
 onMounted(() => {});
 
@@ -83,28 +81,21 @@ function navToDetail(shortcut) {
             <el-icon><CirclePlusFilled /></el-icon>
           </div>
         </div>
-        <div class="shortcutContainer pb-16" >
+        <div class="shortcutContainer pb-16">
           <TransitionGroup name="list" tag="ul">
-            <div
-              :id="'shortcut' + index"
+            <shortcut
               v-for="(shortcut, index) in ShortcutConfig"
               :key="shortcut"
-            >
-              <shortcut
-                :shortcut="shortcut"
-                :shortcutIndex="index"
-                :shortcutName="shortcut.shortcutName"
-                @removeShortcut="deleteShortcut"
-              />
-            </div>
+              :shortcut="shortcut"
+              :shortcutIndex="index"
+              :shortcutName="shortcut.shortcutName"
+              @removeShortcut="deleteShortcut"
+            />
           </TransitionGroup>
           <div class="w-full h-24"></div>
         </div>
 
-
-        <div
-          class="shortcutList w-full p-6 overflow-auto" 
-        >
+        <div class="shortcutList w-full p-6 overflow-auto">
           <div class="w-full text-white rounded-2xl overflow-hidden">
             <button
               class="w-full flex-shrink-0 py-2 px-4 bgLight_Secondary text-left"

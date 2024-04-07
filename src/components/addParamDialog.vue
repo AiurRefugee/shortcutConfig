@@ -116,15 +116,14 @@ onMounted( () => {
 <template>
   <el-dialog
     :title="addType == 'shortcut' ? '添加shortcut' : '添加param'"
-    v-model="showDialog"
-    style="border-radius: 1rem"
+    v-model="showDialog" 
     :width="'var(--dialogWidth)'"
     @close="closeDialog"
   >
-    <section class="pl-4">
+    <section class="px-4">
       <div class="paramItem" v-if="addType == 'shortcut'">
-        <p class="w-1/3 mr-2">shortcutName:</p>
-        <div class="pl-1">
+        <p class="w-1/3 mr-2 my-2 txtDark_Secondary text-lg">shortcutName:</p>
+        <div class="">
           <el-input
             v-model="newParam.shortcutName"
             placeholder="shortcutName"
@@ -133,14 +132,14 @@ onMounted( () => {
       </div>
       <div class="paramItem" v-else>
         <div>
-          <p class="w-1/3 mr-2">key:</p>
-          <div class="pl-1">
+          <p class="w-1/3 mr-2 txtDark_Secondary text-lg">key:</p>
+          <div class="">
             <el-input v-model="newParam.key" placeholder="key"></el-input>
           </div>
         </div>
         <div class="paramItem my-2">
-          <p class="w-1/3 mr-2">canAddParam:</p>
-          <div class="pl-1">
+          <p class="w-1/3 mr-2 txtDark_Secondary text-lg">canAddParam:</p>
+          <div class="">
             <el-switch
               v-model="newParam.canAddParam" 
               @change="toogleCanAdd"
@@ -156,8 +155,8 @@ onMounted( () => {
       >
         <div>
           <div class="paramItem">
-            <p class="w-1/3 mr-2">paramType:</p>
-            <div class="pl-1">
+            <p class="w-1/3 mr-2 txtDark_Secondary text-lg">paramType:</p>
+            <div class="">
               <el-select v-model="newParam.type" @change="clearValue">
                 <el-option label="select" value="select"></el-option>
                 <el-option label="input" value="input"></el-option>
@@ -165,15 +164,15 @@ onMounted( () => {
               </el-select>
             </div>
           </div>
-          <p class="text-xs txtDark_Basic">
+          <p class="text-xs txtDark_Basic my-2">
             参数类型:select选择器;input输入框;switch开关
           </p>
         </div>
 
         <div v-if="newParam.type === 'input'">
           <div class="paramItem">
-            <p class="w-1/3 mr-2">value:</p>
-            <div class="pl-1">
+            <p class="w-1/3 mr-2 txtDark_Secondary text-lg">value:</p>
+            <div class="">
               <el-input
                 v-model="newParam.value"
                 placeholder="参数值"
@@ -183,22 +182,22 @@ onMounted( () => {
         </div>
         <div v-if="newParam.type === 'select'">
           <div class="paramItem">
-            <p class="w-1/3 mr-2">value:</p>
-            <div class="pl-1">
+            <p class="w-1/3 mr-2 txtDark_Secondary text-lg">value:</p>
+            <div class="">
               <el-input
                 v-model="newParam.options"
                 placeholder="选项值"
               ></el-input>
             </div>
           </div>
-          <p class="text-xs txtDark_Basic">
+          <p class="text-xs txtDark_Basic my-2">
             选项值以空格为分割， 默认值写在第一个
           </p>
         </div>
         <div v-if="newParam.type === 'switch'">
           <div class="paramItem">
-            <p class="w-1/3 mr-2">value:</p>
-            <div class="pl-1">
+            <p class="w-1/3 mr-2 txtDark_Secondary text-lg">value:</p>
+            <div class="">
               <el-switch v-model="newParam.value"></el-switch>
             </div>
           </div>
@@ -206,7 +205,7 @@ onMounted( () => {
       </div>
     </section>
     <template #footer>
-      <div class="w-full flex">
+      <div class="w-full flex px-2">
         <el-button class="w-full" type="primary" @click="addParm"
           >确定</el-button
         >

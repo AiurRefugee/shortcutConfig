@@ -5,14 +5,14 @@ import gsap from "gsap";
 import OptButton from "@/components/optButton.vue";
 import { CopyDocument } from "@element-plus/icons-vue";
 import Widgets from "@/components/Widgets.vue";
-import { showOpt, copyToClipboard } from '@/utils/utils.js'
+import { showOpt, copyToClipboard } from "@/utils/utils.js";
 const $bus = inject("$bus");
 
 import { shortcutStore } from "@/store/shortcut";
 const store = shortcutStore();
-
+var longPressTimer = null;
 const subWrapper = ref();
-const listItemWrapper = ref(); 
+const listItemWrapper = ref();
 
 const props = defineProps(["param", "index", "shortcutIndex"]);
 const emit = defineEmits(["deleteParam"]);
@@ -31,22 +31,42 @@ function deleteParam(index) {
     onComplete: () => {
       setTimeout(() => {
         props.param.params.splice(index, 1);
-        $bus.emit('update', props.shortcutIndex)
+        $bus.emit("update", props.shortcutIndex);
       }, 200);
     },
   });
 }
 
 async function addKeyValue() {
-  const newKeyValue = await store.getAddParam("param")
-  props.param.params.unshift(newKeyValue)
-  $bus.emit('update', props.shortcutIndex)
+  const newKeyValue = await store.getAddParam("param");
+  props.param.params.unshift(newKeyValue);
+  $bus.emit("update", props.shortcutIndex);
 }
 
 function emitDelete(index) {
-  
   emit("deleteParam", index);
-} 
+}
+
+function calStart(event) {
+  // const target = event.target;
+  // target.readOnly = false;
+  // target.focus();
+  // setTimeout(() => {
+  //   target.readOnly = false;
+  //   target.focus();
+  // }, 500);
+}
+
+function calEnd(event) {
+  const target = event.target;
+  // target.readOnly = false;
+  // setTimeout(() => {
+  //   target.readOnly = false;
+  // }, 500);
+  // setTimeout(() => {
+  //   target.focus()
+  // }, 600)
+}
 
 onMounted(() => {});
 </script>
@@ -56,12 +76,13 @@ onMounted(() => {});
     <div
       id="listItem"
       class="text-lg p-2 pr-0 flex items-center cursor-pointer"
+      @click="showOpt(listItemWrapper, param.canAddParam)"
     >
       <div class="w-full flex justify-between items-center">
         <div
-          class="w-1/2 flex-grow-2 whitespace-nowrap overflow-hidden pr-4"
-          :class="param.type ? '' : 'flex-shrink-0'"
-          @click.stop="showOpt(listItemWrapper, param.canAddParam)"
+          class="w-2/5 whitespace-nowrap overflow-hidden pr-2"
+          :class="param.params ? 'flex-1' : ''"
+          
         >
           <!-- <div class="divider"></div> -->
           <!-- <el-input
@@ -70,15 +91,13 @@ onMounted(() => {});
             placeholder="请输入键名"
             v-else
           ></el-input> -->
-          <div class="w-full flex items-center overflow-auto">
-            <input
-              class="bg-transparent text-base txtDark_Primary"
-              v-model="param.key"
-              placeholder="请输入键名"
-            />
+          <div
+            class="w-full flex items-center overflow-auto text-base txtDark_Primary"
+          >
+            {{ param.key }}
           </div>
         </div>
-        <div class="w-1/2 pr-3 flex-grow-2" :class="param.type ? '' : ''">
+        <div class="pr-3" :class="param.params ? 'w-0' : 'w-3/5'">
           <div class="w-full flex justify-end" v-if="param.type == 'select'">
             <el-select
               v-model="param.value"
@@ -94,21 +113,26 @@ onMounted(() => {});
           </div>
 
           <div
-            class="w-full flex flex-grow-2 justify-end"
+            class="w-full flex flex-grow-2 items-center justify-between rounded-lg pl-2 bg-white"
             v-if="param.type == 'input'"
             :class="param.type ? '' : ''"
           >
-            <el-input
-              placeholder="请输入值"
-              v-model="param.value"
-              :readonly="props.readOnly"
-            >
-              <template #append>
+            <div class="w-5/6 overflow-auto pr-2">
+              <input
+                class="w-full h-8 whitespace-nowrap overflow-auto txtLight_Basic"
+                style="font-size: 14px;"
+                placeholder="请输入值"
+                v-model="param.value"
+              />
+            </div>
+            <div class="h-8 w-10 flex justify-center items-center copy">
+              <CopyDocument />
+            </div>
+            <!-- <template #append>
                 <el-icon @click="copyToClipboard(param.value)"
                   ><CopyDocument
                 /></el-icon>
-              </template>
-            </el-input>
+              </template> -->
           </div>
           <div
             class="w-full flex justify-end flex-grow-2"
@@ -119,10 +143,10 @@ onMounted(() => {});
           </div>
         </div>
 
-        <OptButton 
-          :index="index" 
+        <OptButton
+          :index="index"
           @addKeyValue="addKeyValue"
-          @deleteParam="emitDelete" 
+          @deleteParam="emitDelete"
         />
       </div>
     </div>

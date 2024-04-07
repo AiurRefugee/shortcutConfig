@@ -2,10 +2,10 @@
 const props = defineProps(["showBack", "leftFunc", "title"]);
 </script>
 <template>
-  <header class="w-full h-12 flex justify-center appHeader">
+  <header class="w-full h-10 pt-1 flex justify-center appHeader">
     <div
       id="left"
-      class="flex h-1/2 justify-self-start items-center"
+      class="flex mt-1 h-1/2 justify-self-start items-center"
       @click="leftFunc"
     >
       <div v-if="showBack" class="flex w-full h-full items-center">
@@ -22,19 +22,12 @@ const props = defineProps(["showBack", "leftFunc", "title"]);
         <span class="text-xl">Back</span>
       </div>
     </div>
-    <h1 class="title text-2xl opacity-0">{{ title }}</h1>
+    <h1 class="title opacity-0">{{ title }}</h1>
     <div class="right"></div>
   </header>
 </template>
 <style scoped lang="scss">
-.appHeader {
-  display: grid;
-  grid-template-columns: 30% 40% 30%;
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
-  @media (orientation: landscape) {
-    // height: 10vh;
-  }
-}
+* {
+  // border: 1px solid black;
+} 
 </style>
