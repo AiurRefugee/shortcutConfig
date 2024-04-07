@@ -80,7 +80,7 @@ onMounted(() => {});
     >
       <div class="w-full flex justify-between items-center">
         <div
-          class="w-2/5 whitespace-nowrap overflow-hidden pr-2"
+          class="w-2/5 whitespace-nowrap overflow-hidden pr-1"
           :class="param.params ? 'flex-1' : ''"
           
         >
@@ -117,7 +117,7 @@ onMounted(() => {});
             v-if="param.type == 'input'"
             :class="param.type ? '' : ''"
           >
-            <div class="w-5/6 overflow-auto pr-2">
+            <div class="w-5/6 overflow-auto pr-1">
               <input
                 class="w-full h-8 whitespace-nowrap overflow-auto txtLight_Basic"
                 style="font-size: 14px;"

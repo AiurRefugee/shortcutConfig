@@ -37,9 +37,8 @@ function removeShortcut(index) {
     height: 0,
     padding: 0,
     margin: 0,
-    duration: 0.6,
-    ease: "power3.out",
-    onComplete: () => { 
+    duration: 0.6, 
+    onComplete: () => {
       if (window.innerWidth <= 628) {
         router.go(-1);
       }
@@ -82,8 +81,8 @@ onMounted(() => {});
         </h2>
         <OptButton @addKeyValue="addKeyValue" @deleteParam="removeShortcut" />
       </div>
-      <transition-group name="list">
-        <div ref="widgetsList">
+      <div ref="widgetsList">
+        <transition-group name="list">
           <div
             class="py-2 overflow-hidden"
             v-for="(item, index) in shortcut.params"
@@ -98,8 +97,8 @@ onMounted(() => {});
             >
             </Widgets>
           </div>
-        </div>
-      </transition-group>
+        </transition-group>
+      </div>
     </div>
   </div>
 </template>
