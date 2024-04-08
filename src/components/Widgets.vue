@@ -95,22 +95,19 @@ onMounted(() => {});
           {{ param.key }}
         </div>
       </div>
-      <div
-        class="pr-3 flex justify-end"
-        :class="param.params ? 'w-0' : 'w-3/5'"
-      >
-        <el-select
-          v-if="param.type == 'select'"
-          v-model="param.value"
-          style="width: 100%; position: relative; z-index: 10"
-        >
-          <el-option
-            :label="item"
-            :value="item"
-            v-for="item in param.options"
-            :key="item"
-          ></el-option>
-        </el-select>
+      <div class="pr-3 flex justify-end" :class="param.params ? 'w-0' : 'w-3/5'">
+          <el-select
+            v-if="param.type == 'select'"
+            v-model="param.value"
+            style="width: 100%; position: relative; z-index: 10"
+          >
+            <el-option
+              :label="item"
+              :value="item"
+              v-for="item in param.options"
+              :key="item"
+            ></el-option>
+          </el-select> 
 
         <div
           class="w-full flex items-center justify-between rounded-lg pl-2 bg-white"

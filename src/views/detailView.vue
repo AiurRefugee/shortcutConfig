@@ -352,26 +352,9 @@ onMounted(() => {
       ></appHeader>
     </template>
     <template v-slot:content>
-      <div class="h-8"></div>
-      <!-- <button
-        id="scrollTitle"
-        class="flex items-center p-4 txtDark_Primary mt-6 text-2xl"
-        @click="navBack"
-      >
-        <svg
-          class="w-8 h-6 mr-1 txtDark_Basic rotate-180"
-          viewBox="0 0 1024 1024"
-        >
-          <path
-            class="bgDark_Basic"
-            d="M307.6 104.6c-14.2 14.2-14.2 37.2 0 51.4L655 503.4c2.8 2.9 2.8 7.5 0 10.3L307.6 861.2c-14.2 14.2-14.2 37.2 0 51.4 14.2 14.2 37.2 14.2 51.4 0l347.4-347.4c15.6-15.6 23.4-36 23.4-56.5s-7.8-41-23.4-56.5L359 104.6c-14.2-14.2-37.2-14.2-51.4 0z"
-            p-id="1451"
-          ></path>
-        </svg>
-        <h2 class="font-bold">ShortcutConfig</h2>
-      </button> -->
-      <!-- <h2 id="scrollTitle" class="text-2xl px-5 font-bold txtDark_Primary">{{ shortcutDetail.shortcutName }}</h2> -->
-      <shortcut :shortcut="shortcutDetail" v-if="shortcutDetail"></shortcut>
+      <div class="h-8"></div> 
+      <shortcut :shortcut="shortcutDetail" v-if="shortcutDetail"/>
+      <div class="h-32"></div>
     </template>
   </ScrollView>
 </template>
