@@ -31,7 +31,7 @@ html {
     --shortcutWidth: 50vw;
     --shortcutMargin: 1rem;
     --shortcutPad: 1rem;
-    --colNum: 2;
+    --colNum: ;
     --dialogWidth: 60vw;
     --el-dialog-padding-primary: 2rem;
 
@@ -70,7 +70,7 @@ html {
     }
 
     @media (width <= 628px) {
-        font-size: 14px;
+        // font-size: 14px;
         --shortcutWidth: 90vw;
         --shortcutMargin: 1rem;
         --colNum: 1;

@@ -122,7 +122,7 @@ onMounted( () => {
   >
     <section class="px-4">
       <div class="paramItem" v-if="addType == 'shortcut'">
-        <p class="w-1/3 mr-2 my-2 txtDark_Secondary text-lg">shortcutName:</p>
+        <p class="w-1/3 mr-2 my-6 txtDark_Secondary text-lg">shortcutName:</p>
         <div class="">
           <el-input
             v-model="newParam.shortcutName"

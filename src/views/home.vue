@@ -5,27 +5,27 @@ import { CirclePlusFilled } from "@element-plus/icons-vue";
 import debugGUI from "@/components/debugGUI.vue";
 import ScrollView from "@/viewComponent/scrollView.vue";
 import appHeader from "@/components/header.vue";
-import { shortcutConfig } from "@/assets/shortcutConfig";
 import { useRouter } from "vue-router";
 
 import detailView from "@/views/detailView.vue";
 import { calScroll } from "@/utils/utils.js";
 import gsap from "gsap";
 import { shortcutStore } from "@/store/shortcut";
+import { ShortcutConfigExports } from "@/utils/shortcutConfig.js";
 const store = shortcutStore();
 
 const router = useRouter();
+const ShortcutConfig = ref(ShortcutConfigExports)
 // components
-import shortcut from "@/components/shortcut.vue";
+import shortcutComponent from "@/components/shortcut.vue";
 
 const port = 5173;
 const lgUrl = `http://localhost:${port}`;
 
 const $bus = inject("$bus");
 $bus.on("update", update);
-
-const ShortcutConfig = ref(shortcutConfig);
-
+ 
+console.log('ShortcutConfig', ShortcutConfig.value)
 function update() {
   console.log("update", ShortcutConfig.value);
 }
@@ -64,8 +64,7 @@ function navToDetail(shortcut) {
   });
 }
 </script>
-<template>
-  <!-- <debugGUI :gui="gui"></debugGUI> -->
+<template> 
   <ScrollView :calScrollFunc="calScroll">
     <template v-slot:header>
       <appHeader :title="'shortcutConfig'" />
@@ -75,22 +74,20 @@ function navToDetail(shortcut) {
           id="scrollTitle"
           class="ShortcutConfig mt-12 h-10 w-full font-bold"
         >
-          <h1>ShortcutConfig</h1>
+          <h1 class="flex-shrink-0">ShortcutConfig</h1>
           <div class="addWrapper ml-4" @click="addShortcut">
             <el-icon><CirclePlusFilled /></el-icon>
           </div>
         </div>
-        <div class="shortcutContainer pb-16">
-          <TransitionGroup name="list" tag="ul">
-            <shortcut
+        <div class="shortcutContainer pb-16"> 
+            <div
               v-for="(shortcut, index) in ShortcutConfig"
               :key="shortcut"
               :shortcut="shortcut"
-              :shortcutIndex="index"
-              :shortcutName="shortcut.shortcutName"
+              :shortcutIndex="index" 
               @removeShortcut="deleteShortcut"
-            />
-          </TransitionGroup>
+            >{{ shortcut }}
+            </div> 
           <div class="w-full h-24"></div>
         </div>
 

@@ -78,17 +78,10 @@ onMounted(() => {});
       class="text-lg p-2 pr-0 flex w-full justify-between items-center cursor-pointer"
     >
       <div
-        class="w-2/5 whitespace-nowrap overflow-hidden pr-1"
+        class="w-2/5 whitespace-nowrap overflow-hidden pr-2"
         :class="param.params ? 'flex-1' : ''"
         @click="showOpt(listItemWrapper, param.canAddParam)"
-      >
-        <!-- <div class="divider"></div> -->
-        <!-- <el-input
-            style="width: 60%;"
-            v-model="param.key"
-            placeholder="请输入键名"
-            v-else
-          ></el-input> -->
+      > 
         <div
           class="w-full flex items-center overflow-auto text-base txtDark_Primary"
         >
@@ -124,12 +117,7 @@ onMounted(() => {});
           </div>
           <div class="h-8 w-10 flex justify-center items-center copy">
             <CopyDocument />
-          </div>
-          <!-- <template #append>
-                <el-icon @click="copyToClipboard(param.value)"
-                  ><CopyDocument
-                /></el-icon>
-              </template> -->
+          </div> 
         </div>
         <el-switch
           v-model="param.value"
