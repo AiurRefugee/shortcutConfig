@@ -60,16 +60,16 @@ onMounted(() => {});
 function navToDetail(shortcut) {
   router.push({
     path: "/detail/" + shortcut.shortcutName,
-    // replace: true,
+    replace: true,
   });
 }
 </script>
 <template> 
-  <ScrollView :calScrollFunc="calScroll">
-    <template v-slot:header>
-      <appHeader :title="'shortcutConfig'" />
+  <!-- <ScrollView :calScrollFunc="calScroll">
+    <template v-slot:header> -->
+      <!-- <appHeader :title="'shortcutConfig'" />
     </template>
-    <template v-slot:content> 
+    <template v-slot:content>  -->
         <div
           id="scrollTitle"
           class="ShortcutConfig mt-12 h-10 w-full font-bold"
@@ -92,7 +92,7 @@ function navToDetail(shortcut) {
         </div>
 
         <div class="shortcutList w-full p-6 overflow-auto">
-          <div class="w-full text-white rounded-2xl overflow-hidden">
+          <div class="w-full rounded-2xl overflow-hidden">
             <button
               class="w-full flex-shrink-0 py-2 px-4 bgLight_Secondary text-left"
               v-for="(shortcut, index) in ShortcutConfig"
@@ -101,12 +101,12 @@ function navToDetail(shortcut) {
             >
               <div class="w-full flex justify-between items-center">
                 <div class="">
-                  <p class="text-xl txtDark_Primary">
+                  <p class="text-lg txtDark_Primary">
                     {{ shortcut.shortcutName }}
                   </p>
-                  <div class="mr-4 ml-1 text-sm text-left mb-2 overflow-hidden">
+                  <div class="mr-4 ml-1 text-sm text-left mb-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-64">
                     <span
-                      class="mr-2 txtDark_Basic overflow-hidden whitespace-nowrap"
+                      class="mr-2 txtDark_Basic overflow-hidden whitespace-nowrap text-ellipsis"
                       v-for="item in shortcut.params.slice(0, 5)"
                       :key="item"
                       >{{ item.key }}</span
@@ -138,8 +138,8 @@ function navToDetail(shortcut) {
           </div>
           <div id="test" class="w-full h-52"></div>
         </div> 
-    </template>
-  </ScrollView>
+    <!-- </template>
+  </ScrollView> -->
 </template>
 <style lang="scss" scoped>
 </style>

@@ -92,7 +92,7 @@ html {
 }
 body {
     margin: 0;
-    height: 100dvh;
+    height: 100vh;
     overflow: auto;
 }
 svg {
@@ -156,15 +156,15 @@ svg {
     transition: all 0.3s ease-in-out;
     opacity: 1;
     @media (width > 628px) {
-        display: none;
-        opacity: 0;
+        // display: none;
+        // opacity: 0;
     }
 }
 .shortcutContainer {
     width: 100vw;
     // column-width: 45%;
     column-count: var(--colNum);
-    // display: flex;
+    display: none;
     // flex-direction: column;
     break-inside: avoid;
     // height: 100vh;

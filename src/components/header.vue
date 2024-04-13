@@ -19,10 +19,10 @@ const props = defineProps(["showBack", "leftFunc", "title"]);
             p-id="1451"
           ></path>
         </svg>
-        <span class="text-xl">Back</span>
+        <span class="text-lg">Back</span>
       </div>
     </div>
-    <h1 class="title opacity-0">{{ title }}</h1>
+    <h1 class="title text-xl opacity-0">{{ title }}</h1>
     <div class="right"></div>
   </header>
 </template>
