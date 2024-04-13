@@ -1,5 +1,7 @@
 <script setup>
-const props = defineProps(["showBack", "leftFunc", "title"]);
+import { ref, onMounted, onUnmounted } from 'vue';
+const props = defineProps(["showBack", "leftFunc", "title", "scrollFunc"]);
+
 </script>
 <template>
   <header class="w-full h-10 pt-1 flex justify-center appHeader">

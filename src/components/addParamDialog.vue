@@ -109,8 +109,7 @@ function clearValue(type) {
 }
 
 onMounted( () => {
-  newParam.value = { ...initParam };
-  console.log(newParam.value);
+  newParam.value = { ...initParam }; 
 })
 </script>
 <template>

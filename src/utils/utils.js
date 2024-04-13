@@ -1,6 +1,7 @@
 
 
-import gsap from "gsap"; 
+import gsap from "gsap";
+import { ref, onMounted, onUnmounted } from 'vue'
 
 export class EventBus {
   constructor() {
@@ -15,7 +16,7 @@ export class EventBus {
     this.events[eventName] = fn;
   }
 
-} 
+}
 
 export function copyToClipboard(text) {
   try {
@@ -45,46 +46,57 @@ export function copyToClipboard(text) {
       grouping: true,
     })
   }
-} 
- 
+}
 
 
 
-export function calScroll(scrollView, event) {
-  var showed = false
-  const height = event.target.scrollTop;
-  const scrollTitle = scrollView
-    .querySelector("#scrollTitle")
-  var rect = null
-  if (!scrollTitle) {
-    console.log('g')
-    return false
-  }
-  rect = scrollTitle.getClientRects()[0];
-  const threshold = (rect.bottom + rect.top) * 0.5  
-  const header = scrollView.querySelector("header");
-  const title = header.querySelector("h1"); 
-  if (threshold < height) {
-    if (!showed) {
-      gsap.to(title, { duration: 0.1, opacity: 1, ease: "power1.inOut" });
-      // gsap.to('#left', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
-      // gsap.to('#right', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
-      gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
-      // header.style.background = 'linear-gradient(to bottom, var(--bgLight_Primary) 50%, transparent 100%)'
-      showed = true
+
+export function useCalScroll() {
+
+  const height = ref(0)
+  const threshold = ref(0)
+
+  function calScroll(event) {
+    const scrollTitle = document.querySelector("#scrollTitle");
+    height.value = scrollTitle.getBoundingClientRect().bottom;
+
+
+    const title = document.querySelector("header");
+    threshold.value = title.getBoundingClientRect().bottom 
+
+    if (height.value < threshold.value) { 
+        gsap.to('header h1', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
+        gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
+    } else { 
+      gsap.to('header h1', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
+      gsap.to(scrollTitle, { duration: 0.2, opacity: 1, ease: "power1.inOut" });
+      // showed = false
     }
+  }
+  onMounted(() => window.addEventListener('scroll', calScroll))
+  onUnmounted(() => window.removeEventListener('scroll', calScroll))
 
-  } else {
+  return {height, threshold}
+}
 
-    gsap.to(title, { duration: 0.1, opacity: 0, ease: "power1.inOut" });
-    // gsap.to('#left', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
-      // gsap.to('#right', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
+export function calScroll() {
+  const scrollTitle = document.querySelector("#scrollTitle");
+  const height = scrollTitle.getBoundingClientRect().bottom;
+
+
+  const title = document.querySelector("header");
+  const threshold = title.getBoundingClientRect().bottom 
+
+  if (height < threshold) { 
+      gsap.to('header h1', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
+      gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
+  } else { 
+    gsap.to('header h1', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
     gsap.to(scrollTitle, { duration: 0.2, opacity: 1, ease: "power1.inOut" });
-    // header.style.background = 'var(--bgLight_Primary)'
-    showed = false
+    // showed = false
   }
 }
- 
+
 
 export function deleteParam(shortcut, index) {
   props.shortcut.params.splice(index, 1);
@@ -105,14 +117,14 @@ export function hideLastButton(button) {
 }
 
 function toogleButton(button) {
-  if (button.clientWidth > 0) { 
+  if (button.clientWidth > 0) {
     gsap.to(button, {
       width: 0,
       duration: 0.3,
       marginRight: '0',
       // ease: "power1.inOut",
     });
-  } else { 
+  } else {
     gsap.to(button, {
       width: "4rem",
       marginRight: '0.5rem',
@@ -123,12 +135,12 @@ function toogleButton(button) {
 }
 
 var lastAdd, lastDelete
-export function showOpt(wrapper, canAdd) { 
+export function showOpt(wrapper, canAdd) {
   hideLastButton(lastAdd);
   hideLastButton(lastDelete);
   const deleteButton = wrapper.querySelector("#delete");
   if (canAdd) {
-    const addButton = wrapper.querySelector('#add') 
+    const addButton = wrapper.querySelector('#add')
     if (addButton) {
       toogleButton(addButton);
       lastAdd = addButton;

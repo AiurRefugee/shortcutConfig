@@ -26,8 +26,9 @@ input:focus-visible {
 }
 html {
     width: 100vw;
-    height: 100dvh;
+    height: 100vh;
     overflow: auto;
+    // overscroll-behavior: none;
     --shortcutWidth: 50vw;
     --shortcutMargin: 1rem;
     --shortcutPad: 1rem;
@@ -50,8 +51,7 @@ html {
     --txtDark_Basic: #5b5b5b;
 
     --radius-lg: 1rem;
-
-    overflow: hidden;
+ 
     --cellHeight: 4vh;
     --radius-lg: 15px;
     --radius-base: 12px;
@@ -92,8 +92,7 @@ html {
 }
 body {
     margin: 0;
-    height: 100vh;
-    overflow: auto;
+    height: 100vh; 
 }
 svg {
     // width: 100%;
@@ -224,7 +223,7 @@ button {
     // height: var(--cellHeight);
 }
 ::-webkit-scrollbar {
-    display: none;
+    // display: none;
 }
 .appHeader { 
     color: var(--txtDark_Primary);
