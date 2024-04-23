@@ -4,8 +4,9 @@ const props = defineProps(["showBack", "leftFunc", "title", "scrollFunc"]);
 
 </script>
 <template>
-  <header class="w-full h-10 pt-1 flex justify-center appHeader">
-    <div
+  <header class="w-full h-10 flex justify-center items-center ">
+    <div class="w-full h-10 pt-1 flex justify-center appHeader">
+      <div
       id="left"
       class="flex mt-1 h-1/2 justify-self-start items-center"
       @click="leftFunc"
@@ -26,6 +27,7 @@ const props = defineProps(["showBack", "leftFunc", "title", "scrollFunc"]);
     </div>
     <h1 class="title text-xl opacity-0">{{ title }}</h1>
     <div class="right"></div>
+    </div>
   </header>
 </template>
 <style scoped lang="scss">

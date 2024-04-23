@@ -20,15 +20,9 @@ const router = createRouter({
       }, 
     
   ],
-  // scrollBehavior(to, from, savedPosition) {
-  //   // 始终在元素 #main 上方滚动 10px
-  //   return {
-  //     // 也可以这么写
-  //     // el: document.getElementById('main'),
-  //     el: '#scrollTitle',
-  //     // 在元素上 10 像素
-  //     top: 10,
-  //   }
+  // scrollBehavior(to, from, savedPosition) { 
+  //   console.log('savedPosition', savedPosition)
+  //   return savedPosition
   // },
 })
 

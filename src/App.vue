@@ -1,9 +1,8 @@
 <script setup>
 import { onMounted } from "vue";
-import { shortcutStore } from "@/store/shortcut"; 
+import { shortcutStore } from "@/store/shortcut";
 const store = shortcutStore();
-onMounted(() => {
-  
+onMounted(() => { 
   window.addEventListener("resize", store.updateSize)
 });
 </script>

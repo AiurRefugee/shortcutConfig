@@ -201,6 +201,8 @@ svg {
         // background-color: var(--bgLight_Primary);
     }
     .shortcut {
+        max-width: 1024px;
+        margin: auto;
         h2 ~ #add {
             margin-right: 0.5rem;
         }
@@ -226,6 +228,7 @@ button {
     // display: none;
 }
 .appHeader { 
+    max-width: 1024px;
     color: var(--txtDark_Primary);
     background-color: var(--bgLight_Primary);
     font-size: 1.5rem;

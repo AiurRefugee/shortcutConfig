@@ -84,8 +84,8 @@ function navToDetail(shortcut) {
 <template>
   <div>
     <appHeader :title="'ShortcutConfig'" />
-    <div id="scrollTitle" class="ShortcutConfig mt-12 h-10 w-full font-bold">
-      <h1 class="flex-shrink-0">ShortcutConfig</h1>
+    <div id="scrollTitle" class="ShortcutConfig max-w-screen-lg m-auto mt-12 h-10 w-full font-bold">
+      <h1 class="flex-shrink-0 max-w-screen-lg">ShortcutConfig</h1>
 
       <div class="addWrapper ml-4" @click="addShortcut">
         <el-icon><CirclePlusFilled /></el-icon>
@@ -99,14 +99,13 @@ function navToDetail(shortcut) {
         :shortcut="shortcut"
         :shortcutIndex="index"
         @removeShortcut="deleteShortcut"
-      >
-        {{ shortcut }}
+      > 
       </div>
       <div class="w-full h-24"></div>
     </div>
 
-    <div class="shortcutList w-full p-6 overflow-auto">
-      <div class="w-full rounded-2xl overflow-hidden">
+    <div class="shortcutList  w-full p-6 flex flex-col items-center overflow-auto">
+      <div class="w-full max-w-screen-lg rounded-2xl overflow-hidden">
         <button
           class="w-full flex-shrink-0 py-2 px-4 bgLight_Secondary text-left"
           v-for="(shortcut, index) in ShortcutConfig"
@@ -147,7 +146,7 @@ function navToDetail(shortcut) {
           ></div>
         </button>
       </div>
-      <div id="test" class="w-full h-52"></div>
+      <div id="test" class="w-full h-96"></div>
     </div>
   </div>
 </template>
