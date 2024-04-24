@@ -4,8 +4,8 @@ const props = defineProps(["showBack", "leftFunc", "title", "scrollFunc"]);
 
 </script>
 <template>
-  <header class="w-full h-10 flex justify-center items-center ">
-    <div class="w-full h-10 pt-1 flex justify-center appHeader">
+  <header id="appHeader" class="fixed px-2 top-0 overflow-hidden z-10 w-full flex justify-center items-center ">
+    <div class="w-full h-8 pt-1 flex justify-center headerGrid">
       <div
       id="left"
       class="flex mt-1 h-1/2 justify-self-start items-center"
@@ -34,4 +34,7 @@ const props = defineProps(["showBack", "leftFunc", "title", "scrollFunc"]);
 * {
   // border: 1px solid black;
 } 
+#appHeader {
+  transition: all 0.5s ease-in-out !important;
+}
 </style>

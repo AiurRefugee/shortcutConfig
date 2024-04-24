@@ -4,7 +4,7 @@ import axios from "axios";
 import { CirclePlusFilled } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 
-import detailView from "@/views/detailView.vue";
+import searchBar from "../components/searchBar.vue";
 import gsap from "gsap";
 import { shortcutStore } from "@/store/shortcut";
 import { ShortcutConfigExports } from "@/utils/shortcutConfig.js";
@@ -27,7 +27,7 @@ $bus.on("update", update);
 
 function calScroll() {
   const scrollTitle = document.querySelector("#scrollTitle");
-  const height = scrollTitle.getBoundingClientRect().bottom; 
+  const height = scrollTitle.getBoundingClientRect().bottom;
 
   if (height < scrollManager.threshold) {
     gsap.to("header h1", { duration: 0.1, opacity: 1, ease: "power1.inOut" });
@@ -70,8 +70,10 @@ function deleteKeyValue(index, keyValueIndex) {
 }
 
 onMounted(() => {
-  scrollManager.threshold = document.querySelector('header').getBoundingClientRect().bottom
-  window.addEventListener("scroll", calScroll);
+  scrollManager.threshold = document
+    .querySelector("header")
+    .getBoundingClientRect().bottom;
+  // window.addEventListener("scroll", calScroll);
 });
 
 function navToDetail(shortcut) {
@@ -82,15 +84,23 @@ function navToDetail(shortcut) {
 }
 </script>
 <template>
-  <div>
+  <div class="comFather">
     <appHeader :title="'ShortcutConfig'" />
-    <div id="scrollTitle" class="ShortcutConfig max-w-screen-lg m-auto mt-12 h-10 w-full font-bold">
-      <h1 class="flex-shrink-0 max-w-screen-lg">ShortcutConfig</h1>
+    <div
+      id="scrollTitle"
+      class="w-full h-16 flex justify-center items-center px-6 overflow-hidden"
+    >
+      <div
+        class="flex items-center text-2xl mt-8 mb-2 max-w-screen-lg m-auto w-full font-bold"
+      >
+        <h1>ShortcutConfig</h1>
 
-      <div class="addWrapper ml-4" @click="addShortcut">
-        <el-icon><CirclePlusFilled /></el-icon>
+        <div class="addWrapper ml-4" @click="addShortcut">
+          <el-icon><CirclePlusFilled /></el-icon>
+        </div>
       </div>
     </div>
+    <searchBar />
     <!-- {{ height }} -->
     <div class="shortcutContainer pb-16">
       <div
@@ -99,13 +109,14 @@ function navToDetail(shortcut) {
         :shortcut="shortcut"
         :shortcutIndex="index"
         @removeShortcut="deleteShortcut"
-      > 
-      </div>
+      ></div>
       <div class="w-full h-24"></div>
     </div>
 
-    <div class="shortcutList  w-full p-6 flex flex-col items-center overflow-auto">
-      <div class="w-full max-w-screen-lg rounded-2xl overflow-hidden">
+    <div
+      class="shortcutList w-full p-6 pt-2 flex flex-col items-center overflow-auto"
+    >
+      <div class="w-full max-w-screen-lg rounded-lg overflow-hidden">
         <button
           class="w-full flex-shrink-0 py-2 px-4 bgLight_Secondary text-left"
           v-for="(shortcut, index) in ShortcutConfig"
@@ -118,10 +129,10 @@ function navToDetail(shortcut) {
                 {{ shortcut.shortcutName }}
               </p>
               <div
-                class="mr-4 ml-1 txtDark_Basic text-sm text-left mb-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-64"
+                class="mr-1 ml-1 txtDark_Basic text-sm text-left mb-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-64"
               >
                 <span
-                  class="mr-2  overflow-hidden whitespace-nowrap text-ellipsis"
+                  class="mr-2 overflow-hidden whitespace-nowrap text-ellipsis"
                   v-for="item in shortcut.params.slice(0, 5)"
                   :key="item"
                   >{{ item.key }}</span
@@ -151,4 +162,26 @@ function navToDetail(shortcut) {
   </div>
 </template>
 <style lang="scss" scoped>
+// .comFather:focus-within #scrollTitle {
+//   opacity: 0;
+//   height: 0;
+// }
+// .comFather:focus-within #searchWrapper {
+//   // translate: 0 -80px;
+//   position: fixed;
+//   top: 0;
+//   height: 0;
+//   // transition: all 0.3s ease-in-out 0.4s;
+//   #cancelSearch {
+//     width: 4rem;
+//   }
+// }
+// .comFather:focus-within #appHeader {
+//   opacity: 0;
+//   height: 0;
+// } 
+// .comFather:focus-within .shortcutList {
+//   transition: none;
+//   padding-top: 3rem;
+// } 
 </style>

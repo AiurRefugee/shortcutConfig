@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import shortcut from "@/components/shortcut.vue";
 import ScrollView from "@/viewComponent/scrollView.vue";
 import appHeader from "@/components/header.vue";
+import searchBar from "../components/searchBar.vue";
 import { shortcutStore } from "@/store/shortcut";
 const store = shortcutStore();
 
@@ -345,10 +346,11 @@ onMounted(() => {});
   <div>
     <appHeader
       :showBack="true"
-      :leftFunc="navBack" 
+      :leftFunc="navBack"
       :title="shortcutName"
     ></appHeader>
-    <div class="h-8"></div>
+    <!-- <searchBar/> -->
+    <div class="h-6"></div>
     <shortcut :shortcut="shortcutDetail" v-if="shortcutDetail" />
     <div class="h-32"></div>
   </div>
