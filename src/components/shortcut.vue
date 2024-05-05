@@ -72,8 +72,7 @@ onMounted(() => {});
   <div class="shortcutWrapper" ref="thisShortcut">
     <div class="shortcut">
       <div class="w-full flex items-center justify-between">
-        <h2
-          id="scrollTitle"
+        <h2 
           class="w-full text-xl"
           @click.stop.prevent="showOpt(thisShortcut, true)"
         >

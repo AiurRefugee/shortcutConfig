@@ -27,18 +27,25 @@ input:focus-visible {
 .basicTrans {
     transition: all 0.5s ease-in-out;
 }
+.fastTrans {
+    transition: all 0.35s ease-in-out;
+}
 html {
     width: 100vw;
     height: 100vh;
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
     // overscroll-behavior: none;
+    --maxW:
     --shortcutWidth: 50vw;
     --shortcutMargin: 1rem;
-    --shortcutPad: 1.2rem;
-    --colNum: ;
+    --shortcutPad: 0.8rem;
+    --colNum: 2;
     --dialogWidth: min(50vw, 628px);
     --el-dialog-padding-primary: 2rem;
 
+    --test: red;
     --bgLight_Primary: white;
     --bgLight_Secondary: #e9e9e9;
     --bgLight_Basic: #d8d8d8;
@@ -105,11 +112,13 @@ svg {
 } 
 #scrollTitle {
     font-weight: 600;
-    overflow: hidden;
-    transition: all 0.5s ease-in-out !important;
+    overflow: hidden; 
 }
 .bgSearch {
     background-color: rgb(201 201 201 / 40%);
+}
+.max-width-screen {
+    max-width: var(--maxW);
 }
 .bgLight_Primary {
     background: var(--bgLight_Primary);
@@ -163,14 +172,14 @@ svg {
     transition: all 0.3s ease-in-out;
     opacity: 1;
     @media (width > 628px) {
-        // display: none;
+        display: none;
         // opacity: 0;
     }
 }
 .shortcutContainer {
     width: 100vw; 
-    column-count: var(--colNum);
-    display: none; 
+    column-count: var(--colNum); 
+    max-width: 1420px;
     break-inside: avoid; 
     grid-gap: 10px;
     transition: all 0.3s ease-in-out; 
@@ -188,11 +197,12 @@ svg {
     transform: translate3d(0, 0, 0);
 }
 .shortcutWrapper {
-    max-width: 1024px;
+    max-width: 1420px;
     width: 100%;
     z-index: 9;
     break-inside: avoid;
     padding: var(--shortcutPad);
+    // padding-left: 0;
     background-color: var(--bgLight_Primary);
     margin: auto;
     overflow: hidden;
@@ -227,7 +237,7 @@ button {
     // display: none;
 }
 .headerGrid {
-    max-width: 1024px;
+    max-width: 1420px;
     color: var(--txtDark_Primary);
     background-color: var(--bgLight_Primary);
     font-size: 1.5rem; 
@@ -244,8 +254,12 @@ button {
     letter-spacing: 0.1rem;
     .title {
         line-height: 1.5rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
         opacity: 0;
         font-weight: 800;
+        transition: all 0.2s ease-in-out;
         color: var(--txtDark_Primary);
     }
 }
@@ -406,7 +420,7 @@ button {
     border-radius: var(--radius-base);
     cursor: pointer;
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1420px) {
         min-width: 40vw;
     }
 }

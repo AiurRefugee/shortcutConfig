@@ -83,7 +83,7 @@ onMounted(() => {});
         @click="showOpt(listItemWrapper, param.canAddParam)"
       > 
         <div
-          class="w-full flex items-center overflow-auto text-base txtDark_Primary"
+          class="w-full flex items-center overflow-hidden text-base txtDark_Primary"
         >
           {{ param.key }}
         </div>

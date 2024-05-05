@@ -2,48 +2,58 @@
 import { ref, onMounted, computed, getCurrentInstance } from "vue";
 // import { layoutStore } from "@/stores/layout";
 
-
 const emit = defineEmits(["toogle"]);
-const props = defineProps(['calScrollFunc', 'top', 'classNames']);
+const props = defineProps(["calScrollFunc", "top", "classNames"]);
 
 // const layout = layoutStore();
-// const size = computed(() => layout.size);  
-const headerTitle = ref()
-const divider = ref()
-const scrollView = ref()
-function toogle() {
-  emit("toogle");
+// const size = computed(() => layout.size);
+const headerTitle = ref();
+const divider = ref();
+const scrollView = ref();
+const showTitle = ref(false);
+const inputFocus = ref(false);
+
+function handleScroll() {
+  if (scrollView.value.scrollTop > 32) {
+    showTitle.value = true;
+  } else {
+    showTitle.value = false;
+  }
 }
- 
-onMounted(() => { 
-})
+
+onMounted(() => {});
 </script>
 <template>
   <div
-    class="scrollView"
-    :class="classNames"
+    class="scrollView" 
     ref="scrollView"
-    :style="{  
-      'padding-top': top ? '5vh' : '0'
-    }"
-    @scroll="calScrollFunc(scrollView, $event)"
+    @scroll="handleScroll(scrollView, $event)"
   >
-    <slot name="header"></slot>
+    <slot name="header" :showTitle="showTitle" :inputFocus="inputFocus"></slot>
+
+    <slot name="title"></slot>
+    <slot
+      name="searchBar"
+      :showDivider="showTitle"
+      :inputFocus="inputFocus"
+    ></slot>
     <slot name="content"></slot>
   </div>
 </template>
 <style lang="scss" scoped>
-// @import "@/style/variables.scss";  
+// @import "@/style/variables.scss";
 .scrollView {
-  width: 100%; 
+  width: 100vw;
+  height: 100vh;
   //   padding: 0 $tabLeftSpace;
   // transform: translate(0, 0);
   background: var(--bgLight_Primary);
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: auto;
+  overscroll-behavior: none;
   // transform: translateX(0);
   // padding-top: $headerHeight;
-  
-   
+}
+::-webkit-scrollbar {
+  display: none;
 }
 </style>

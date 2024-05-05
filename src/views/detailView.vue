@@ -12,6 +12,7 @@ import { useCalScroll } from "@/utils/utils.js";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
+const showTitle = ref(false);
 const shortcutDetail = ref({
   shortcutName: "读取哈希表",
 
@@ -340,17 +341,26 @@ function navBack() {
   });
 }
 
+function handleScroll(e) {
+  console.log(e.target.scrollTop)
+  if (e.target.scrollTop > 32) {
+    showTitle.value = true;
+  } else {
+    showTitle.value = false;
+  }
+}
+
 onMounted(() => {});
 </script>
 <template>
-  <div>
+  <div id="detailView" class="w-full h-full overflow-auto" @scroll="handleScroll">
     <appHeader
       :showBack="true"
       :leftFunc="navBack"
+      :showTitle="showTitle"
       :title="shortcutName"
     ></appHeader>
-    <!-- <searchBar/> -->
-    <div class="h-6"></div>
+    <!-- <searchBar/> --> 
     <shortcut :shortcut="shortcutDetail" v-if="shortcutDetail" />
     <div class="h-32"></div>
   </div>
