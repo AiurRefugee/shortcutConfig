@@ -18,7 +18,7 @@ function test() {
 <template>
   <header
     id="appHeader"
-    class="fastTrans flex justify-center sticky top-0 z-40 px-2 overflow-hidden w-full bgLight_Primary txtDark_Primary"
+    class="basicTrans flex justify-center px-2 overflow-hidden w-full bgLight_Primary txtDark_Primary"
     :style="{
         height: inputFocus ? '0' : '2rem',
       }"
@@ -44,7 +44,7 @@ function test() {
         </div>
       </div>
       <h1
-        class="title text-xl opacity-0"
+        class="title text-xl opacity-0 basicTrans"
         :style="{ opacity: showTitle ? '1' : '0' }"
       >
         {{ title }}

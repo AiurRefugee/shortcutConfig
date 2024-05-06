@@ -92,6 +92,10 @@ html {
         --bgLight_Secondary: #1e1e1e;
         --bgLight_Basic: #2c2c2c;
 
+        --bgDark_Primary: white;
+        --bgDark_Secondary: #f4f4f4;
+        --bgDark_Basic: #e9e9e9;
+
         --txtLight_Primary: #181818;
         --txtLight_Secondary: #3d3d3d;
         --txtLight_Basic: #606266;
@@ -120,6 +124,9 @@ svg {
     font-weight: 600;
     overflow: hidden;
 }
+.overscrollBehaviorNone {
+    overscroll-behavior: none;
+}
 .hiddenScroll {
     ::-webkit-scrollbar {
         display: none;
@@ -144,7 +151,7 @@ svg {
     background: var(--bgLight_Basic);
 }
 .bgDark_Primary {
-    background: rgba(24, 24, 24, 0.695);
+    background: var(--bgDark_Primary);
 }
 .txtLight_Primary {
     color: var(--txtLight_Primary);
@@ -192,6 +199,7 @@ svg {
 }
 .shortcutContainer {
     width: 100vw;
+    height: 100%;
     column-count: var(--colNum);
     max-width: var(--maxW);
     break-inside: avoid;

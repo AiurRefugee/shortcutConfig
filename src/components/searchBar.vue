@@ -22,10 +22,10 @@ function inputOnFocus() {
   //   marginLeft: "1rem",
   //   duration: 0.05,
   // });
-  // gsap.to("#scrollTitle", {
-  //   height: 0,
-  //   duration: 0.5,
-  // });
+  gsap.to("#scrollTitle", {
+    height: 0,
+    duration: 0.5,
+  });
 
   // gsap.to("#appHeaderWrapper", {
   //   height: 0,
@@ -41,15 +41,11 @@ function inputBlur() {
   // // mask.style.display = "none";
   // const searchBarWrapper = document.getElementById("searchBarWrapper");
 
-  // gsap.to("#scrollTitle", {
-  //   height: "2.5rem",
-  //   duration: 0.2,
-  //   // ease: 'power1',
-  //   onComplete: () => {
-  //     const searchBarWrapper = document.getElementById("searchBarWrapper");
-  //     searchBarWrapper.style.top = "2rem";
-  //   },
-  // });
+  gsap.to("#scrollTitle", {
+    height: "2.5rem",
+    duration: 0.2,
+    ease: 'power1', 
+  });
   // gsap.to("#cancelSearch", {
   //   width: "0",
   //   margin: "0",
@@ -74,14 +70,11 @@ onMounted(() => {});
   <div
     ref="searchWrapper"
     id="searchBar"
-    class="sticky z-50 overflow-visible flex flex-col items-center fastTrans bgLight_Primary"
-    :style="{
-      top: inputFocus ? '0' : '2rem',
-    }"
+    class="overflow-hidden flex flex-col items-center fastTrans bgLight_Primary"
   >
-    <div class="w-full max-width-screen flex justify-center bgLight_Primary pt-2 pb-3 px-4">
+    <div class="w-full px-4 max-width-screen flex justify-center bgLight_Primary pt-1 pb-3">
       <div
-        class="w-full h-full bgSearch py-1 flex-1 flex items-center rounded-lg px-2"
+        class="w-full h-full bgSearch flex-1 flex items-center rounded-lg px-2" 
       >
         <svg viewBox="0 0 1030 1024" class="aspect-auto h-4 mr-2">
           <path
