@@ -43,8 +43,8 @@ onMounted(() => {});
 <style lang="scss" scoped>
 // @import "@/style/variables.scss";
 .scrollView {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   //   padding: 0 $tabLeftSpace;
   // transform: translate(0, 0);
   background: var(--bgLight_Primary);

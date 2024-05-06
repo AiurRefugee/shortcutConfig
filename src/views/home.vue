@@ -19,6 +19,8 @@ import appHeader from "@/components/header.vue";
 import shortcutComponent from "@/components/shortcut.vue";
 
 const header = ref(null);
+const scrollView = ref();
+const showTitle = ref(false);
 const queryInput = ref("");
 const inputFocus = ref(false);
 const scrollManager = {
@@ -124,125 +126,112 @@ function test() {
   console.log(header.value);
   header.value.test();
 }
+
+function handleScroll() {
+  if (scrollView.value.scrollTop > 32) {
+    showTitle.value = true;
+  } else {
+    showTitle.value = false;
+  }
+}
+
 </script>
 <template>
-  <ScrollView :inputFocus="inputFocus">
-    <template #header="appHeader">
-      <appHeader
-        @test="test"
-        ref="header"
-        :title="'ShortcutConfig'"
-        :showTitle="appHeader.showTitle"
-        :inputFocus="inputFocus"
-        @click="test"
-      />
-    </template>
-    <template v-slot:title>
+  <div
+  ref="scrollView"
+    class="w-full h-full overflow-auto"
+    @scroll="handleScroll(scrollView, $event)"
+  >
+    <appHeader
+      @test="test"
+      ref="header"
+      :title="'ShortcutConfig'"
+      :showTitle="showTitle"
+      :inputFocus="inputFocus"
+      @click="test"
+    />
+    <div
+      id="scrollTitle"
+      class="fastTrans w-full flex justify-center items-center px-2 overflow-hidden"
+      :style="{
+        height: inputFocus ? '0' : '2.5rem',
+      }"
+    >
       <div
-        id="scrollTitle"
-        class="fastTrans w-full flex justify-center items-center px-2 overflow-hidden"
-        :style="{
-          height: inputFocus ? '0' : '2.5rem',
-        }"
+        class="flex px-1 max-width-screen items-center text-3xl m-auto w-full font-bold txtDark_Primary"
       >
-        <div
-          class="flex px-1 max-width-screen items-center text-3xl max-w-screen m-auto w-full font-bold txtDark_Primary"
+        <h1>ShortcutConfig</h1>
+
+        <div class="addWrapper ml-4" @click="addShortcut">
+          <el-icon><CirclePlusFilled /></el-icon>
+        </div>
+      </div>
+    </div>
+    <searchBar
+      v-model:queryInput="queryInput"
+      v-model:inputFocus="inputFocus"
+      :showDivider="showTitle"
+    />
+    <div class="w-full flex justify-center items-center">
+      <div class="shortcutContainer px-2 pb-16">
+        <div class="txtDark_Primary text-2xl font-bold"></div>
+        <shortcutComponent
+          v-for="(shortcut, index) in fileteredList"
+          :key="shortcut"
+          :shortcut="shortcut"
+          :shortcutIndex="index"
+          @removeShortcut="deleteShortcut"
         >
-          <h1>ShortcutConfig</h1>
-
-          <div class="addWrapper ml-4" @click="addShortcut">
-            <el-icon><CirclePlusFilled /></el-icon>
-          </div>
-        </div>
+        </shortcutComponent>
+        <div class="w-full h-24"></div>
       </div>
-    </template>
-    <template #searchBar="searchBar">
-      <searchBar
-        v-model:queryInput="queryInput"
-        v-model:inputFocus="inputFocus"
-        :showDivider="searchBar.showDivider"
-      />
-    </template>
-    <template v-slot:content>
-      <div class="w-full flex justify-center items-center">
-        <div class="shortcutContainer px-2 pb-16">
-          <div class="txtDark_Primary text-2xl font-bold"></div>
-          <shortcutComponent
-            v-for="(shortcut, index) in fileteredList"
-            :key="shortcut"
-            :shortcut="shortcut"
-            :shortcutIndex="index"
-            @removeShortcut="deleteShortcut"
-          >
-          </shortcutComponent>
-          <div class="w-full h-24"></div>
-        </div>
-      </div>
+    </div>
 
-      <div
-        class="shortcutList w-full px-4 pt-2 flex flex-col items-center overflow-auto"
-      >
-        <div class="w-full max-w-screen rounded-xl overflow-hidden">
-          <button
-            class="w-full flex-shrink-0 p-2 pb-0 bgLight_Secondary text-left"
-            v-for="(shortcut, index) in fileteredList"
-            :key="index"
-            @click="navToDetail(shortcut)"
-          >
-            <div class="w-full flex justify-between items-center">
-              <div class="">
-                <p class="text-lg txtDark_Primary">
-                  {{ shortcut.shortcutName }}
-                </p>
-                <div
-                  class="mr-1 ml-1 txtDark_Basic text-sm text-left mb-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-64"
+    <div
+      class="shortcutList w-full px-4 pt-2 flex flex-col items-center overflow-auto"
+    >
+      <div class="w-full max-width-screen rounded-xl overflow-hidden">
+        <button
+          class="w-full flex-shrink-0 p-2 pb-0 bgLight_Secondary text-left"
+          v-for="(shortcut, index) in fileteredList"
+          :key="index"
+          @click="navToDetail(shortcut)"
+        >
+          <div class="w-full flex justify-between items-center">
+            <div class="">
+              <p class="text-lg txtDark_Primary">
+                {{ shortcut.shortcutName }}
+              </p>
+              <div
+                class="mr-1 ml-1 txtDark_Basic text-sm text-left mb-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-64"
+              >
+                <span
+                  class="mr-2 overflow-hidden whitespace-nowrap text-ellipsis"
+                  v-for="item in shortcut.params.slice(0, 5)"
+                  :key="item"
+                  >{{ item.key }}</span
                 >
-                  <span
-                    class="mr-2 overflow-hidden whitespace-nowrap text-ellipsis"
-                    v-for="item in shortcut.params.slice(0, 5)"
-                    :key="item"
-                    >{{ item.key }}</span
-                  >
-                  <span class="txtDark_Basic" v-if="shortcut.params">...</span>
-                </div>
-              </div>
-              <div class="w-5 aspect-auto">
-                <svg
-                  class="w-full h-full txtDark_Basic"
-                  viewBox="0 0 1024 1024"
-                >
-                  <path
-                    class="bgDark_Basic"
-                    d="M307.6 104.6c-14.2 14.2-14.2 37.2 0 51.4L655 503.4c2.8 2.9 2.8 7.5 0 10.3L307.6 861.2c-14.2 14.2-14.2 37.2 0 51.4 14.2 14.2 37.2 14.2 51.4 0l347.4-347.4c15.6-15.6 23.4-36 23.4-56.5s-7.8-41-23.4-56.5L359 104.6c-14.2-14.2-37.2-14.2-51.4 0z"
-                    p-id="1451"
-                  ></path>
-                </svg>
+                <span class="txtDark_Basic" v-if="shortcut.params">...</span>
               </div>
             </div>
-            <div
-              class="w-full bgLight_Basic"
-              style="height: 1px"
-              v-if="index != fileteredList.length - 1"
-            ></div>
-          </button>
-        </div>
-        <div id="test" class="w-full h-96"></div>
+            <div class="w-5 aspect-auto">
+              <svg class="w-full h-full txtDark_Basic" viewBox="0 0 1024 1024">
+                <path
+                  class="bgDark_Basic"
+                  d="M307.6 104.6c-14.2 14.2-14.2 37.2 0 51.4L655 503.4c2.8 2.9 2.8 7.5 0 10.3L307.6 861.2c-14.2 14.2-14.2 37.2 0 51.4 14.2 14.2 37.2 14.2 51.4 0l347.4-347.4c15.6-15.6 23.4-36 23.4-56.5s-7.8-41-23.4-56.5L359 104.6c-14.2-14.2-37.2-14.2-51.4 0z"
+                  p-id="1451"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <div
+            class="w-full bgLight_Basic"
+            style="height: 1px"
+            v-if="index != fileteredList.length - 1"
+          ></div>
+        </button>
       </div>
-    </template>
-  </ScrollView>
-
-  <div
-    id="scrollTitle"
-    class="w-full h-10 flex justify-center items-center px-2 overflow-hidden"
-  >
-    <div
-      class="flex px-1 max-width-screen items-center text-3xl max-w-screen m-auto w-full font-bold txtDark_Primary"
-    >
-      <h1>ShortcutConfig</h1>
-
-      <div class="addWrapper ml-4" @click="addShortcut">
-        <el-icon><CirclePlusFilled /></el-icon>
-      </div>
+      <div id="test" class="w-full h-96"></div>
     </div>
   </div>
 </template>

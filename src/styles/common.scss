@@ -37,7 +37,7 @@ html {
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     // overscroll-behavior: none;
-    --maxW:
+    --maxW: 1440px;
     --shortcutWidth: 50vw;
     --shortcutMargin: 1rem;
     --shortcutPad: 0.8rem;
@@ -113,6 +113,11 @@ svg {
 #scrollTitle {
     font-weight: 600;
     overflow: hidden; 
+} 
+.hiddenScroll {
+    ::-webkit-scrollbar {
+        display: none;
+    }
 }
 .bgSearch {
     background-color: rgb(201 201 201 / 40%);

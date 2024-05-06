@@ -18,7 +18,7 @@ function test() {
 <template>
   <header
     id="appHeader"
-    class="fastTrans sticky top-0 z-40 px-2 overflow-hidden w-full bgLight_Primary txtDark_Primary"
+    class="fastTrans flex justify-center sticky top-0 z-40 px-2 overflow-hidden w-full bgLight_Primary txtDark_Primary"
     :style="{
         height: inputFocus ? '0' : '2rem',
       }"

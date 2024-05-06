@@ -76,19 +76,20 @@ onMounted(() => {});
     <div
       id="listItem"
       class="text-lg p-2 pr-0 flex w-full justify-between items-center cursor-pointer"
+      @click="showOpt(listItemWrapper, param.canAddParam)"
     >
       <div
-        class="w-2/5 whitespace-nowrap overflow-hidden pr-2"
+        class="w-2/5 whitespace-nowrap overflow-auto pr-2"
         :class="param.params ? 'flex-1' : ''"
-        @click="showOpt(listItemWrapper, param.canAddParam)"
+        
       > 
         <div
-          class="w-full flex items-center overflow-hidden text-base txtDark_Primary"
+          class="hiddenScroll w-full flex items-center overflow-auto text-base txtDark_Primary"
         >
           {{ param.key }}
         </div>
       </div>
-      <div class="pr-3 flex justify-end" :class="param.params ? 'w-0' : 'w-3/5'">
+      <div id="widgetComponent" class="pr-3 flex justify-end" :class="param.params ? 'w-0' : 'w-3/5'">
           <el-select
             v-if="param.type == 'select'"
             v-model="param.value"
