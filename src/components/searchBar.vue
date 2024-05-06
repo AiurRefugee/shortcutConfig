@@ -74,12 +74,12 @@ onMounted(() => {});
   <div
     ref="searchWrapper"
     id="searchBar"
-    class="sticky z-40 overflow-visible flex flex-col items-center fastTrans bgLight_Primary"
+    class="sticky z-50 overflow-visible flex flex-col items-center fastTrans bgLight_Primary"
     :style="{
       top: inputFocus ? '0' : '2rem',
     }"
   >
-    <div class="w-full max-width-screen flex justify-center bgLight_Primary pt-2 pb-3 px-2">
+    <div class="w-full max-width-screen flex justify-center bgLight_Primary pt-2 pb-3 px-4">
       <div
         class="w-full h-full bgSearch py-1 flex-1 flex items-center rounded-lg px-2"
       >
@@ -118,7 +118,7 @@ onMounted(() => {});
     </div>
     <div
       id="searchDivider"
-      class=""
+      class="bgDark_Primary"
       :style="{
         opacity: showDivider || inputFocus ? '1' : '0',
       }"

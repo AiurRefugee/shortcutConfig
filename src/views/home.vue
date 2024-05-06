@@ -139,7 +139,7 @@ function handleScroll() {
 <template>
   <div
   ref="scrollView"
-    class="w-full h-full overflow-auto"
+    class="w-full h-full overflow-overlay relative z-0"
     @scroll="handleScroll(scrollView, $event)"
   >
     <appHeader
@@ -152,13 +152,14 @@ function handleScroll() {
     />
     <div
       id="scrollTitle"
-      class="fastTrans w-full flex justify-center items-center px-2 overflow-hidden"
+      class="fastTrans w-full flex justify-center items-center px-4 overflow-hidden"
       :style="{
+        opacity: showTitle ? '0' : '1',
         height: inputFocus ? '0' : '2.5rem',
       }"
     >
       <div
-        class="flex px-1 max-width-screen items-center text-3xl m-auto w-full font-bold txtDark_Primary"
+        class="flex max-width-screen items-center text-3xl m-auto w-full font-bold txtDark_Primary"
       >
         <h1>ShortcutConfig</h1>
 
@@ -173,7 +174,7 @@ function handleScroll() {
       :showDivider="showTitle"
     />
     <div class="w-full flex justify-center items-center">
-      <div class="shortcutContainer px-2 pb-16">
+      <div class="shortcutContainer">
         <div class="txtDark_Primary text-2xl font-bold"></div>
         <shortcutComponent
           v-for="(shortcut, index) in fileteredList"
