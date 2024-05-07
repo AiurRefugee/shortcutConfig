@@ -9,6 +9,7 @@ import gsap from "gsap";
 import { shortcutStore } from "@/store/shortcut";
 import { ShortcutConfigExports } from "@/utils/shortcutConfig.js";
 const store = shortcutStore();
+var animatingHeight = false;
 
 const router = useRouter();
 const ShortcutConfig = ref(ShortcutConfigExports);
@@ -21,7 +22,7 @@ import shortcutComponent from "@/components/shortcut.vue";
 const header = ref(null);
 const scrollView = ref();
 var springTimeout = null;
-var scrollOrigin = 0
+var scrollOrigin = 0;
 const showTitle = ref(false);
 const queryInput = ref("");
 const inputFocus = ref(false);
@@ -131,26 +132,40 @@ function test() {
 
 function handleScroll(scrollView, $event) {
   if (inputFocus.value) {
-    return false
+    return false;
   }
   const scrollTitle = document.getElementById("scrollTitle");
-  scrollTitle.style.height = 40 - Math.min(scrollView.scrollTop, 40) + "px";
+  // if (!animatingHeight) {
+    scrollTitle.style.height = 40 - Math.min(scrollView.scrollTop, 40) + "px";
+  // }
+
   showTitle.value = scrollView.scrollTop > 40 ? true : false;
-  if (springTimeout) {
-    clearTimeout(springTimeout);
-  }
-  const targetH = scrollTitle.clientHeight > 20 ? 40 : 0;
-  if (targetH == 40) {
-    showTitle.value = false;
-  } else {
-    showTitle.value = true;
-  }
-  springTimeout = setTimeout(() => {
-    gsap.to(scrollTitle, {
-      height: targetH,
-      duration: 0.5, 
-    });
-  }, 200);
+  // if (springTimeout) {
+  //   clearTimeout(springTimeout);
+  // }
+  // springTimeout = setTimeout(() => {
+  //   const targetH = scrollTitle.clientHeight > 20 ? 40 : 0;
+  //   const curentHeight = 40 - scrollView.scrollTop
+  //   if (targetH == 40) {
+  //     showTitle.value = false;
+  //   } else {
+  //     showTitle.value = true;
+  //   }
+  //   animatingHeight = true;
+  //   gsap.fromTo(
+  //     scrollTitle,
+  //     {
+  //       height: curentHeight,
+  //     },
+  //     {
+  //       height: targetH,
+  //       duration: 0.5,
+  //       onComplete: () => {
+  //         animatingHeight = false;
+  //       },
+  //     }
+  //   );
+  // }, 200);
 }
 </script>
 <template>
@@ -165,10 +180,10 @@ function handleScroll(scrollView, $event) {
     />
     <div
       id="scrollTitle"
-      class="w-full flex relative h-10 justify-center items-center overflow-hidden"
+      class="basicTrans w-full flex relative h-10 justify-center items-center overflow-hidden"
       :style="{
         opacity: showTitle ? '0' : '1',
-        height: inputFocus || showTitle ? '0' : '2.5rem',
+        height: showTitle || inputFocus ? '0' : '2.5rem',
       }"
     >
       <div

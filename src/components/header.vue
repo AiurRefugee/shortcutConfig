@@ -20,8 +20,8 @@ function test() {
     id="appHeader"
     class="basicTrans flex justify-center px-2 overflow-hidden w-full bgLight_Primary txtDark_Primary"
     :style="{
-        height: inputFocus ? '0' : '2rem',
-      }"
+      height: inputFocus ? '0' : '2rem',
+    }"
   >
     <div class="w-full flex justify-center headerGrid">
       <div
@@ -44,8 +44,11 @@ function test() {
         </div>
       </div>
       <h1
+        id="topTitle"
         class="title text-xl opacity-0 basicTrans"
-        :style="{ opacity: showTitle ? '1' : '0' }"
+        :style="{
+          opacity: showTitle ? '1' : '0',
+        }"
       >
         {{ title }}
       </h1>

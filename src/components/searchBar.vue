@@ -72,7 +72,12 @@ onMounted(() => {});
     id="searchBar"
     class="overflow-hidden flex flex-col items-center fastTrans bgLight_Primary"
   >
-    <div class="w-full px-4 max-width-screen flex justify-center bgLight_Primary pt-1 pb-3">
+    <div class="w-full px-4 max-width-screen flex justify-center bgLight_Primary pt-2 pb-3"
+      :style="{
+        // paddingTop: inputFocus ? '0.75rem' : '0.25rem',
+        // paddingBottom: inputFocus ? '0.75rem' : '0.25rem'
+      }"
+    >
       <div
         class="w-full h-full bgSearch flex-1 flex items-center rounded-lg px-2" 
       >
