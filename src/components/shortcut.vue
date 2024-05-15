@@ -69,8 +69,8 @@ function deleteParam(index) {
 onMounted(() => {});
 </script>
 <template>
-  <div class="shortcutWrapper" ref="thisShortcut">
-    <div class="shortcut">
+  <div class="shortcutWrapper py-4" ref="thisShortcut">
+    <div class="shortcut rounded-xl">
       <div class="w-full flex items-center justify-between">
         <h2 
           class="w-full text-xl"

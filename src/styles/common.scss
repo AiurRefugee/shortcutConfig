@@ -24,6 +24,9 @@ input:focus-visible {
 #opt {
     // transition: all 0.3s ease-in-out;
 }
+.exFastTrans {
+    transition: all 0.1s ease;
+}
 .basicTrans {
     transition: all 0.5s ease-in-out;
 }
@@ -200,10 +203,10 @@ svg {
 .shortcutContainer {
     width: 100vw;
     height: 100%;
-    column-count: var(--colNum);
+    column-count: 2;
+    column-gap: 20px;
     max-width: var(--maxW);
-    break-inside: avoid;
-    grid-gap: 10px;
+    break-inside: avoid; 
     transition: all 0.3s ease-in-out;
     opacity: 1;
     @media (width <= 628px) {
@@ -220,10 +223,9 @@ svg {
 }
 .shortcutWrapper {
     max-width: 1420px;
-    width: 100%;
-    z-index: 9;
+    width: 100%; 
     break-inside: avoid;
-    padding: var(--shortcutPad);
+    // padding: var(--shortcutPad);
     // padding-left: 0;
     background-color: var(--bgLight_Primary);
     margin: auto;
@@ -245,7 +247,7 @@ svg {
             color: var(--txtDark_Primary);
         }
         transition: all 0.3s ease-in-out;
-        border-radius: var(--radius-lg);
+        // border-radius: var(--radius-lg);
         padding: var(--shortcutPad);
         background-color: var(--bgLight_Secondary);
     }
@@ -322,7 +324,7 @@ button {
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-    border-radius: var(--radius-lg);
+    // border-radius: var(--radius-lg);
     box-shadow: 0 0 15px 10px #858181d1;
     background-color: var(--bgColorSecPrimary);
     @media (width <= 628px) {
@@ -439,7 +441,7 @@ button {
     overflow: auto;
     padding: 1vh 2vh;
     margin: 1vh 5px;
-    border-radius: var(--radius-base);
+    // border-radius: var(--radius-base);
     cursor: pointer;
 
     @media (max-width: 1420px) {
@@ -479,7 +481,7 @@ button {
     background-color: #414141;
     cursor: pointer;
     margin-right: 5px;
-    border-radius: 50%;
+    // border-radius: 50%;
     aspect-ratio: 1 / 1;
     padding: 2px;
     color: white;

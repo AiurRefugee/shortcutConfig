@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
-defineExpose({
-  test,
+defineExpose({ 
 });
 const props = defineProps([
   "showBack",
@@ -10,10 +9,7 @@ const props = defineProps([
   "title",
   "showTitle",
   "scrollFunc",
-]);
-function test() {
-  console.log("test");
-}
+]); 
 </script>
 <template>
   <header

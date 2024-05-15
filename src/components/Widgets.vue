@@ -72,16 +72,16 @@ onMounted(() => {});
 </script>
 
 <template>
-  <div ref="listItemWrapper" class="listItemWrapper rounded-lg" :id="param.key">
+  <div ref="listItemWrapper" class="listItemWrapper rounded-xl" :id="param.key">
     <div
       id="listItem"
-      class="text-lg p-2 pr-0 flex w-full justify-between items-center cursor-pointer"
-      @click="showOpt(listItemWrapper, param.canAddParam)"
+      class="text-lg p-3 pr-0 flex w-full justify-between items-center cursor-pointer"
+      
     >
       <div
         class="w-2/5 whitespace-nowrap overflow-auto pr-2"
         :class="param.params ? 'flex-1' : ''"
-        
+        @click="showOpt(listItemWrapper, param.canAddParam)"
       > 
         <div
           class="w-full flex items-center overflow-hidden text-base txtDark_Primary"
