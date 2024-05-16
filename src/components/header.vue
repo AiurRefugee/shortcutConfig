@@ -14,9 +14,9 @@ const props = defineProps([
 <template>
   <header
     id="appHeader"
-    class="basicTrans flex justify-center px-2 overflow-hidden w-full bgLight_Primary txtDark_Primary"
+    class="flex justify-center px-2 overflow-hidden w-full bgLight_Primary txtDark_Primary"
     :style="{
-      height: inputFocus ? '0' : '2rem',
+      // height: inputFocus ? '0' : '2rem',
     }"
   >
     <div class="w-full flex justify-center headerGrid">

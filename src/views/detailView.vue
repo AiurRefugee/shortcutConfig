@@ -342,7 +342,7 @@ function navBack() {
 }
 
 function handleScroll(e) {
-  console.log(e.target.scrollTop)
+  console.log(e.target.scrollTop);
   if (e.target.scrollTop > 32) {
     showTitle.value = true;
   } else {
@@ -353,15 +353,23 @@ function handleScroll(e) {
 onMounted(() => {});
 </script>
 <template>
-  <div id="detailView" class="w-full h-full overflow-auto" @scroll="handleScroll">
-    <appHeader
-      :showBack="true"
-      :leftFunc="navBack"
-      :showTitle="showTitle"
-      :title="shortcutName"
-    ></appHeader>
-    <!-- <searchBar/> --> 
-    <shortcut :shortcut="shortcutDetail" v-if="shortcutDetail" />
+  <div
+    id="detailView"
+    class="w-full h-full overflow-auto overscrollBehaviorNone"
+    @scroll="handleScroll"
+  >
+    <div class="sticky top-0 z-50">
+      <appHeader
+        :showBack="true"
+        :leftFunc="navBack"
+        :showTitle="showTitle"
+        :title="shortcutName"
+      ></appHeader>
+    </div>
+    <!-- <searchBar/> -->
+    <div class="p-4">
+      <shortcut :shortcut="shortcutDetail" v-if="shortcutDetail" />
+    </div>
     <div class="h-32"></div>
   </div>
 </template>

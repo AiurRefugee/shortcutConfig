@@ -24,6 +24,9 @@ input:focus-visible {
 #opt {
     // transition: all 0.3s ease-in-out;
 }
+.z-100 {
+    z-index: 100;
+}
 .exFastTrans {
     transition: all 0.1s ease;
 }
@@ -31,12 +34,12 @@ input:focus-visible {
     transition: all 0.5s ease-in-out;
 }
 .fastTrans {
-    transition: all 0.35s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 html {
     width: 100vw;
     height: 100vh;
-    overflow: auto;
+    overflow: hidden;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: none;
     // overscroll-behavior: none;
@@ -126,7 +129,7 @@ svg {
 #scrollTitle {
     font-weight: 600;
     overflow: hidden;
-}
+} 
 .overscrollBehaviorNone {
     overscroll-behavior: none;
 }
@@ -200,15 +203,13 @@ svg {
         // opacity: 0;
     }
 }
-.shortcutContainer {
-    width: 100vw;
-    height: 100%;
+.shortcutContainer { 
     column-count: 2;
     column-gap: 20px;
     max-width: var(--maxW);
     break-inside: avoid; 
-    transition: all 0.3s ease-in-out;
-    opacity: 1;
+    // transition: all 0.3s ease-in-out;
+    // opacity: 1;
     @media (width <= 628px) {
         opacity: 0;
         display: none;
@@ -221,7 +222,11 @@ svg {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
+.scroll-snap {
+    scroll-snap-type: x proximity;
+}
 .shortcutWrapper {
+    scroll-snap-align: start;
     max-width: 1420px;
     width: 100%; 
     break-inside: avoid;

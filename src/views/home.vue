@@ -164,8 +164,8 @@ function handleScroll($event) {
 }
 </script>
 <template>
-  <div class="w-full h-full flex justify-center overflow-hidden">
-    <div class="w-full h-full max-width-screen">
+  <div id="viewport" class="w-full h-full flex justify-center overflow-hidden">
+    <div class="w-full h-full max-width-screen relative">
       <appHeader
         @test="test"
         ref="header"
@@ -174,17 +174,17 @@ function handleScroll($event) {
         :inputFocus="inputFocus"
         @click="test"
       />
-      <div ref="scrollView" class="w-full h-full overflow-auto" @scroll="handleScroll">
+      <div id="scrollView" ref="scrollView" class="w-full h-full overflow-overlay  px-4" @scroll="handleScroll">
         <div
           id="scrollTitle"
-          class="w-full flex relative h-10 justify-center items-center overflow-hidden"
+          class="w-full flex relative h-10 justify-center items-center"
           :style="{
             opacity: showTitle ? '0' : '1',
-            height: showTitle || inputFocus ? '0' : '2.5rem',
+            // height: showTitle || inputFocus ? '0' : '2.5rem',
           }"
         >
           <div
-            class="w-full flex absolute px-4 bottom-0 h-10 items-center text-3xl m-auto font-bold txtDark_Primary"
+            class="w-full flex absolute bottom-0 h-10 items-center text-3xl m-auto font-bold txtDark_Primary"
           >
             <h1>ShortcutConfig</h1>
 
@@ -198,9 +198,9 @@ function handleScroll($event) {
           v-model:inputFocus="inputFocus"
           :showDivider="showTitle"
         />
-        <div class="w-full flex-1 pb-16 px-4">
+        <div class="w-full flex-1 pb-16">
           <div class="w-full flex justify-center items-center">
-            <div class="shortcutContainer"> 
+            <div class="shortcutContainer w-full h-full pt-2"> 
               <shortcutComponent
                 v-for="(shortcut, index) in fileteredList"
                 :key="shortcut"
