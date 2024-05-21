@@ -6,8 +6,6 @@ import gsap from "gsap";
 const store = shortcutStore();
 const showDialog = computed(() => store.showDialog);
 const addType = computed(() => store.addType);
-
-const emit = defineEmits(["addKeyValue"]); 
 const initParam = {
   shortcutName: "",
   canAddParam: true,
@@ -18,49 +16,14 @@ const initParam = {
   options: "",
 };
 
-const newParam = ref(JSON.parse(JSON.stringify(initParam)));
+const newParam = ref(initParam);
  
 function closeDialog() {  
   newParam.value = JSON.parse(JSON.stringify(initParam)) 
   store.showDialog = false;  
 }
 
-function checkNewParam() { 
-  if (addType.value == "shortcut") {
-    if (newParam.value.shortcutName === "") {
-      ElMessage({
-        message: "shortcutName不能为空",
-        type: "error",
-        grouping: true,
-      });
-      return false;
-    }
-  } else {
-    if (newParam.value.key === "") {
-      ElMessage({
-        message: "键名不能为空",
-        type: "error",
-        grouping: true,
-      });
-      return false;
-    }
-    if (newParam.value.type == "select" && newParam.value.options == "") {
-      ElMessage({
-        message: "选项不能为空",
-        type: "error",
-        grouping: true,
-      });
-      return false;
-    }
-  }
-
-  return true;
-}
-
-function addParm() {
-  if (!checkNewParam()) {
-    return false;
-  }
+function addParm() { 
   if (addType.value != "shortcut") {
     delete newParam.value.shortcutName;
   }
@@ -155,12 +118,12 @@ onMounted( () => {
         <div>
           <div class="paramItem">
             <p class="w-1/3 mr-2 txtDark_Secondary text-lg">paramType:</p>
-            <div class="">
-              <el-select v-model="newParam.type" @change="clearValue">
-                <el-option label="select" value="select"></el-option>
-                <el-option label="input" value="input"></el-option>
-                <el-option label="switch" value="switch"></el-option>
-              </el-select>
+            <div class="w-full">
+              <select class="w-32 h-7 px-2 mx-1" v-model="newParam.type" @change="clearValue">
+                <option label="select" value="select"></option>
+                <option label="input" value="input"></option>
+                <option label="switch" value="switch"></option>
+              </select>
             </div>
           </div>
           <p class="text-xs txtDark_Basic my-2">

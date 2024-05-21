@@ -52,8 +52,5 @@ onMounted(() => {});
   overscroll-behavior: none;
   // transform: translateX(0);
   // padding-top: $headerHeight;
-}
-::-webkit-scrollbar {
-  display: none;
-}
+} 
 </style>

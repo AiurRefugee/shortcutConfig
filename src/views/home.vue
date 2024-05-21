@@ -9,7 +9,9 @@ import gsap from "gsap";
 import { shortcutStore } from "@/store/shortcut";
 import { ShortcutConfigExports } from "@/utils/shortcutConfig.js";
 const store = shortcutStore();
-var animatingHeight = false;
+var animating = false;
+const focusFinished = ref(false);
+const showDivider = ref(false)
 
 const router = useRouter();
 const ShortcutConfig = ref(ShortcutConfigExports);
@@ -20,6 +22,10 @@ import appHeader from "@/components/header.vue";
 import shortcutComponent from "@/components/shortcut.vue";
 
 const header = ref(null);
+const titleScale = ref(1)
+const title = ref() 
+const scrollArea = ref()
+const searchBarDom = ref()
 const scrollView = ref();
 var springTimeout = null;
 var scrollOrigin = 0;
@@ -28,7 +34,7 @@ const queryInput = ref("");
 const inputFocus = ref(false);
 const scrollManager = {
   showed: false,
-  threshold: 40,
+  threshold: 64,
 };
 const $bus = inject("$bus");
 $bus.on("update", update);
@@ -38,14 +44,6 @@ function filterValue(originObject, queryInput) {
     originObject.key &&
     originObject.key.toString().toLowerCase().includes(queryInput.toLowerCase())
   ) {
-    console.log(
-      originObject.key,
-      originObject.key
-        .toString()
-        .toLowerCase()
-        .includes(queryInput.toLowerCase()),
-      queryInput
-    );
     return true;
   }
   // 如果值包含关键词
@@ -128,39 +126,56 @@ function handleScroll($event) {
   // if (inputFocus.value) {
   //   return false;
   // }
-  // console.log(scrollView.value)
-  // const scrollTitle = document.getElementById("scrollTitle");
-  // // if (!animatingHeight) {
-  // scrollTitle.style.height = 40 - Math.min(scrollView.value.scrollTop, 40) + "px";
-  // // }
+  animating = false;
+  const target = $event.target;
+  const scrollTopNow = target.scrollTop; ;
+  titleScale.value = scrollTopNow < 0 ? Math.min(Math.abs(scrollTopNow) / 4000 + 1, 1.3) : 1;
+  const threshold = inputFocus.value ? 10 : title.value.getBoundingClientRect().bottom;
+  const searchBarBottom = searchBarDom.value.getBoundingClientRect().bottom
+  const scrollAreaTop = scrollArea.value.getBoundingClientRect().top
+  showDivider.value = scrollAreaTop < searchBarBottom
+  if (scrollTopNow > threshold) {
+    showTitle.value = true;
+  } else {
+    showTitle.value = false;
+    // if (springTimeout) {
+    //   clearTimeout(springTimeout);
+    // }
+    // springTimeout = setTimeout(() => {
+    //   const scrollTopNew = target.scrollTop;
+    //   const scrollTitle = document.getElementById("scrollTitle");
+    //   const scrollTitleRect = scrollTitle.getBoundingClientRect();
+    //   const titleBottom = scrollTitleRect.bottom;
+    //   const visibleHeight = titleBottom - 32; // scrollTitle 可见部分高度
 
-  //showTitle.value = scrollView.scrollTop > 40 ? true : false;
-  // if (springTimeout) {
-  //   clearTimeout(springTimeout);
-  // }
-  // springTimeout = setTimeout(() => {
-  //   const targetH = scrollTitle.clientHeight > 20 ? 40 : 0;
-  //   const curentHeight = 40 - scrollView.scrollTop
-  //   if (targetH == 40) {
-  //     showTitle.value = false;
-  //   } else {
-  //     showTitle.value = true;
-  //   }
-  //   animatingHeight = true;
-  //   gsap.fromTo(
-  //     scrollTitle,
-  //     {
-  //       height: curentHeight,
-  //     },
-  //     {
-  //       height: targetH,
-  //       duration: 0.5,
-  //       onComplete: () => {
-  //         animatingHeight = false;
-  //       },
-  //     }
-  //   );
-  // }, 200);
+    //   if (!animating) {
+    //     animating = true;
+    //     if (scrollTopNew > 32) {
+    //       gsap.to(target, {
+    //         scrollTop: scrollTopNew + visibleHeight,
+    //         duration: 0.8,
+    //         ease: "power1.inOut",
+    //         onComplete: () => {
+    //           animating = false;
+    //           console.log("scrollTopNew", scrollTopNew);
+    //         },
+    //       });
+    //     } else {
+    //       const upVec = 64 - visibleHeight;
+    //       gsap.to(target, {
+    //         scrollTop: scrollTopNew - upVec,
+    //         duration: 1,
+    //         // ease: "power2.inOut",
+    //         onComplete: () => {
+    //           animating = false;
+    //           console.log("scrollTopNew upVec", scrollTopNew);
+    //         },
+    //       });
+    //     }
+    //   }
+    //   console.log(titleBottom);
+    // }, 300);
+  }
 }
 </script>
 <template>
@@ -174,43 +189,49 @@ function handleScroll($event) {
         :inputFocus="inputFocus"
         @click="test"
       />
-      <div id="scrollView" ref="scrollView" class="w-full h-full overflow-overlay  px-4" @scroll="handleScroll">
+
+      <div
+        id="scrollView"
+        ref="scrollView"
+        class="w-full h-full overflow-overlay"
+        @scroll="handleScroll"
+      >
         <div
           id="scrollTitle"
-          class="w-full flex relative h-10 justify-center items-center"
+          class="w-full flex overflow-hidden relative h-16 justify-center items-center"
           :style="{
-            opacity: showTitle ? '0' : '1',
-            // height: showTitle || inputFocus ? '0' : '2.5rem',
+            opacity: showTitle ? '0' : '1', 
           }"
         >
           <div
-            class="w-full flex absolute bottom-0 h-10 items-center text-3xl m-auto font-bold txtDark_Primary"
+            class="w-full absolute bottom-3 px-4 flex items-center text-4xl m-auto font-bold txtDark_Primary"
           >
-            <h1>ShortcutConfig</h1>
+            <h1 id="title" ref="title" class="exFastTrans" :style="{scale: titleScale}">ShortcutConfig</h1>
 
             <div class="addWrapper ml-4" @click="addShortcut">
-              <el-icon><CirclePlusFilled /></el-icon>
+              <el-icon><CirclePlusFilled/></el-icon>
             </div>
           </div>
         </div>
-        <searchBar
-          v-model:queryInput="queryInput"
-          v-model:inputFocus="inputFocus"
-          :showDivider="showTitle"
-        />
-        <div class="w-full flex-1 pb-16">
-          <div class="w-full flex justify-center items-center">
-            <div class="shortcutContainer w-full h-full pt-2"> 
-              <shortcutComponent
-                v-for="(shortcut, index) in fileteredList"
-                :key="shortcut"
-                :shortcut="shortcut"
-                :shortcutIndex="index"
-                @removeShortcut="deleteShortcut"
-              />
-               
-              <div class="w-full h-24"></div>
-            </div>
+        <div id="searchBar" ref="searchBarDom" class="sticky z-50 top-0">
+          <searchBar
+            v-model:queryInput="queryInput"
+            v-model:inputFocus="inputFocus"
+            v-model:focusFinished="focusFinished"
+            :showDivider="showDivider"
+          />
+        </div>
+        <div id="scrollArea" ref="scrollArea" class="w-full flex-1 pb-16 pl-4 pr-4">
+          <div class="shortcutContainer w-full h-full">
+            <shortcutComponent
+              v-for="(shortcut, index) in fileteredList"
+              :key="shortcut"
+              :shortcut="shortcut"
+              :shortcutIndex="index"
+              @removeShortcut="deleteShortcut"
+            />
+
+            <div class="w-full h-24"></div>
           </div>
 
           <div
@@ -248,7 +269,8 @@ function handleScroll($event) {
                       viewBox="0 0 1024 1024"
                     >
                       <path
-                        class="bgDark_Basic"
+                        stroke-opacity="1"
+                        stroke-width="20" 
                         d="M307.6 104.6c-14.2 14.2-14.2 37.2 0 51.4L655 503.4c2.8 2.9 2.8 7.5 0 10.3L307.6 861.2c-14.2 14.2-14.2 37.2 0 51.4 14.2 14.2 37.2 14.2 51.4 0l347.4-347.4c15.6-15.6 23.4-36 23.4-56.5s-7.8-41-23.4-56.5L359 104.6c-14.2-14.2-37.2-14.2-51.4 0z"
                         p-id="1451"
                       ></path>
@@ -270,9 +292,6 @@ function handleScroll($event) {
   </div>
 </template>
 <style lang="scss" scoped>
-::-webkit-scrollbar {
-  // display: none;
-}
 * {
   // border: 1px solid black;
 }

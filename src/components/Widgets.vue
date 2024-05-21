@@ -76,32 +76,35 @@ onMounted(() => {});
     <div
       id="listItem"
       class="text-lg p-3 pr-0 flex w-full justify-between items-center cursor-pointer"
-      
     >
       <div
         class="w-2/5 whitespace-nowrap overflow-auto pr-2"
         :class="param.params ? 'flex-1' : ''"
         @click="showOpt(listItemWrapper, param.canAddParam)"
-      > 
+      >
         <div
           class="w-full flex items-center overflow-hidden text-base txtDark_Primary"
         >
           {{ param.key }}
         </div>
       </div>
-      <div id="widgetComponent" class="pr-3 flex justify-end" :class="param.params ? 'w-0' : 'w-3/5'">
-          <el-select
-            v-if="param.type == 'select'"
-            v-model="param.value"
-            style="width: 100%; position: relative; z-index: 10"
-          >
-            <el-option
-              :label="item"
-              :value="item"
-              v-for="item in param.options"
-              :key="item"
-            ></el-option>
-          </el-select> 
+      <div
+        id="widgetComponent"
+        class="pr-3 h-8 flex justify-end"
+        :class="param.params ? 'w-0' : 'w-3/5'"
+      >
+        <select
+        class="w-full"
+          v-if="param.type == 'select'"
+          v-model="param.value" 
+        >
+          <option
+            :label="item"
+            :value="item"
+            v-for="item in param.options"
+            :key="item"
+          ></option>
+        </select>
 
         <div
           class="w-full flex items-center justify-between rounded-lg pl-2 bg-white"
@@ -118,7 +121,7 @@ onMounted(() => {});
           </div>
           <div class="h-8 w-10 flex justify-center items-center copy">
             <CopyDocument />
-          </div> 
+          </div>
         </div>
         <el-switch
           v-model="param.value"

@@ -1,6 +1,7 @@
 import { createApp } from 'vue' 
 import '@/styles/common.scss'
 import '@/styles/element.scss'
+import '@/styles/variables.scss'
 import '@/styles/transition.scss';
 import { createPinia } from 'pinia'
 
