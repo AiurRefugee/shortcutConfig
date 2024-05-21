@@ -1,11 +1,32 @@
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, inject } from "vue";
 import { shortcutStore } from "@/store/shortcut";
 import { ElMessage } from "element-plus";
 import gsap from "gsap";
 const store = shortcutStore();
-const showDialog = computed(() => store.showDialog);
-const addType = computed(() => store.addType);
+const dialogVisible = ref(false)
+const $bus = inject("$bus");
+const addType = ref("param")
+var addParamResolve = null
+
+$bus.on('getAddedParam', (addType) => { 
+  open(addType)
+  return new Promise((resolve) => {
+    addParamResolve = resolve
+  })
+})
+
+function open(addTypeStr) {
+  addType.value = addTypeStr
+  newParam.value = initParam
+  dialogVisible.value = true;
+}
+
+defineExpose({
+  open
+})
+
+const showDialog = computed(() => store.showDialog); 
 const initParam = {
   shortcutName: "",
   canAddParam: true,
@@ -20,7 +41,7 @@ const newParam = ref(initParam);
  
 function closeDialog() {  
   newParam.value = JSON.parse(JSON.stringify(initParam)) 
-  store.showDialog = false;  
+  dialogVisible.value = false;  
 }
 
 function addParm() { 
@@ -41,7 +62,7 @@ function addParm() {
     delete newParam.value.options;
   }
   console.log(newParam.value);
-  store.addParamResolve(newParam.value);
+  addParamResolve(newParam.value);
   closeDialog();
 }
 
@@ -78,7 +99,7 @@ onMounted( () => {
 <template>
   <el-dialog
     :title="addType == 'shortcut' ? '添加shortcut' : '添加param'"
-    v-model="showDialog" 
+    v-model="dialogVisible" 
     :width="'var(--dialogWidth)'"
     @close="closeDialog"
   >

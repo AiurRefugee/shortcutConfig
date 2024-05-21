@@ -24,7 +24,7 @@ const widgetsList = ref();
 const thisShortcut = ref();
 
 async function addKeyValue() {
-  const param = await store.getAddParam("param");
+  const param = await $bus.emit('getAddedParam', 'param')
   console.log("addKeyValue", param);
   props.shortcut.params.unshift(param);
   $bus.emit("update");
@@ -32,7 +32,7 @@ async function addKeyValue() {
 
 function removeShortcut(index) {
   gsap.to(thisShortcut.value, {
-    transform: "translate(0, -200px)",
+    transform: "translate( -100%, 0)",
     opacity: 0,
     height: 0,
     padding: 0,
@@ -54,7 +54,7 @@ function deleteParam(index) {
     opacity: 0,
     padding: 0,
     margin: 0,
-    transform: "translate( 0, -30px)",
+    transform: "translate( -100%, 0)",
     duration: 0.6,
     ease: "power1.inOut",
     onComplete: () => {

@@ -9,7 +9,7 @@ export class EventBus {
   }
   emit(eventName, data) {
     if (this.events[eventName]) {
-      this.events[eventName](data)
+      return this.events[eventName](data)
     }
   }
   on(eventName, fn) {

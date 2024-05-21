@@ -25,7 +25,7 @@ function deleteParam(index) {
     opacity: 0,
     padding: 0,
     margin: 0,
-    transform: "translate( 0, -30px)",
+    transform: "translate( -100%, 0)",
     duration: 0.3,
     ease: "power1.inOut",
     onComplete: () => {
@@ -38,7 +38,7 @@ function deleteParam(index) {
 }
 
 async function addKeyValue() {
-  const newKeyValue = await store.getAddParam("param");
+  const newKeyValue = await $bus.emit("getAddedParam", 'param');
   props.param.params.unshift(newKeyValue);
   $bus.emit("update", props.shortcutIndex);
 }

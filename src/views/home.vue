@@ -11,7 +11,7 @@ import { ShortcutConfigExports } from "@/utils/shortcutConfig.js";
 const store = shortcutStore();
 var animating = false;
 const focusFinished = ref(false);
-const showDivider = ref(false)
+const showDivider = ref(false);
 
 const router = useRouter();
 const ShortcutConfig = ref(ShortcutConfigExports);
@@ -22,10 +22,10 @@ import appHeader from "@/components/header.vue";
 import shortcutComponent from "@/components/shortcut.vue";
 
 const header = ref(null);
-const titleScale = ref(1)
-const title = ref() 
-const scrollArea = ref()
-const searchBarDom = ref()
+const titleScale = ref(1);
+const title = ref();
+const scrollArea = ref();
+const searchBarDom = ref();
 const scrollView = ref();
 var springTimeout = null;
 var scrollOrigin = 0;
@@ -80,8 +80,10 @@ function update() {
 
 async function addShortcut() {
   console.log("addShortcut");
-  const newShortcut = await store.getAddParam("shortcut");
-  ShortcutConfig.value.unshift(newShortcut);
+  const addParamPromise = $bus.emit("getAddedParam", "shortcut")
+  addParamPromise.then((newShortcut) => {
+    ShortcutConfig.value.unshift(newShortcut);
+  });
 }
 
 function deleteShortcut(index) {
@@ -128,12 +130,15 @@ function handleScroll($event) {
   // }
   animating = false;
   const target = $event.target;
-  const scrollTopNow = target.scrollTop; ;
-  titleScale.value = scrollTopNow < 0 ? Math.min(Math.abs(scrollTopNow) / 4000 + 1, 1.3) : 1;
-  const threshold = inputFocus.value ? 10 : title.value.getBoundingClientRect().bottom;
-  const searchBarBottom = searchBarDom.value.getBoundingClientRect().bottom
-  const scrollAreaTop = scrollArea.value.getBoundingClientRect().top
-  showDivider.value = scrollAreaTop < searchBarBottom
+  const scrollTopNow = target.scrollTop;
+  titleScale.value =
+    scrollTopNow < 0 ? Math.min(Math.abs(scrollTopNow) / 4000 + 1, 1.3) : 1;
+  const threshold = inputFocus.value
+    ? 10
+    : title.value.getBoundingClientRect().bottom;
+  const searchBarBottom = searchBarDom.value.getBoundingClientRect().bottom;
+  const scrollAreaTop = scrollArea.value.getBoundingClientRect().top;
+  showDivider.value = scrollAreaTop < searchBarBottom;
   if (scrollTopNow > threshold) {
     showTitle.value = true;
   } else {
@@ -200,20 +205,27 @@ function handleScroll($event) {
           id="scrollTitle"
           class="w-full flex overflow-hidden relative h-16 justify-center items-center"
           :style="{
-            opacity: showTitle ? '0' : '1', 
+            opacity: showTitle ? '0' : '1',
           }"
         >
           <div
             class="w-full absolute bottom-3 px-4 flex items-center text-4xl m-auto font-bold txtDark_Primary"
           >
-            <h1 id="title" ref="title" class="exFastTrans" :style="{scale: titleScale}">ShortcutConfig</h1>
+            <h1
+              id="title"
+              ref="title"
+              class="exFastTrans"
+              :style="{ scale: titleScale }"
+            >
+              ShortcutConfig
+            </h1>
 
             <div class="addWrapper ml-4" @click="addShortcut">
-              <el-icon><CirclePlusFilled/></el-icon>
+              <el-icon><CirclePlusFilled /></el-icon>
             </div>
           </div>
         </div>
-        <div id="searchBar" ref="searchBarDom" class="sticky z-50 top-0">
+        <div id="searchBar" ref="searchBarDom" class="sticky w-full z-50 pr-2">
           <searchBar
             v-model:queryInput="queryInput"
             v-model:inputFocus="inputFocus"
@@ -221,7 +233,11 @@ function handleScroll($event) {
             :showDivider="showDivider"
           />
         </div>
-        <div id="scrollArea" ref="scrollArea" class="w-full flex-1 pb-16 pl-4 pr-4">
+        <div
+          id="scrollArea"
+          ref="scrollArea"
+          class="w-full flex-1 pb-16 pl-4 pr-6"
+        >
           <div class="shortcutContainer w-full h-full">
             <shortcutComponent
               v-for="(shortcut, index) in fileteredList"
@@ -270,7 +286,7 @@ function handleScroll($event) {
                     >
                       <path
                         stroke-opacity="1"
-                        stroke-width="20" 
+                        stroke-width="20"
                         d="M307.6 104.6c-14.2 14.2-14.2 37.2 0 51.4L655 503.4c2.8 2.9 2.8 7.5 0 10.3L307.6 861.2c-14.2 14.2-14.2 37.2 0 51.4 14.2 14.2 37.2 14.2 51.4 0l347.4-347.4c15.6-15.6 23.4-36 23.4-56.5s-7.8-41-23.4-56.5L359 104.6c-14.2-14.2-37.2-14.2-51.4 0z"
                         p-id="1451"
                       ></path>
