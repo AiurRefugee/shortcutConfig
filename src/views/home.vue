@@ -31,6 +31,7 @@ var springTimeout = null;
 var scrollOrigin = 0;
 const showTitle = ref(false);
 const queryInput = ref("");
+provide("queryInput", queryInput);
 const inputFocus = ref(false);
 const scrollManager = {
   showed: false,
@@ -39,11 +40,29 @@ const scrollManager = {
 const $bus = inject("$bus");
 $bus.on("update", update);
 
-function filterValue(originObject, queryInput) {
+function filterValue(originObject) {
+  if (queryInput.value === "") {
+    return true;
+  }
+  if (
+    originObject.shortcutName &&
+    originObject.shortcutName
+      .toString()
+      .toLowerCase()
+      .includes(queryInput.value.toLowerCase())
+  ) {
+    originObject.showShortcut = true; 
+    return true;
+  }
+
   if (
     originObject.key &&
-    originObject.key.toString().toLowerCase().includes(queryInput.toLowerCase())
+    originObject.key
+      .toString()
+      .toLowerCase()
+      .includes(queryInput.value.toLowerCase())
   ) {
+    originObject.showWidget = true;
     return true;
   }
   // 如果值包含关键词
@@ -52,25 +71,19 @@ function filterValue(originObject, queryInput) {
     originObject.value
       .toString()
       .toLowerCase()
-      .includes(queryInput.toLowerCase())
+      .includes(queryInput.value.toLowerCase())
   ) {
-    console.log(
-      originObject.value,
-      originObject.value
-        .toString()
-        .toLowerCase()
-        .includes(queryInput.toLowerCase()),
-      queryInput
-    );
+    originObject.showWidget = true;
+    // console.log(originObject)
     return true;
   }
   if (originObject.params) {
     for (const item of originObject.params) {
-      if (filterValue(item, queryInput)) {
+      if (filterValue(item)) {
         return true;
       }
     }
-  }
+  } 
   return false;
 }
 
@@ -80,7 +93,7 @@ function update() {
 
 async function addShortcut() {
   console.log("addShortcut");
-  const addParamPromise = $bus.emit("getAddedParam", "shortcut")
+  const addParamPromise = $bus.emit("getAddedParam", "shortcut");
   addParamPromise.then((newShortcut) => {
     ShortcutConfig.value.unshift(newShortcut);
   });
@@ -104,16 +117,6 @@ function deleteShortcut(index) {
 function deleteKeyValue(index, keyValueIndex) {
   ShortcutConfig.value[index].params.splice(keyValueIndex, 1);
 }
-
-const fileteredList = computed(() => {
-  if (!queryInput.value) {
-    return ShortcutConfig.value;
-  } else {
-    return ShortcutConfig.value.filter((shortcut) => {
-      return filterValue(shortcut, queryInput.value);
-    });
-  }
-});
 
 onMounted(() => {});
 
@@ -239,13 +242,14 @@ function handleScroll($event) {
           class="w-full flex-1 pb-16 pl-4 pr-6"
         >
           <div class="shortcutContainer w-full h-full">
-            <shortcutComponent
-              v-for="(shortcut, index) in fileteredList"
-              :key="shortcut"
-              :shortcut="shortcut"
-              :shortcutIndex="index"
-              @removeShortcut="deleteShortcut"
-            />
+            <div v-for="(shortcut, index) in ShortcutConfig" :key="shortcut">
+              <shortcutComponent
+                :shortcut="shortcut"
+                :shortcutIndex="index"
+                v-if="filterValue(shortcut)"
+                @removeShortcut="deleteShortcut"
+              />
+            </div>
 
             <div class="w-full h-24"></div>
           </div>
@@ -254,51 +258,52 @@ function handleScroll($event) {
             class="shortcutList w-full pt-2 flex flex-col items-center overflow-auto"
           >
             <div class="w-full rounded-xl overflow-hidden">
-              <button
-                class="w-full flex-shrink-0 p-2 pb-0 bgLight_Secondary text-left"
-                v-for="(shortcut, index) in fileteredList"
-                :key="index"
-                @click="navToDetail(shortcut)"
-              >
-                <div class="w-full flex justify-between items-center">
-                  <div class="">
-                    <p class="text-lg txtDark_Primary">
-                      {{ shortcut.shortcutName }}
-                    </p>
-                    <div
-                      class="mr-1 ml-1 txtDark_Basic text-sm text-left mb-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-64"
-                    >
-                      <span
-                        class="mr-2 overflow-hidden whitespace-nowrap text-ellipsis"
-                        v-for="item in shortcut.params.slice(0, 5)"
-                        :key="item"
-                        >{{ item.key }}</span
+              <div v-for="(shortcut, index) in ShortcutConfig" :key="index">
+                <button
+                  class="w-full flex-shrink-0 p-2 pb-0 bgLight_Secondary text-left"
+                  @click="navToDetail(shortcut)"
+                  v-if="filterValue(shortcut)"
+                >
+                  <div class="w-full flex justify-between items-center">
+                    <div class="">
+                      <p class="text-lg txtDark_Primary">
+                        {{ shortcut.shortcutName }}
+                      </p>
+                      <div
+                        class="mr-1 ml-1 txtDark_Basic text-sm text-left mb-2 overflow-hidden whitespace-nowrap text-ellipsis max-w-64"
                       >
-                      <span class="txtDark_Basic" v-if="shortcut.params"
-                        >...</span
+                        <span
+                          class="mr-2 overflow-hidden whitespace-nowrap text-ellipsis"
+                          v-for="item in shortcut.params.slice(0, 5)"
+                          :key="item"
+                          >{{ item.key }}</span
+                        >
+                        <span class="txtDark_Basic" v-if="shortcut.params"
+                          >...</span
+                        >
+                      </div>
+                    </div>
+                    <div class="w-5 aspect-auto">
+                      <svg
+                        class="w-full h-full txtDark_Basic"
+                        viewBox="0 0 1024 1024"
                       >
+                        <path
+                          stroke-opacity="1"
+                          stroke-width="20"
+                          d="M307.6 104.6c-14.2 14.2-14.2 37.2 0 51.4L655 503.4c2.8 2.9 2.8 7.5 0 10.3L307.6 861.2c-14.2 14.2-14.2 37.2 0 51.4 14.2 14.2 37.2 14.2 51.4 0l347.4-347.4c15.6-15.6 23.4-36 23.4-56.5s-7.8-41-23.4-56.5L359 104.6c-14.2-14.2-37.2-14.2-51.4 0z"
+                          p-id="1451"
+                        ></path>
+                      </svg>
                     </div>
                   </div>
-                  <div class="w-5 aspect-auto">
-                    <svg
-                      class="w-full h-full txtDark_Basic"
-                      viewBox="0 0 1024 1024"
-                    >
-                      <path
-                        stroke-opacity="1"
-                        stroke-width="20"
-                        d="M307.6 104.6c-14.2 14.2-14.2 37.2 0 51.4L655 503.4c2.8 2.9 2.8 7.5 0 10.3L307.6 861.2c-14.2 14.2-14.2 37.2 0 51.4 14.2 14.2 37.2 14.2 51.4 0l347.4-347.4c15.6-15.6 23.4-36 23.4-56.5s-7.8-41-23.4-56.5L359 104.6c-14.2-14.2-37.2-14.2-51.4 0z"
-                        p-id="1451"
-                      ></path>
-                    </svg>
-                  </div>
-                </div>
-                <div
-                  class="w-full bgLight_Basic"
-                  style="height: 1px"
-                  v-if="index != fileteredList.length - 1"
-                ></div>
-              </button>
+                  <div
+                    class="w-full bgLight_Basic"
+                    style="height: 1px"
+                    v-if="index != ShortcutConfig.length - 1"
+                  ></div>
+                </button>
+              </div>
             </div>
             <div id="test" class="w-full h-96"></div>
           </div>

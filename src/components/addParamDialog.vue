@@ -16,12 +16,6 @@ $bus.on('getAddedParam', (addType) => {
   })
 })
 
-function open(addTypeStr) {
-  addType.value = addTypeStr
-  newParam.value = initParam
-  dialogVisible.value = true;
-}
-
 defineExpose({
   open
 })
@@ -36,6 +30,13 @@ const initParam = {
   type: "switch",
   options: "",
 };
+
+function open(addTypeStr) {
+  addType.value = addTypeStr
+  newParam.value = JSON.parse(JSON.stringify(initParam))
+  console.log(initParam)
+  dialogVisible.value = true;
+}
 
 const newParam = ref(initParam);
  
@@ -188,7 +189,7 @@ onMounted( () => {
       </div>
     </section>
     <template #footer>
-      <div class="w-full flex px-2">
+      <div class="w-full h-full flex items-center px-2">
         <el-button class="w-full" type="primary" @click="addParm"
           >确定</el-button
         >

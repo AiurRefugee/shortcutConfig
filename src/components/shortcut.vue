@@ -12,7 +12,7 @@ const store = shortcutStore();
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 
-const props = defineProps(["shortcut", "shortcutIndex"]);
+const props = defineProps(["shortcut", "shortcutIndex", "showShortcut"]);
 const emit = defineEmits(["removeShortcut", "checkName"]);
 
 function runShortCut(name) {
@@ -20,8 +20,22 @@ function runShortCut(name) {
 }
 
 const $bus = inject("$bus");
+const queryInput = inject('queryInput')
+
 const widgetsList = ref();
 const thisShortcut = ref();
+
+function filterParam(param) {  
+  console.log(param)
+  if (param && param.key) {
+    return param.key.includes(queryInput.value) || props.shortcut.showShortcut || param.showWidget
+  }
+  if (param && param.value) {
+    return param.value.includes(queryInput.value) || props.shortcut.showShortcut || param.showWidget
+  }
+  
+  return props.showShortcut
+}
 
 async function addKeyValue() {
   const param = await $bus.emit('getAddedParam', 'param')
@@ -83,15 +97,16 @@ onMounted(() => {});
       <div ref="widgetsList">
         <transition-group name="list">
           <div
-            class="py-2 overflow-hidden"
-            v-for="(item, index) in shortcut.params"
-            :key="item"
+            class="overflow-hidden"
+            v-for="(param, index) in shortcut.params"
+            :key="param"
           >
-            <Widgets
+            <Widgets  
+              v-if="filterParam(param)"
               :index="index"
               :shortcutIndex="shortcutIndex"
               :type="'params'"
-              :param="item"
+              :param="param"
               @deleteParam="deleteParam"
             >
             </Widgets>

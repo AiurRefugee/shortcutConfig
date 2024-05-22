@@ -7,6 +7,7 @@ import { CopyDocument } from "@element-plus/icons-vue";
 import Widgets from "@/components/Widgets.vue";
 import { showOpt, copyToClipboard } from "@/utils/utils.js";
 const $bus = inject("$bus");
+const queryInput = inject('queryInput')
 
 import { shortcutStore } from "@/store/shortcut";
 const store = shortcutStore();
@@ -38,7 +39,7 @@ function deleteParam(index) {
 }
 
 async function addKeyValue() {
-  const newKeyValue = await $bus.emit("getAddedParam", 'param');
+  const newKeyValue = await $bus.emit("getAddedParam", "param");
   props.param.params.unshift(newKeyValue);
   $bus.emit("update", props.shortcutIndex);
 }
@@ -68,11 +69,25 @@ function calEnd(event) {
   // }, 600)
 }
 
+function filterParam(param) { 
+  if (param && param.key) {
+    return param.key.includes(queryInput.value) 
+  }
+  if (param && param.value) {
+    return param.value.includes(queryInput.value) 
+  }
+  return false
+}
+
 onMounted(() => {});
 </script>
 
 <template>
-  <div ref="listItemWrapper" class="listItemWrapper rounded-xl" :id="param.key">
+  <div
+    ref="listItemWrapper"
+    class="listItemWrapper rounded-xl my-2"
+    :id="param.key" 
+  >
     <div
       id="listItem"
       class="text-lg p-3 pr-0 flex w-full justify-between items-center cursor-pointer"
@@ -94,9 +109,9 @@ onMounted(() => {});
         :class="param.params ? 'w-0' : 'w-3/5'"
       >
         <select
-        class="w-full"
+          class="w-full"
           v-if="param.type == 'select'"
-          v-model="param.value" 
+          v-model="param.value"
         >
           <option
             :label="item"
@@ -142,14 +157,14 @@ onMounted(() => {});
       v-if="param.params"
     >
       <transition-group name="list">
-        <Widgets
-          v-for="(item, index) in param.params"
-          :key="item"
-          :index="index"
-          :type="'params'"
-          :param="item"
-          @deleteParam="deleteParam"
-        />
+        <div v-for="(param, index) in param.params" :key="param">
+          <Widgets 
+            :index="index"
+            :type="'params'"
+            :param="param"
+            @deleteParam="deleteParam"
+          />
+        </div>
       </transition-group>
     </div>
   </div>

@@ -36,7 +36,7 @@ function inputOnFocus() {
         const searchInput = document.getElementById("searchInput");
         console.log(searchInput);
         searchInput.focus();
-      }, 1000);
+      }, 500);
     },
   });
 }
@@ -100,7 +100,7 @@ onMounted(() => {
 </script>
 <template>
   <div
-    class="overflow-hidden pt-1 pb-4 pl-4 flex items-center fastTrans bgLight_Primary"
+    class="overflow-hidden pt-0 pb-4 pl-4 flex items-center fastTrans bgLight_Primary"
   >
     <div
       class="inputWrap w-full h-full bgSearch flex-1 flex items-center rounded-lg px-2"
@@ -115,9 +115,10 @@ onMounted(() => {
       <div
         v-if="!focusFinished"
         @click="inputOnFocus"
-        class="bg-transparent w-full text-base txtPlaceHolder"
+        class="bg-transparent w-full text-base"
       >
-        <text>在列表中查找</text>
+        <text class="txtDark_Secondary" v-if="queryInput">{{ queryInput }}</text>
+        <text class="txtPlaceHolder" v-else>在列表中查找</text>
       </div>
       <input
         v-else
