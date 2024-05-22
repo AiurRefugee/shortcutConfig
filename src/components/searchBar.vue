@@ -121,7 +121,7 @@ onMounted(() => {
         <text class="txtPlaceHolder" v-else>在列表中查找</text>
       </div>
       <input
-        v-else
+        v-else 
         id="searchInput"
         class="bg-transparent font-normal text-gray-500 w-full text-base txtDark_Primary"
         v-model="queryInput"

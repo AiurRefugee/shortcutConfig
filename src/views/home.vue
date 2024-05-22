@@ -8,6 +8,7 @@ import searchBar from "../components/searchBar.vue";
 import gsap from "gsap";
 import { shortcutStore } from "@/store/shortcut";
 import { ShortcutConfigExports } from "@/utils/shortcutConfig.js";
+import { filterValue } from '@/utils/utils.js'
 const store = shortcutStore();
 var animating = false;
 const focusFinished = ref(false);
@@ -30,7 +31,7 @@ const scrollView = ref();
 var springTimeout = null;
 var scrollOrigin = 0;
 const showTitle = ref(false);
-const queryInput = ref("");
+const queryInput = ref("ip");
 provide("queryInput", queryInput);
 const inputFocus = ref(false);
 const scrollManager = {
@@ -39,53 +40,6 @@ const scrollManager = {
 };
 const $bus = inject("$bus");
 $bus.on("update", update);
-
-function filterValue(originObject) {
-  if (queryInput.value === "") {
-    return true;
-  }
-  if (
-    originObject.shortcutName &&
-    originObject.shortcutName
-      .toString()
-      .toLowerCase()
-      .includes(queryInput.value.toLowerCase())
-  ) {
-    originObject.showShortcut = true; 
-    return true;
-  }
-
-  if (
-    originObject.key &&
-    originObject.key
-      .toString()
-      .toLowerCase()
-      .includes(queryInput.value.toLowerCase())
-  ) {
-    originObject.showWidget = true;
-    return true;
-  }
-  // 如果值包含关键词
-  if (
-    originObject.value &&
-    originObject.value
-      .toString()
-      .toLowerCase()
-      .includes(queryInput.value.toLowerCase())
-  ) {
-    originObject.showWidget = true;
-    // console.log(originObject)
-    return true;
-  }
-  if (originObject.params) {
-    for (const item of originObject.params) {
-      if (filterValue(item)) {
-        return true;
-      }
-    }
-  } 
-  return false;
-}
 
 function update() {
   console.log("update", ShortcutConfig.value);
@@ -123,8 +77,16 @@ onMounted(() => {});
 function navToDetail(shortcut) {
   router.push({
     path: "/detail/" + shortcut.shortcutName,
+    query: {
+      queryInput: queryInput.value
+    },
     replace: true,
   });
+}
+
+function filterShortcut(shortcut) {
+  console.log(queryInput.value)
+  return filterValue(shortcut, queryInput.value)
 }
 
 function handleScroll($event) {
@@ -246,7 +208,7 @@ function handleScroll($event) {
               <shortcutComponent
                 :shortcut="shortcut"
                 :shortcutIndex="index"
-                v-if="filterValue(shortcut)"
+                v-if="filterShortcut(shortcut)"
                 @removeShortcut="deleteShortcut"
               />
             </div>
@@ -262,7 +224,7 @@ function handleScroll($event) {
                 <button
                   class="w-full flex-shrink-0 p-2 pb-0 bgLight_Secondary text-left"
                   @click="navToDetail(shortcut)"
-                  v-if="filterValue(shortcut)"
+                  v-if="filterShortcut(shortcut)"
                 >
                   <div class="w-full flex justify-between items-center">
                     <div class="">

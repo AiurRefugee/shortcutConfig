@@ -62,12 +62,12 @@ export function useCalScroll() {
 
 
     const title = document.querySelector("header");
-    threshold.value = title.getBoundingClientRect().bottom 
+    threshold.value = title.getBoundingClientRect().bottom
 
-    if (height.value < threshold.value) { 
-        gsap.to('header h1', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
-        gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
-    } else { 
+    if (height.value < threshold.value) {
+      gsap.to('header h1', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
+      gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
+    } else {
       gsap.to('header h1', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
       gsap.to(scrollTitle, { duration: 0.2, opacity: 1, ease: "power1.inOut" });
       // showed = false
@@ -76,7 +76,7 @@ export function useCalScroll() {
   onMounted(() => window.addEventListener('scroll', calScroll))
   onUnmounted(() => window.removeEventListener('scroll', calScroll))
 
-  return {height, threshold}
+  return { height, threshold }
 }
 
 export function calScroll() {
@@ -85,12 +85,12 @@ export function calScroll() {
 
 
   const title = document.querySelector("header");
-  const threshold = title.getBoundingClientRect().bottom 
+  const threshold = title.getBoundingClientRect().bottom
 
-  if (height < threshold) { 
-      gsap.to('header h1', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
-      gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
-  } else { 
+  if (height < threshold) {
+    gsap.to('header h1', { duration: 0.1, opacity: 1, ease: "power1.inOut" });
+    gsap.to(scrollTitle, { duration: 0.2, opacity: 0, ease: "power1.inOut" });
+  } else {
     gsap.to('header h1', { duration: 0.1, opacity: 0, ease: "power1.inOut" });
     gsap.to(scrollTitle, { duration: 0.2, opacity: 1, ease: "power1.inOut" });
     // showed = false
@@ -151,4 +151,52 @@ export function showOpt(wrapper, canAdd) {
     toogleButton(deleteButton);
     lastDelete = deleteButton;
   }
+}
+
+export function filterValue(originObject, queryInput) {
+  // console.log(queryInput)
+  if (queryInput === "") {
+    return true;
+  }
+  if (
+    originObject.shortcutName &&
+    originObject.shortcutName
+      .toString()
+      .toLowerCase()
+      .includes(queryInput.toLowerCase())
+  ) {
+    originObject.showShortcut = true;
+    return true;
+  }
+
+  if (
+    originObject.key &&
+    originObject.key
+      .toString()
+      .toLowerCase()
+      .includes(queryInput.toLowerCase())
+  ) {
+    originObject.showWidget = true;
+    return true;
+  }
+  // 如果值包含关键词
+  if (
+    originObject.value &&
+    originObject.value
+      .toString()
+      .toLowerCase()
+      .includes(queryInput.toLowerCase())
+  ) {
+    originObject.showWidget = true;
+    // console.log(originObject)
+    return true;
+  }
+  if (originObject.params) {
+    for (const item of originObject.params) {
+      if (filterValue(item, queryInput)) {
+        return true;
+      }
+    }
+  }
+  return false;
 }

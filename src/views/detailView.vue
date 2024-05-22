@@ -5,6 +5,8 @@ import ScrollView from "@/viewComponent/scrollView.vue";
 import appHeader from "@/components/header.vue";
 import searchBar from "../components/searchBar.vue";
 import { shortcutStore } from "@/store/shortcut";
+import { filterValue } from '@/utils/utils.js'
+
 const store = shortcutStore();
 
 import { useCalScroll } from "@/utils/utils.js";
@@ -12,7 +14,10 @@ import { useCalScroll } from "@/utils/utils.js";
 import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 const route = useRoute();
-const showTitle = ref(false);
+
+const queryInput = route.query.queryInput
+console.log(queryInput)
+const showTitle = ref(false); 
 const shortcutDetail = ref({
   shortcutName: "读取哈希表",
 
@@ -353,7 +358,9 @@ function handleScroll(e) {
   }
 }
 
-onMounted(() => {});
+onMounted(() => {
+  filterValue(shortcutDetail.value, queryInput)
+});
 </script>
 <template>
   <div id="detailView" class="w-full h-full flex flex-col">

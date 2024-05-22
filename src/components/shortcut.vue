@@ -8,8 +8,10 @@ import { CopyDocument, Share, Plus } from "@element-plus/icons-vue";
 import { ElMessage } from "element-plus";
 import { showOpt, copyToClipboard } from "@/utils/utils.js";
 import { shortcutStore } from "@/store/shortcut";
+
 const store = shortcutStore();
 import { useRouter, useRoute } from "vue-router";
+const route = useRoute()
 const router = useRouter();
 
 const props = defineProps(["shortcut", "shortcutIndex", "showShortcut"]);
@@ -20,13 +22,12 @@ function runShortCut(name) {
 }
 
 const $bus = inject("$bus");
-const queryInput = inject('queryInput')
+const queryInput = inject('queryInput') || route.query.queryInput
 
 const widgetsList = ref();
 const thisShortcut = ref();
 
-function filterParam(param) {  
-  console.log(param)
+function filterParam(param) {   
   if (param && param.key) {
     return param.key.includes(queryInput.value) || props.shortcut.showShortcut || param.showWidget
   }
